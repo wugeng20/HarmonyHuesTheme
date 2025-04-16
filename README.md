@@ -1,0 +1,2 @@
+# HarmonyHuesTheme
+Typecho主题-HarmonyHues，HarmonyHues的设计灵感源自自然界中的和谐之美。
