@@ -14,7 +14,8 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
 <?php $helloTxt = $this->options->helloText; ?>
 <div class="hh-widget mb-3">
   <div class="hello-widget">
-    <img class="lazy" data-original="<?php echo getRandImg(); ?>" alt="<?php $helloTxt?>" />
+    <img class="widget-lazy" src="<?php getLazyload(); ?>" data-original="<?php getRandImg(); ?>"
+      alt="<?php echo $helloTxt ?>" />
     <div class="hello-content d-flex flex-column justify-content-center align-items-center">
       <span class="hello-text"><?php echo $helloTxt; ?></span>
     </div>

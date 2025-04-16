@@ -58,7 +58,8 @@ function slidesHtml($content) {
             $slidesHtml .= '<source src="'.$image.'" type="video/mp4">';
             $slidesHtml .= '</video>';
         } else {
-            $slidesHtml .= '<img src="'.$image.'"alt="'.$title.'">';
+            // $slidesHtml .= '<img src="'.$image.'"alt="'.$title.'">';
+            $slidesHtml .= '<img class="swiper-lazy" src="'.getLazyload(false).'" data-src="'.$image.'" alt="'.$title.'">';
         }
 
         $slidesHtml .= empty($label) ? '' : '<div class="px-2 py-1 swiper-slide-label">'.$label.'</div>';

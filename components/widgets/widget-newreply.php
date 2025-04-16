@@ -31,7 +31,8 @@ function parseCommentContens($content) {
     <div class="newreply-item mb-2">
       <div class="comment-info d-flex align-items-center">
         <div class="comment-avatar">
-          <img class="avatar-img" src="<?php echo getGravatar($item->mail); ?>" alt="<?php $item->author(false)?>">
+          <img class="avatar-img widget-lazy" src="<?php getLazyload(); ?>"
+            data-original="<?php echo getGravatar($item->mail); ?>" alt="<?php $item->author(false)?>">
         </div>
         <div class="comment-name ml-2">
           <a href="<?php $item->url()?>"><?php $item->author(false)?></a>：

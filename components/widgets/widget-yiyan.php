@@ -63,7 +63,8 @@ $randImg = getAssets('assets/yiyan/'.rand(1, 20).'.webp', false);
     <div class="yiyan-refresh-btn" title="刷新一言"><i onclick="location.reload()" class="iconfont icon-yuan"></i></div>
     <div class="yiyan-content d-flex flex-column justify-content-between">
       <div class="yiyan-cover">
-        <img data-original="<?php echo $randImg; ?>" src="<?php getLazyload(); ?>" alt="一言" class="yiyan-img lazy" />
+        <img data-original="<?php echo $randImg; ?>" src="<?php getLazyload(); ?>" alt="一言"
+          class="yiyan-img widget-lazy" />
       </div>
       <?php $yiyan = getYiyan(); ?>
       <div class="yiyan-text p-2">

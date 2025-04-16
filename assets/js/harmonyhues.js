@@ -482,6 +482,30 @@ $(document).ready(function () {
     requestAnimationFrame(animate);
   }
   /*---------------------动态计时器结束---------------------*/
+  /*---------------------懒加载开始---------------------*/
+  // 基础配置
+  var lazyLoadConfig = {
+    effect: "fadeIn",
+    threshold: 200,
+    container: window
+  };
+
+  // 通用加载处理函数
+  function handleLazyLoad(loadedClass, removedClass) {
+    return function () {
+      $(this).addClass(loadedClass).removeClass(removedClass);
+    };
+  }
+
+  // 初始化懒加载
+  $("img.lazy").lazyload($.extend({}, lazyLoadConfig, {
+    load: handleLazyLoad("loaded", "lazy")
+  }));
+
+  $(".hh-widget img.widget-lazy").lazyload($.extend({}, lazyLoadConfig, {
+    load: handleLazyLoad("loaded", "widget-lazy")
+  }));
+  /*---------------------懒加载结束---------------------*/
 
   /*---------------------一些插件集合str---------------------*/
   // 动画延迟函数
@@ -518,30 +542,21 @@ $(document).ready(function () {
       nextButton: '.swiper-button-next', // 下一页
       roundLengths: true, // 将slide的宽和高取整，以防止某些分辨率的屏幕上出现模糊
       parallax: true, // 开启视差效果
+      lazyLoading: true, // 懒加载
     });
 
     $('.swiper-container').mouseenter(function () {
       indexSwiper.stopAutoplay();
     }).mouseleave(function () {
       indexSwiper.startAutoplay();
-    })
+    });
 
     $('.swiper-container').hover(function () {
       indexSwiper.stopAutoplay();
     }, function () {
       indexSwiper.startAutoplay();
-    })
+    });
   }
-
-  // 图片懒加载
-  $("img.lazy").lazyload({
-    effect: "fadeIn",
-    threshold: 200,
-    load: function () {
-      // 图片加载完成后添加 loaded 类
-      $(this).addClass("loaded").removeClass('lazy');
-    }
-  });
 
   // 灯箱
   if (typeof ViewImage !== 'undefined') {
