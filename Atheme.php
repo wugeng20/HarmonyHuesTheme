@@ -18,7 +18,7 @@ $itemsArray = array(
     array('title' => '主题版本', 'content' => getVersion()),
     array('title' => '博客程序', 'content' => 'TYPECHO'),
     array('title' => '技术栈', 'content' => 'PHP、HTML、CSS、JS'),
-    array('title' => '是否开放', 'content' => '完善中，暂不开放'),
+    array('title' => '是否开放', 'content' => '<a href="https://github.com/wugeng20/HarmonyHuesTheme" target="_blank" title="HarmonyHues主题">GitHub下载</a>'),
 );
 ?>
 <?php $this->need('components/header.php'); ?>
