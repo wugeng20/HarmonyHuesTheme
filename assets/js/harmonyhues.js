@@ -487,7 +487,8 @@ $(document).ready(function () {
   var lazyLoadConfig = {
     effect: "fadeIn",
     threshold: 200,
-    container: window
+    container: window,
+    failure_limit: 30
   };
 
   // 通用加载处理函数
