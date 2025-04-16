@@ -1,0 +1,430 @@
+/* ------------------------------------
+ * Harmony Hues主题
+ *
+ * @author  星语社长
+ * @link  https://biibii.cn
+ * @update  2024-7-6 18:00:04
+ * --------------------------------- */
+// 定义文本溢出省略号样式
+@mixin text-ellipsis($line-clamp: 2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $line-clamp;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+}
+
+.hh-widget {
+  overflow: hidden;
+  background-image: var(--widget-bg-gradient);
+
+  &:first-child {
+    margin-top: 0 !important;
+  }
+}
+
+/* 博主信息 */
+.author-content {
+  cursor: default;
+
+  .author-info-avatar {
+    position: relative;
+    width: 5rem;
+    height: 5rem;
+    margin: 0 auto;
+
+    .avatar-img {
+      width: 5rem;
+      height: 5rem;
+      border: var(--border-solid-main);
+      border-radius: var(--border-radius-circle);
+      transition: var(--transition-ease-all);
+      overflow: hidden;
+    }
+
+    .author-oneline {
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+      right: 5px;
+      bottom: 5px;
+      background-color: var(--success);
+      border-radius: var(--border-radius-circle);
+      border: var(--border-solid-main);
+
+      &.author-offline {
+        background-color: var(--secondary);
+      }
+    }
+
+    &:hover .avatar-img {
+      border-radius: var(--border-radius-base);
+    }
+  }
+
+  .author-nickname {
+    color: var(--font-color-main);
+    font-size: 1.1rem;
+  }
+
+  .author-text {
+    font-size: 0.9rem;
+    color: var(--font-color-main-light);
+  }
+
+  .blog-count-box {
+    .blog-count-item {
+      margin: 0.1rem;
+      color: var(--font-color-main);
+      font-weight: 500;
+      font-size: 0.85rem;
+      background-image: linear-gradient(90deg, var(--color-primary-light-5), transparent);
+      border-radius: var(--border-radius-base);
+      border: var(--border-solid-small);
+      overflow: hidden;
+    }
+  }
+}
+
+// 旋转360度动画
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 一言 */
+.yiyan-widget {
+  position: relative;
+
+  .yiyan-date {
+    .yiyan-day {
+      line-height: 1;
+      font-weight: bold;
+      font-size: 2.25rem;
+    }
+  }
+
+  .yiyan-refresh-btn {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    color: var(--font-color-main-light);
+    animation: spin 8s linear infinite;
+
+    &:hover {
+      cursor: pointer;
+      color: var(--color-primary-light-1);
+    }
+  }
+
+  .yiyan-content {
+    .yiyan-cover {
+      img {
+        width: 100%;
+        height: 100%;
+        max-height: 7rem;
+        object-fit: cover;
+      }
+    }
+
+    .yiyan-text {
+      .yiyan-quote {
+        font-size: 0.9rem;
+      }
+
+      .yiyan-author {
+        color: var(--font-color-main-light);
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+/* 热门文章 */
+.hotposts-widget {
+  .hotposts-item {
+    font-size: 0.95rem;
+    line-height: 2;
+
+    .hotposts-number {
+      font-size: 0.9rem;
+      padding: 0 0.35rem;
+      border-radius: var(--border-radius-small);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    /* 文字颜色 */
+    /* 第1名 */
+    &:nth-child(1) .hotposts-number {
+      background-color: var(--red);
+    }
+
+    /* 第2名 */
+    &:nth-child(2) .hotposts-number {
+      background-color: var(--success);
+    }
+
+    /* 第3名 */
+    &:nth-child(3) .hotposts-number {
+      background-color: var(--primary);
+    }
+
+    /* 其他名次 */
+    &:nth-child(n+4) .hotposts-number {
+      background-color: var(--overlay-color-dark-2);
+    }
+
+    .hotposts-title {
+      @include text-ellipsis;
+    }
+  }
+}
+
+/* 最新评论 */
+.newreply-widget {
+  font-size: 0.9rem;
+  overflow: hidden;
+  max-height: 15rem;
+
+  &:hover {
+    overflow: auto;
+  }
+
+  .avatar-img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--border-radius-circle);
+    overflow: hidden;
+    border: var(--border-solid-main);
+  }
+
+  .comment-content {
+    position: relative;
+    line-height: 1.5rem;
+    background-color: var(--bg-color-body);
+    border-radius: var(--border-radius-medium);
+    z-index: 1;
+    word-break: break-all;
+
+    &::before {
+      position: absolute;
+      content: "";
+      width: 0.8rem;
+      height: 0.8rem;
+      background: var(--bg-color-body);
+      top: -2px;
+      left: 5px;
+      z-index: -1;
+      transform: rotate(45deg);
+    }
+
+    &:hover {
+      background: var(--overlay-color-light-8);
+
+      &::before {
+        background: var(--overlay-color-light-8);
+      }
+    }
+
+    img {
+      width: auto;
+      height: 1.5rem;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
+/* 文章目录导航 */
+.atoc-content {
+  font-size: 0.95rem;
+  color: var(--font-color-main);
+  border-radius: var(--border-radius-medium);
+  padding: var(--border-radius-base);
+  border: var(--border-solid-small);
+
+  .atoc-item {
+    position: relative;
+
+    .atoc-link {
+      @include text-ellipsis;
+
+      &.active {
+        font-weight: bold;
+        color: var(--color-primary-light-1);
+      }
+    }
+  }
+}
+
+/* 首页底部样式 */
+.index-footer-widget {
+
+  /* 首页底部-Hello */
+  .hello-widget {
+    position: relative;
+    height: 8rem;
+
+    .hello-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--overlay-color-dark-2);
+      mix-blend-mode: overlay;
+      -webkit-backdrop-filter: saturate(50%) blur(4px);
+      backdrop-filter: saturate(50%) blur(4px);
+
+      .hello-text {
+        color: var(--bg-color-main);
+        font-size: 2rem;
+        font-weight: bold;
+      }
+    }
+
+    .hello-btn-group {
+      position: absolute;
+      bottom: 0.75rem;
+      right: 0.75rem;
+
+      .hello-btn-item {
+        font-size: 0.8rem;
+        color: var(--color-primary-light-5);
+        background-color: var(--overlay-color-light-1);
+        border-radius: var(--border-radius-small);
+      }
+    }
+  }
+
+  /* 首页底部-时间之旅 */
+  .timejourney-widget {
+    position: relative;
+    background-image: var(--gradient-45deg);
+    z-index: 0;
+
+    .timejourney-progress {
+      position: absolute;
+      width: 0%;
+      height: 100%;
+      color: var(--bg-color-body);
+      font-weight: bold;
+      background-color: var(--font-color-main);
+      border-radius: var(--border-radius-medium);
+      z-index: -1;
+    }
+
+    .timejourney-content {
+      width: 100%;
+      height: 100%;
+      color: var(--bg-color-body);
+
+      .timejourney-day {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .timejourney-desc,
+      .timejourney-unit {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+/* 轮播图样式 */
+.swiper-widget {
+  overflow: hidden;
+
+  .swiper-container {
+    position: relative;
+    width: 100%;
+    height: 15rem;
+    overflow: hidden;
+
+    &:hover {
+      .swiper-button-wrapper {
+        opacity: 1;
+      }
+    }
+
+    .swiper-wrapper {
+      .swiper-slide-label {
+        position: absolute;
+        top: 0;
+        right: 1rem;
+        z-index: 1;
+        font-size: 0.85rem;
+        background-color: var(--overlay-color-light-5);
+        border-bottom-right-radius: var(--border-radius-base);
+        border-bottom-left-radius: var(--border-radius-base);
+        overflow: hidden;
+        mix-blend-mode: overlay;
+        -webkit-backdrop-filter: saturate(50%) blur(4px);
+        backdrop-filter: saturate(50%) blur(4px);
+        transition: background-color 0.3s ease-in-out;
+      }
+
+      .swiper-slide-content {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        color: var(--bg-color-main);
+        background-image: linear-gradient(0deg, var(--overlay-color-dark-2) 15%, transparent 85%);
+
+        .swiper-slide-title {
+          @include text-ellipsis(1);
+        }
+
+        .swiper-slide-description {
+          font-size: 0.85rem;
+          @include text-ellipsis;
+        }
+      }
+    }
+
+    .swiper-button-wrapper {
+      gap: 0.5rem;
+      opacity: 0;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      z-index: 11;
+      transition: opacity 0.5s ease-in-out;
+
+      .swiper-button-prev,
+      .swiper-button-next {
+        width: 1.5rem;
+        height: 1.5rem;
+        background-color: var(--overlay-color-light-5);
+        mix-blend-mode: overlay;
+        -webkit-backdrop-filter: saturate(50%) blur(10px);
+        backdrop-filter: saturate(50%) blur(10px);
+        border-radius: var(--border-radius-base);
+
+        &:hover {
+          background-color: var(--overlay-color-light-8);
+        }
+
+        .iconfont {
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .swiper-container {
+    height: 10rem !important;
+  }
+}

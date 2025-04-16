@@ -1,0 +1,125 @@
+.col-mb-12 {
+  &.col-tb-8 {
+    &.col-tb-offset-2 {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+}
+
+.harmonyhues-config {
+  display: flex;
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  &>form {
+    .setting-content {
+      li {
+        .typecho-label {
+          display: block;
+          border-left: 4px solid var(--font-color-main);
+          background: var(--border-color-main);
+          line-height: 26px;
+          margin-bottom: 15px;
+          padding: 5px 15px;
+          color: var(--font-color-main);
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+
+        select {
+          min-width: 200px;
+          height: 34px;
+          line-height: 34px;
+          border: 1px solid #e9e9eb;
+          color: #666;
+          border-radius: 4px;
+          padding-left: 5px;
+        }
+
+        .multiline {
+          display: flex;
+          align-items: center;
+          color: #666;
+
+          input[type=checkbox] {
+            margin-right: 5px;
+            box-shadow: none !important;
+          }
+        }
+
+        textarea {
+          height: 125px;
+        }
+
+        .description {
+          background: #f2f2f2;
+          color: var(--font-color-main);
+          padding: 10px 15px;
+          margin-top: 10px;
+          line-height: 26px;
+          word-break: break-all;
+        }
+      }
+    }
+
+    .typecho-option {
+      position: -webkit-sticky;
+      position: sticky;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      border-top: 1px solid #ebebeb;
+
+      button {
+        width: 170px;
+        height: 40px;
+        border-radius: 20px;
+        background-image: var(--gradient-45deg);
+        border: var(--border-solid-main);
+        border-radius: var(--border-radius-medium);
+        box-shadow: var(--shadow-box-main);
+
+        &:hover {
+          box-shadow: var(--shadow-inset-box);
+        }
+      }
+    }
+  }
+}
+
+.harmonyhues-config>form .setting-content li input[type=text],
+.harmonyhues-config>form .setting-content li textarea {
+  width: 100%;
+  padding: 10px;
+  color: #666;
+  border: 1px solid #e9e9eb;
+  -webkit-appearance: none;
+}
+
+.harmonyhues-backup {
+  input[type=submit] {
+    width: 150px;
+    height: 40px;
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--shadow-box-main) !important;
+    ;
+
+    &:hover {
+      box-shadow: var(--shadow-inset-box) !important;
+    }
+  }
+}
