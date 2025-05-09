@@ -52,14 +52,13 @@ function slidesHtml($content) {
 
         // 生成HTML
         $slidesHtml .= '<div class="swiper-slide">';
-        $slidesHtml .= '<a href="'.$link.'" target="_blank">';
+        $slidesHtml .= '<a href="'.$link.'" target="_blank" title="'.($title ?: $description).' - 点击前往">';
         if ($extension === 'mp4') {
             $slidesHtml .= '<video class="swiper-slide-video" autoplay loop muted playsinline>';
             $slidesHtml .= '<source src="'.$image.'" type="video/mp4">';
             $slidesHtml .= '</video>';
         } else {
-            // $slidesHtml .= '<img src="'.$image.'"alt="'.$title.'">';
-            $slidesHtml .= '<img class="swiper-lazy" src="'.getLazyload(false).'" data-src="'.$image.'" alt="'.$title.'">';
+            $slidesHtml .= '<img class="swiper-lazy" src="'.getLazyload(false).'" data-src="'.$image.'" alt="'.($title ?: $description).'图片">';
         }
 
         $slidesHtml .= empty($label) ? '' : '<div class="px-2 py-1 swiper-slide-label">'.$label.'</div>';

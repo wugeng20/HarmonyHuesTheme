@@ -99,15 +99,73 @@ if ($sticky && $this->is('index') || $this->is('front')) {
   <nav class="mt-4">
     <?php
 ob_start();
-$this->pageNav('<i class="iconfont icon-shangyiye"></i>', '<i class="iconfont icon-xiayiye"></i>', 1, '', array('wrapTag' => 'ul', 'wrapClass' => 'pagination justify-content-center', 'itemTag' => 'li', 'textTag' => 'span', 'currentClass' => 'active', 'prevClass' => 'prev', 'nextClass' => 'next'));
+$this->pageNav(
+    '<i class="iconfont icon-shangyiye"></i>',
+    '<i class="iconfont icon-xiayiye"></i>',
+    1,
+    '',
+    array(
+        'wrapTag' => 'ul',
+        'wrapClass' => 'pagination justify-content-center',
+        'itemTag' => 'li',
+        'textTag' => 'span',
+        'currentClass' => 'active',
+        'prevClass' => 'prev',
+        'nextClass' => 'next',
+    )
+);
 $content = ob_get_contents();
 ob_end_clean();
+
+// 删除省略号等无内容项
 $content = preg_replace("/<li><span>(.*?)<\/span><\/li>/sm", '', $content);
-$content = preg_replace("/<li [class=\"active\"]+>(.*?)<\/li>/sm", '<li class="page-item active">$1</li>', $content);
-$content = preg_replace("/<li [class=\"prev\"]+>(.*?)<\/li>/sm", '<li class="page-item prev" title="上一页">$1</li>', $content);
-$content = preg_replace("/<li [class=\"next\"]+>(.*?)<\/li>/sm", '<li class="page-item next" title="下一页">$1</li>', $content);
-$content = preg_replace("/<li>(.*?)<\/li>/sm", '<li class="page-item">$1</li>', $content);
-$content = preg_replace("/<a href=\"(.*?)\">(.*?)<\/a>/sm", '<a class="page-link p-0 w-100 h-100 d-flex align-items-center justify-content-center" href="$1">$2</a>', $content);
+
+// 规范化分页项类名
+$content = preg_replace(array(
+    "/<li class=\"active\">(.*?)<\/li>/sm",
+    "/<li class=\"prev\">(.*?)<\/li>/sm",
+    "/<li class=\"next\">(.*?)<\/li>/sm",
+    "/<li>(.*?)<\/li>/sm",
+), array(
+    '<li class="page-item active">$1</li>',
+    '<li class="page-item prev">$1</li>',
+    '<li class="page-item next">$1</li>',
+    '<li class="page-item">$1</li>',
+), $content);
+
+// 智能生成 title 的核心逻辑
+$content = preg_replace_callback(
+    "/<a href=\"(.*?)\">(.*?)<\/a>/sm",
+    function ($matches) {
+        $href = $matches[1];
+        $linkContent = $matches[2];
+
+        // 判断链接类型
+        if (strpos($linkContent, 'icon-shangyiye') !== false) {
+            $title = '上一页';
+        } elseif (strpos($linkContent, 'icon-xiayiye') !== false) {
+            $title = '下一页';
+        } else {
+            // 从 URL 中提取页码（适配 /page/2/ 格式）
+            preg_match('/\/page\/(\d+)\/$/', $href, $pageMatch);
+            $page = $pageMatch[1] ?? 1;
+            $title = "第{$page}页";
+        }
+
+        // 构建安全的 title 属性
+        $safeTitle = htmlspecialchars($title, ENT_QUOTES);
+
+        // 返回优化后的 HTML
+        return sprintf(
+            '<a class="page-link p-0 w-100 h-100 d-flex align-items-center justify-content-center" href="%s" title="%s">%s</a>',
+            $href,
+            $safeTitle,
+            $linkContent
+        );
+    },
+    $content
+);
+
 echo $content;
 ?>
   </nav>

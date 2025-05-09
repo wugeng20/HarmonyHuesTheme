@@ -54,11 +54,11 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     <!-- 分享+赞助 -->
     <div class="post-tools d-flex justify-content-center mt-4">
       <div class="post-tools-item d-flex flex-column align-items-center">
-        <button class="btn" id="reward-btn"><i class="iconfont icon-zanshangma"></i></button>
+        <button class="btn" id="reward-btn" title="赞赏"><i class="iconfont icon-zanshangma"></i></button>
         <span>赞赏</span>
       </div>
       <div class="post-tools-item d-flex flex-column align-items-center">
-        <button class="btn" id="share-btn"><i class="iconfont icon-fenxiang1"></i></button>
+        <button class="btn" id="share-btn" title="分享"><i class="iconfont icon-fenxiang1"></i></button>
         <span>分享</span>
       </div>
     </div>

@@ -482,10 +482,20 @@ img {
       border-radius: var(--border-radius-medium);
     }
   }
-}
 
-.navbar.active {
-  box-shadow: var(--shadow-nav) !important;
+  &.active {
+    box-shadow: var(--shadow-nav) !important;
+  }
+
+  &.nav-hidden {
+    transform: translateY(-100%) !important;
+    opacity: 0 !important;
+  }
+
+  &.nav-visible {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+  }
 }
 
 // LOGO样式
@@ -933,6 +943,9 @@ img {
 /*---------- 文章列表->分页str ----------*/
 .pagination {
   gap: 0.5rem;
+  opacity: 0;
+  animation: fade-in-top 0.5s 0.8s forwards;
+  -webkit-animation: fade-in-top 0.5s 0.8s forwards;
 
   .page-item {
     width: 2rem;
@@ -988,6 +1001,11 @@ img {
   .sidebar-sticky {
     top: 88px;
     z-index: 2 !important;
+    transition: top 0.3s ease;
+
+    &.visible-top {
+      top: 20px;
+    }
   }
 
   .widget-title {

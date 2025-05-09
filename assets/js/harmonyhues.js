@@ -507,7 +507,37 @@ $(document).ready(function () {
     load: handleLazyLoad("loaded", "widget-lazy")
   }));
   /*---------------------懒加载结束---------------------*/
+  /*---------------------顶部导航栏滚动隐藏与显示开始---------------------*/
+  let lastScrollTop = 0;
+  const navbar = $("#navbar");
+  const sidebarSticky = $(".sidebar-sticky");
+  const scrollThreshold = 100; // 滚动阈值设为100px
 
+  $(window).scroll(function () {
+    const currentScroll = $(this).scrollTop();
+
+    // 当滚动距离小于阈值时强制显示导航栏
+    if (currentScroll < scrollThreshold) {
+      navbar.removeClass("nav-hidden").addClass("nav-visible");
+      lastScrollTop = currentScroll;
+      return;
+    }
+
+    // 滚动方向判断
+    if (Math.abs(currentScroll - lastScrollTop) > 5) { // 增加5px容差防止误判
+      if (currentScroll > lastScrollTop) {
+        // 向下滚动超过阈值时隐藏
+        navbar.removeClass("nav-visible").addClass("nav-hidden");
+        sidebarSticky.addClass("visible-top");
+      } else {
+        // 向上滚动时立即显示
+        navbar.removeClass("nav-hidden").addClass("nav-visible");
+        sidebarSticky.removeClass("visible-top");
+      }
+    }
+    lastScrollTop = currentScroll;
+  });
+  /*---------------------顶部导航栏滚动隐藏与显示结束---------------------*/
   /*---------------------一些插件集合str---------------------*/
   // 动画延迟函数
   function applyAnimationDelay(selector, delayFactor) {

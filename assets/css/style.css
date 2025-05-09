@@ -101,6 +101,10 @@ img.loaded { background-color: transparent; filter: blur(0px); -webkit-transitio
 
 .navbar.active { box-shadow: var(--shadow-nav) !important; }
 
+.navbar.nav-hidden { transform: translateY(-100%) !important; opacity: 0 !important; }
+
+.navbar.nav-visible { transform: translateY(0) !important; opacity: 1 !important; }
+
 .navbar-logo span { font-size: 1.5rem; }
 
 .navbar-logo img { height: 40px; }
@@ -256,7 +260,7 @@ img.loaded { background-color: transparent; filter: blur(0px); -webkit-transitio
 
 /*---------- 文章列表样式end ----------*/
 /*---------- 文章列表->分页str ----------*/
-.pagination { gap: 0.5rem; }
+.pagination { gap: 0.5rem; opacity: 0; animation: fade-in-top 0.5s 0.8s forwards; -webkit-animation: fade-in-top 0.5s 0.8s forwards; }
 
 .pagination .page-item { width: 2rem; height: 2rem; }
 
@@ -272,7 +276,9 @@ img.loaded { background-color: transparent; filter: blur(0px); -webkit-transitio
 
 .hh-widget:not(.no-animation), .card:not(.no-animation) { opacity: 0; animation: fade-in-top 0.5s 0.3s forwards; -webkit-animation: fade-in-top 0.5s 0.3s forwards; }
 
-.main-sidebar .sidebar-sticky { top: 88px; z-index: 2 !important; }
+.main-sidebar .sidebar-sticky { top: 88px; z-index: 2 !important; transition: top 0.3s ease; }
+
+.main-sidebar .sidebar-sticky.visible-top { top: 20px; }
 
 .main-sidebar .widget-title { position: relative; font-size: 1.1rem; display: inline-block; z-index: 1; }
 

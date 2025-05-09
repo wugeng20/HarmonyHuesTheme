@@ -20,7 +20,7 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
       <?php
 $email = $comments->mail;
     $imgUrl = getGravatar($email);
-    echo '<img class="lazy" src="'.getAvatarLazyload(false).'" data-original="'.$imgUrl.'">';
+    echo '<img class="lazy" src="'.getAvatarLazyload(false).'" data-original="'.$imgUrl.'" alt="'.$comments->author.'">';
     ?>
       <div class="comment-header">
         <div class="comment-name">
@@ -63,20 +63,20 @@ $email = $comments->mail;
     <div id="<?php $this->respondId(); ?>" class="respond flex-grow-1 w-100">
       <form method="post" action="<?php $this->commentUrl()?>" id="comment-form" role="form">
         <?php if ($this->user->hasLogin()): // ===> 已登录用户 ?>
-        <div class="mb-3"><?php _e('当前用户: '); ?><a
-            href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a>.
-          <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('退出'); ?> &raquo;</a>
-        </div>
-        <?php else: // ===> 未登录用户 ?>
-        <ul class="row comment-form-info">
-          <li class="col-12 col-md-4 col-xl-4 mb-2">
-            <input type="text" name="author" id="author" class="form-control" placeholder="昵称"
-              value="<?php $this->remember('author'); ?>" required />
-          </li>
-          <li class="col-12 col-md-4 col-xl-4 mb-2">
-            <input type="email" name="mail" id="mail" class="form-control" placeholder="Email"
-              value="<?php $this->remember('mail'); ?>" <?php if ($this->options->commentsRequireMail): ?>
-              required<?php endif; ?> />
+	        <div class="mb-3"><?php _e('当前用户: '); ?><a
+	            href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a>.
+	          <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('退出'); ?> &raquo;</a>
+	        </div>
+	        <?php else: // ===> 未登录用户 ?>
+	        <ul class="row comment-form-info">
+	          <li class="col-12 col-md-4 col-xl-4 mb-2">
+	            <input type="text" name="author" id="author" class="form-control" placeholder="昵称"
+	              value="<?php $this->remember('author'); ?>" required />
+	          </li>
+	          <li class="col-12 col-md-4 col-xl-4 mb-2">
+	            <input type="email" name="mail" id="mail" class="form-control" placeholder="Email"
+	              value="<?php $this->remember('mail'); ?>" <?php if ($this->options->commentsRequireMail): ?>
+	              required<?php endif; ?> />
           </li>
           <li class="col-12 col-md-4 col-xl-4 mb-2">
             <input type="url" name="url" id="url" class="form-control" placeholder="http(s)://"
@@ -109,12 +109,12 @@ $email = $comments->mail;
     <h4>评论已关闭</h4>
     <?php endif; ?>
     <?php if ($comments->have()): // ===>评论列表 ?>
-    <p><?php $this->commentsNum(_t('暂无评论'), _t('仅有一条评论'), _t('全部 %d 条评论')); ?></p>
-    <?php $comments->listComments(); ?>
-    <div class="comment-pagination">
-      <?php $comments->pageNav('<', '>', '2', '...', array('wrapClass' => 'd-flex justify-content-center mt-3')); ?>
-    </div>
-    <?php else: ?>
+	    <p><?php $this->commentsNum(_t('暂无评论'), _t('仅有一条评论'), _t('全部 %d 条评论')); ?></p>
+	    <?php $comments->listComments(); ?>
+	    <div class="comment-pagination">
+	      <?php $comments->pageNav('<', '>', '2', '...', array('wrapClass' => 'd-flex justify-content-center mt-3')); ?>
+	    </div>
+	    <?php else: ?>
     <div class="no-comments d-flex flex-column align-items-center">
       <svg viewBox="0 0 1462 1024" height="7rem">
         <path d="M673.192229 403.426743v241.7664l300.163657 129.316571V485.902629l-300.163657-82.475886z"

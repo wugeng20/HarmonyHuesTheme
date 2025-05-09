@@ -11,9 +11,13 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
 }
 ?>
 <?php
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+
 /* 邮件通知插件优化版 */
-require_once 'phpmailer.php';
-require_once 'smtp.php';
+require 'PHPMailer/PHPMailer.php';
+require 'PHPMailer/SMTP.php';
+require 'PHPMailer/Exception.php';
 
 $options = Helper::options();
 
@@ -52,23 +56,28 @@ class Email {
     }
 
     private static function initMailer() {
-        $options = Helper::options();
-        $mail = new PHPMailer(true); // 启用异常
+        try {
+            $options = Helper::options();
+            $mail = new PHPMailer(false); // 启用异常
 
-        // SMTP配置
-        $mail->isSMTP();
-        $mail->SMTPAuth = true;
-        $mail->CharSet = 'UTF-8';
-        $mail->SMTPSecure = $options->commentSMTPSecure;
-        $mail->Host = $options->commentMailHost;
-        $mail->Port = $options->commentMailPort;
-        $mail->FromName = $options->commentMailFromName;
-        $mail->Username = $options->commentMailAccount;
-        $mail->From = $options->commentMailAccount;
-        $mail->Password = $options->commentMailPassword;
-        $mail->isHTML(true);
+            // SMTP配置
+            $mail->isSMTP();
+            $mail->SMTPAuth = true;
+            $mail->CharSet = 'UTF-8';
+            $mail->SMTPSecure = $options->commentSMTPSecure;
+            $mail->Host = $options->commentMailHost;
+            $mail->Port = $options->commentMailPort;
+            $mail->FromName = $options->commentMailFromName;
+            $mail->Username = $options->commentMailAccount;
+            $mail->From = $options->commentMailAccount;
+            $mail->Password = $options->commentMailPassword;
+            $mail->isHTML(true);
 
-        return $mail;
+            return $mail;
+        } catch (Exception $e) {
+            $str = "\nerror time: ".date('Y-m-d H:i:s')."\n";
+            echo $str.$e."\n";
+        }
     }
 
     private static function processCommentText($content) {

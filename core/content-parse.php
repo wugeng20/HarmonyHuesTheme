@@ -80,7 +80,7 @@ function ContentVideo($content) {
             $posterSrc = getAssets('assets/images/thumb/'.rand(1, 20).'.webp', false);
         }
 
-        return '<video class="video-content" src="'.$videoSrc.'" poster="'.$posterSrc.'" controls></video>';
+        return '<video class="video-content" src="'.$videoSrc.'" poster="'.$posterSrc.'" title="视频" controls></video>';
     }, $content);
 
     return $content;
@@ -98,9 +98,9 @@ function extractToLinks($content) {
             $favicon = @strip_tags($matches[3]);
 
             $tohtml .= '<a data-links href="'.$url.'" class="d-flex align-items-center p-2 to-links-item short-code-card"
-    target="_blank">';
+    target="_blank" title="'.($name ?: ' 短代码链接').'">';
             if ( ! empty($favicon)) {
-                $tohtml .= '<img src="'.getLazyload(false).'" data-original="'.$favicon.'" class="lazy" title="'.$name.'" />';
+                $tohtml .= '<img src="'.getLazyload(false).'" data-original="'.$favicon.'" class="lazy" alt="'.$name.'" />';
             }
             $tohtml .= '<div class="to-links-text">';
             $tohtml .= '<span>'.$name.'</span>';

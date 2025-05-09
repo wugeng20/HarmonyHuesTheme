@@ -35,11 +35,12 @@ function parseCommentContens($content) {
             data-original="<?php echo getGravatar($item->mail); ?>" alt="<?php $item->author(false)?>">
         </div>
         <div class="comment-name ml-2">
-          <a href="<?php $item->url()?>"><?php $item->author(false)?></a>：
+          <a href="<?php $item->url()?>" title="<?php $item->author(false)?>"><?php $item->author(false)?></a>：
         </div>
       </div>
       <div class="comment-content mt-1 p-2">
-        <a href="<?php echo $item->permalink; ?>"><?php echo parseCommentContens($item->content); ?></a>
+        <a href="<?php echo $item->permalink; ?>"
+          title="<?php echo $item->title.'评论' ?>"><?php echo parseCommentContens($item->content); ?></a>
       </div>
     </div>
     <?php endwhile; ?>

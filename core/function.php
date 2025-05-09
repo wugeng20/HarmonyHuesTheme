@@ -312,9 +312,9 @@ function getCommentAt($coid, $type = 'html') {
                 ->where('coid = ? AND status = ?', $parent, 'approved')
         );
         if ($type == 'html') {
-            echo '<span class="repy-to-author mr-1"><a href="'.$arow['url'].'">@'.$arow['author'].'</a>: </span>';
+            echo '<span class="repy-to-author mr-1"><a href="'.$arow['url'].'" title="'.$arow['author'].'">@'.$arow['author'].'</a>: </span>';
         } elseif ($type == 'a') {
-            echo '<a href="'.$arow['url'].'">'.$arow['author'].'</a>';
+            echo '<a href="'.$arow['url'].'" title="'.$arow['author'].'">'.$arow['author'].'</a>';
         }
     }
 }
@@ -375,7 +375,8 @@ function CommentAuthor($obj, $autoLink = NULL, $noFollow = NULL) {
     $noFollow = $noFollow ? $noFollow : $options->commentsUrlNofollow;
     if ($obj->url && $autoLink) {
         echo '<a href="'.$obj->url.'"'.($noFollow ? '
-  rel="external nofollow"' : NULL).(strstr($obj->url, $options->index) == $obj->url ? NULL : ' target="_blank"').'>'
+  rel="external nofollow"' : NULL).(strstr($obj->url, $options->index) == $obj->url ? NULL : ' target="_blank"').'
+  title="'.$obj->author.'">'
         .$obj->author.'</a>';
     } else {
         echo $obj->author;

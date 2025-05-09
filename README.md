@@ -6,11 +6,11 @@
 
 Typecho 主题-《HarmonyHues - 和谐色调》
 
-- HarmonyHues的设计灵感源自自然界中的和谐之美
+- HarmonyHues主题的设计灵感源自自然界中的和谐之美
 - 这是一款类拟态风格的主题，为什么这样命名？（因为当时让GPT起几个简洁的主题名称，百度翻译一下-和谐色调，然后就选这个，后面才发现，来不及改了...）
 - 开发主题是为了简洁一点、自己开发能够更好的文章阅读和分享知识！（可以话来点 Star 支持一下）
 
-主题预览链接：[BIIBII.CN](https://www.biibii.cn)
+主题预览链接：[BIIBII.CN](https://www.biibii.cn/)
 
 ## 功能
 
@@ -37,9 +37,10 @@ Typecho 主题-《HarmonyHues - 和谐色调》
 
 ## 联系
 
-- 主题作者：[星语（G.E.N.G）](https://www.biibii.cn)
-- 主题官网：[BIIBII.CN](https://www.biibii.cn)
+- 作者：[星语（G.E.N.G）](https://www.biibii.cn/about.html)
+- 官网：[BIIBII.CN](https://www.biibii.cn/)
 - 邮箱：[1431258805@qq.com](mailto:1431258805@qq.com)
+- 主题BUG反馈：[点击这里](https://www.biibii.cn/bugfeedback.html)
 
 ## 捐款
 
