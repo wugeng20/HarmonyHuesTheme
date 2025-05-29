@@ -15,6 +15,12 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
 //后台编辑器添加功能
 function themeFields($layout) {
 
+    $showSidebar = new Typecho_Widget_Helper_Form_Element_Radio('showSidebar',
+        array('0' => _t('单栏'),
+            '1' => _t('双栏')),
+        '1', _t('侧边栏显示'), _t('选择当前文章页是否显示侧边栏，默认显示侧边栏，也推荐显示'));
+    $layout->addItem($showSidebar);
+
     $keywords = new Typecho_Widget_Helper_Form_Element_Text(
         'keywords',
         NULL,

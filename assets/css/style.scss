@@ -104,7 +104,7 @@
   /* 45度渐变 */
   --gradient-45deg: linear-gradient(45deg, var(--bg-color-body), #f8f8f8);
   /* 工具背景渐变 */
-  --widget-bg-gradient: linear-gradient(-45deg, var(--bg-color-main), #f4f9ff);
+  --widget-bg-gradient: linear-gradient(-45deg, var(--bg-color-main), #f3f5f8);
   /* 主边框 */
   --border-solid-main: 2px solid var(--bg-color-main);
   /* 小边框 */
@@ -1234,11 +1234,12 @@ main>.container {
   gap: $gap-size;
 
   a {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--font-color-main-transparent);
     padding: 0.25rem 0.5rem;
-    border-radius: var(--border-radius-medium);
+    border-radius: var(--border-radius-large);
     border: var(--border-solid-main);
+    background-color: var(--bg-color-secondary);
   }
 
   a:hover {
@@ -1248,9 +1249,21 @@ main>.container {
   .post-tags {
     gap: $gap-size;
 
+    a {
+      padding: 0.15rem 0.5rem 0.15rem 0.15rem;
+    }
+
     a::before {
       content: '#';
+      display: inline-flex;
       margin-right: 0.25rem;
+      background-color: var(--bg-color-main);
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      font-weight: 700;
+      justify-content: center;
+      border-radius: var(--border-radius-large);
     }
   }
 }
@@ -1689,12 +1702,18 @@ main>.container {
     position: relative;
   }
 
+  .search-name {
+    h5 {
+      font-weight: 700;
+    }
+  }
+
   .form-control {
     position: relative;
     width: 100%;
     height: 100%;
     padding: 0.6rem 2rem 0.6rem 1rem;
-    font-size: 1.15rem;
+    font-size: 1rem;
     border-radius: var(--border-radius-medium);
   }
 

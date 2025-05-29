@@ -449,9 +449,10 @@ function getCustomMenu($currentUrl = '') {
             }
         }
 
-        $navhtml .= '<li class="nav-item">';
+        $navhtml .= '<li class="nav-item '.($item['class'] ?? '').'">';
         $navhtml .= '<a class="nav-a '.($isActive ? 'active' : '').'" href="'.$item['link'].'" target="'.$item['target'].'"
-    title="'.$item['name'].'">'.$item['name'].(isset($item['sub']) ? '<i class="iconfont nav-icon icon-xiala"></i>' :
+    title="'.$item['name'].'">'.$item['name'].(isset($item['sub'])
+                ? '<i class="iconfont nav-icon icon-xiala"></i>' :
             '').'</a>';
 
         if (isset($item['sub']) && is_array($item['sub'])) {
@@ -459,8 +460,9 @@ function getCustomMenu($currentUrl = '') {
     <ul>';
             foreach ($item['sub'] as $subItem) {
                 $subIsActive = isSamePath($currentUrl, $subItem['link']);
-                $navhtml .= '<li class="'.($subIsActive ? 'active' : '').'"><a href="'.$subItem['link'].'"
-          target="'.$subItem['target'].'" title="'.$subItem['name'].'">'.$subItem['name'].'</a></li>';
+                $navhtml .= '<li class="'.($subIsActive ? 'active' : '').' '.($subItem['class'] ?? '').'"><a
+          href="'.$subItem['link'].'" target="'.$subItem['target'].'"
+          title="'.$subItem['name'].'">'.$subItem['name'].'</a></li>';
             }
             $navhtml .= '</ul>
   </div>';

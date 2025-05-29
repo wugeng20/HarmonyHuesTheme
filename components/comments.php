@@ -56,10 +56,10 @@ $email = $comments->mail;
 }
 
 ?>
+<?php $this->comments()->to($comments); ?>
+<?php if ($this->allow('comment')): ?>
 <div class="card my-2 p-2 p-md-3 my-md-3">
   <div id="comments">
-    <?php $this->comments()->to($comments); ?>
-    <?php if ($this->allow('comment')): ?>
     <div id="<?php $this->respondId(); ?>" class="respond flex-grow-1 w-100">
       <form method="post" action="<?php $this->commentUrl()?>" id="comment-form" role="form">
         <?php if ($this->user->hasLogin()): // ===> 已登录用户 ?>
@@ -105,9 +105,7 @@ $email = $comments->mail;
         </div>
       </form>
     </div>
-    <?php else: ?>
-    <h4>评论已关闭</h4>
-    <?php endif; ?>
+    <!-- 评论列表主体st -->
     <?php if ($comments->have()): // ===>评论列表 ?>
 	    <p><?php $this->commentsNum(_t('暂无评论'), _t('仅有一条评论'), _t('全部 %d 条评论')); ?></p>
 	    <?php $comments->listComments(); ?>
@@ -159,5 +157,9 @@ $email = $comments->mail;
       <p style="color: var(--main-muted-color1);">暂无评论</p>
     </div>
     <?php endif; ?>
+    <!-- 评论列表主体end -->
   </div>
 </div>
+<?php else: ?>
+<div class="mb-3"></div>
+<?php endif; ?>

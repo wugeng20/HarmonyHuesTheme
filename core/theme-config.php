@@ -27,7 +27,7 @@ function themeConfig($form) {
     $favicon = new Typecho_Widget_Helper_Form_Element_Text(
         'favicon',
         NULL,
-        '/usr/themes/HarmonyHues/assets/images/favicon.ico',
+        '/usr/themes/HarmonyHues/assets/images/favicon.webp',
         'favicon地址（必填）',
         '介绍：一般为http://www.yourblog.com/image.png,支持 https:// 或 //,留空则不设置favicon'
     );
@@ -216,6 +216,7 @@ function themeConfig($form) {
             'ShowSidebarYiyan' => '一言',
             'ShowSidebarComments' => '最新评论',
             'ShowHotPosts' => '热门文章',
+            'ShowDevilEyes' => '恶魔之眼',
         ),
         array('ShowAboutMe', 'ShowSidebarYiyan', 'ShowHotPosts'),
         '侧边栏显示（非必填）',

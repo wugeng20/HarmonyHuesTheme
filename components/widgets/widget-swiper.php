@@ -90,9 +90,9 @@ $swiperText = $this->options->swiperText;
     <div class="swiper-pagination d-flex align-items-center mx-1"></div>
     <div class="d-flex justify-content-center align-items-center m-2 swiper-button-wrapper">
       <div class="swiper-button-prev d-flex justify-content-center align-items-center" title="上一张"><i
-          class="iconfont icon-shangyizhang"></i></div>
+          class="iconfont icon-shangyizhang p-1"></i></div>
       <div class="swiper-button-next d-flex justify-content-center align-items-center" title="下一张"><i
-          class="iconfont icon-xiayizhang"></i></div>
+          class="iconfont icon-xiayizhang p-1"></i></div>
     </div>
   </div>
 </div>

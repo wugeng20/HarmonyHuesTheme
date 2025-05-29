@@ -22,10 +22,9 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
   <?php endif; ?>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
   <?php if ($this->is('single')): ?>
-  <meta name="keywords"
-    content="<?php echo $this->fields->keywords ? $this->fields->keywords : htmlspecialchars($this->_keywords); ?>" />
+  <meta name="keywords" content="<?php echo $this->fields->keywords ?: htmlspecialchars($this->_keywords); ?>" />
   <meta name="description"
-    content="<?php echo $this->fields->description ? $this->fields->description : htmlspecialchars($this->_description); ?>" />
+    content="<?php echo $this->fields->description ?: htmlspecialchars($this->_description); ?>" />
   <?php $this->header('keywords=&description='); ?>
   <?php else: ?>
   <?php $this->header(); ?>
