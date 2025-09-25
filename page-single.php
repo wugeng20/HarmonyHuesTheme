@@ -1,17 +1,19 @@
 <?php
+
 /**
  * 单栏页面
+ * 
  * @author  星语社长
- * @link  https://biibii.cn
+ * @link    https://biibii.cn
  * @update  2025-5-25 17:57:11
  * @package custom
  */
-?>
-<?php if ( ! defined('__TYPECHO_ROOT_DIR__')) {
-    exit;
+if (!defined('__TYPECHO_ROOT_DIR__')) {
+  exit;
 }
+
+$this->need('components/header.php');
 ?>
-<?php $this->need('components/header.php'); ?>
 
 <!--主体st-->
 <main>

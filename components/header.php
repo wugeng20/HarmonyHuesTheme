@@ -1,11 +1,12 @@
 <?php
+
 /**
  * 顶部head主体内容
  *
  * @author  星语社长
  * @link  https://biibii.cn
  * @update  2024-7-6 18:00:04
- * --------------------------------- */
+ */
 if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
@@ -65,7 +66,7 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     media="all">
   <?php if ($this->is('post') || $this->is('page')): ?>
   <!-- Md样式 -->
-  <link rel="stylesheet" href="<?php getAssets('assets/css/markdow-style.min.css'); ?>" type="text/css" media="all">
+  <link rel="stylesheet" href="<?php getAssets('assets/css/markdown-style.min.css'); ?>" type="text/css" media="all">
   <!--代码高亮-->
   <link rel="stylesheet" href="<?php getAssets('assets/lib/prism/prism-one-dark.min.css'); ?>" type="text/css"
     media="all">

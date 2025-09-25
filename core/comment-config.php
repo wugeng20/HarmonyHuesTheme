@@ -1,19 +1,21 @@
 <?php
-/* ------------------------------------
+
+/**
  * Harmony Hues主题
  *
  * @author  星语社长
  * @link  https://biibii.cn
  * @update  2024-7-6 18:00:04
- * --------------------------------- */
-if ( ! defined('__TYPECHO_ROOT_DIR__')) {
+ */
+if (! defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 ?>
 <?php
 
 /* 判断是否是手机 */
-function isMobile() {
+function isMobile()
+{
     if (isset($_SERVER['HTTP_X_WAP_PROFILE'])) {
         return true;
     }
@@ -23,10 +25,9 @@ function isMobile() {
     }
     if (isset($_SERVER['HTTP_USER_AGENT'])) {
         $clientkeywords = array('nokia', 'sony', 'ericsson', 'mot', 'samsung', 'htc', 'sgh', 'lg', 'sharp', 'sie-', 'philips', 'panasonic', 'alcatel', 'lenovo', 'iphone', 'ipod', 'blackberry', 'meizu', 'android', 'netfront', 'symbian', 'ucweb', 'windowsce', 'palm', 'operamini', 'operamobi', 'openwave', 'nexusone', 'cldc', 'midp', 'wap', 'mobile');
-        if (preg_match('/('.implode('|', $clientkeywords).')/i', strtolower($_SERVER['HTTP_USER_AGENT']))) {
+        if (preg_match('/(' . implode('|', $clientkeywords) . ')/i', strtolower($_SERVER['HTTP_USER_AGENT']))) {
             return true;
         }
-
     }
     if (isset($_SERVER['HTTP_ACCEPT'])) {
         if ((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false || (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html')))) {
@@ -37,18 +38,19 @@ function isMobile() {
 }
 
 /** 获取浏览器信息 */
-function getBrowser($agent) {
+function getBrowser($agent)
+{
     $outputer = false;
     if (preg_match('/MSIE\s([^\s|;]+)/i', $agent, $regs)) {
         $outputer = 'IE';
     } elseif (preg_match('/FireFox\/([^\s]+)/i', $agent, $regs)) {
         $str1 = explode('Firefox/', $regs[0]);
         $FireFox_vern = explode('.', $str1[1]);
-        $outputer = '火狐'.$FireFox_vern[0];
+        $outputer = '火狐' . $FireFox_vern[0];
     } elseif (preg_match('/Maxthon([\d]*)\/([^\s]+)/i', $agent, $regs)) {
         $str1 = explode('Maxthon/', $agent);
         $Maxthon_vern = explode('.', $str1[1]);
-        $outputer = '傲游'.$Maxthon_vern[0];
+        $outputer = '傲游' . $Maxthon_vern[0];
     } elseif (preg_match('#SE 2([a-zA-Z0-9.]+)#i', $agent, $regs)) {
         $outputer = '搜狗';
     } elseif (preg_match('#360([a-zA-Z0-9.]+)#i', $agent, $regs)) {
@@ -56,18 +58,18 @@ function getBrowser($agent) {
     } elseif (preg_match('/Edge([\d]*)\/([^\s]+)/i', $agent, $regs)) {
         $str1 = explode('Edge/', $regs[0]);
         $Edge_vern = explode('.', $str1[1]);
-        $outputer = 'Edge'.$Edge_vern[0];
+        $outputer = 'Edge' . $Edge_vern[0];
     } elseif (preg_match('/EdgiOS([\d]*)\/([^\s]+)/i', $agent, $regs)) {
         $str1 = explode('EdgiOS/', $regs[0]);
         $outputer = 'Edge';
     } elseif (preg_match('/UC/i', $agent)) {
         $str1 = explode('rowser/', $agent);
         $UCBrowser_vern = explode('.', $str1[1]);
-        $outputer = 'UC'.$UCBrowser_vern[0];
+        $outputer = 'UC' . $UCBrowser_vern[0];
     } elseif (preg_match('/OPR/i', $agent)) {
         $str1 = explode('OPR/', $agent);
         $opr_vern = explode('.', $str1[1]);
-        $outputer = '欧朋 '.$opr_vern[0];
+        $outputer = '欧朋 ' . $opr_vern[0];
     } elseif (preg_match('/MicroMesseng/i', $agent, $regs)) {
         $outputer = '微信';
     } elseif (preg_match('/WeiBo/i', $agent, $regs)) {
@@ -75,11 +77,11 @@ function getBrowser($agent) {
     } elseif (preg_match('/QQ/i', $agent, $regs) || preg_match('/QQBrowser\/([^\s]+)/i', $agent, $regs)) {
         $str1 = explode('rowser/', $agent);
         $QQ_vern = explode('.', $str1[1]);
-        $outputer = 'QQ '.$QQ_vern[0];
+        $outputer = 'QQ ' . $QQ_vern[0];
     } elseif (preg_match('/MQBHD/i', $agent, $regs)) {
         $str1 = explode('MQBHD/', $agent);
         $QQ_vern = explode('.', $str1[1]);
-        $outputer = 'QQ '.$QQ_vern[0];
+        $outputer = 'QQ ' . $QQ_vern[0];
     } elseif (preg_match('/BIDU/i', $agent, $regs)) {
         $outputer = '百度';
     } elseif (preg_match('/LBBROWSER/i', $agent, $regs)) {
@@ -91,7 +93,7 @@ function getBrowser($agent) {
     } elseif (preg_match('/UBrowser/i', $agent, $regs)) {
         $str1 = explode('rowser/', $agent);
         $UCBrowser_vern = explode('.', $str1[1]);
-        $outputer = 'UC'.$UCBrowser_vern[0];
+        $outputer = 'UC' . $UCBrowser_vern[0];
     } elseif (preg_match('/mailapp/i', $agent, $regs)) {
         $outputer = 'email';
     } elseif (preg_match('/2345Explorer/i', $agent, $regs)) {
@@ -119,11 +121,11 @@ function getBrowser($agent) {
     } elseif (preg_match('/Chrome([\d]*)\/([^\s]+)/i', $agent, $regs)) {
         $str1 = explode('Chrome/', $agent);
         $chrome_vern = explode('.', $str1[1]);
-        $outputer = 'Chrome'.$chrome_vern[0];
+        $outputer = 'Chrome' . $chrome_vern[0];
     } elseif (preg_match('/safari\/([^\s]+)/i', $agent, $regs)) {
         $str1 = explode('Version/', $agent);
         $safari_vern = @explode('.', $str1[1]);
-        $outputer = 'Safari'.$safari_vern[0];
+        $outputer = 'Safari' . $safari_vern[0];
     } else {
         return false;
     }
@@ -131,7 +133,8 @@ function getBrowser($agent) {
 }
 
 /** 获取操作系统信息 */
-function getOs($agent) {
+function getOs($agent)
+{
     $os = false;
     if (preg_match('/win/i', $agent)) {
         if (preg_match('/nt 6.0/i', $agent)) {
@@ -183,8 +186,10 @@ function getOs($agent) {
 
 /* 加强评论拦截功能 */
 Typecho_Plugin::factory('Widget_Feedback')->comment = array('Intercept', 'message');
-class Intercept {
-    public static function message($comment) {
+class Intercept
+{
+    public static function message($comment)
+    {
         // 判断用户输入是否大于字符
         if (Helper::options()->TextLimit && strlen($comment['text']) > Helper::options()->TextLimit) {
             $comment['status'] = 'waiting';

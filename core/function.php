@@ -1,11 +1,12 @@
 <?php
-/* ------------------------------------
+
+/**
  * Harmony Hues主题
  *
  * @author  星语社长
  * @link  https://biibii.cn
  * @update  2024-7-6 18:00:04
- * --------------------------------- */
+ */
 if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
@@ -25,18 +26,14 @@ function getVersion() {
 };
 
 /* 获取资源路径 */
-function getAssets($assets, $type = true) {
-    $assetsURL = '';
-    // 是否本地化资源
-    if (Helper::options()->AssetsURL) {
-        $assetsURL = Helper::options()->AssetsURL.'/'.$assets;
+function getAssets($assetPath, $echo = true) {
+    $options = Helper::options();
+    $baseUrl = $options->AssetsURL ? $options->AssetsURL : $options->themeUrl;
+    $fullUrl = rtrim($baseUrl, '/').'/'.ltrim($assetPath, '/');
+    if ($echo) {
+        echo $fullUrl;
     } else {
-        $assetsURL = Helper::options()->themeUrl.'/'.$assets;
-    }
-    if ($type) {
-        echo $assetsURL;
-    } else {
-        return $assetsURL;
+        return $fullUrl;
     }
 }
 
@@ -69,7 +66,8 @@ function themeInit($self) {
 
     // 随机一篇文章
     if ($self->request->isGet() && $self->request->get('random')) {
-        header('Location: '.randomPost('return'));exit;
+        header('Location: '.randomPost('return'));
+        exit;
     }
 
     // 添加文章锚点功能
@@ -171,9 +169,17 @@ function randomPost($type = 'echo') {
     if ($result) {
         $f = Helper::widgetById('Contents', $result['cid']);
         $permalink = $f->permalink;
-        if ($type == 'return') {return $permalink;} else {echo $permalink;}
+        if ($type == 'return') {
+            return $permalink;
+        } else {
+            echo $permalink;
+        }
     } else {
-        if ($type == 'return') {return false;} else {echo '没有文章可随机';}
+        if ($type == 'return') {
+            return false;
+        } else {
+            echo '没有文章可随机';
+        }
     }
 }
 
@@ -249,7 +255,6 @@ function getLazyload($type = true) {
     } else {
         return $Lazyload;
     }
-
 }
 
 /* 获取头像懒加载图 */
@@ -260,7 +265,6 @@ function getAvatarLazyload($type = true) {
     } else {
         return $avatarBase64;
     }
-
 }
 
 /* 获取随机图 */
@@ -456,13 +460,13 @@ function getCustomMenu($currentUrl = '') {
             '').'</a>';
 
         if (isset($item['sub']) && is_array($item['sub'])) {
-            $navhtml .= '<div class="sub-menu">
-    <ul>';
+            $navhtml .= '<div class="pt-md-4 sub-menu">';
+            $navhtml .= '<ul class="d-md-flex flex-md-wrap p-md-2">';
             foreach ($item['sub'] as $subItem) {
                 $subIsActive = isSamePath($currentUrl, $subItem['link']);
-                $navhtml .= '<li class="'.($subIsActive ? 'active' : '').' '.($subItem['class'] ?? '').'"><a
-          href="'.$subItem['link'].'" target="'.$subItem['target'].'"
-          title="'.$subItem['name'].'">'.$subItem['name'].'</a></li>';
+                $navhtml .= '<li class="p-2 '.($subIsActive ? 'active' : '').' '.($subItem['class'] ?? '').'"><a
+          href="'.$subItem['link'].'" target="'.$subItem['target'].'" title="'.$subItem['name'].'">'.
+                    $subItem['name'].'</a></li>';
             }
             $navhtml .= '</ul>
   </div>';
@@ -514,50 +518,36 @@ function getCatalog() {
         return '暂无目录';
     }
 
-    $str = '<ul class="atoc-list">'."\n";
+    $str = '<ul class="atoc-list">';
     $prev_depth = '';
     $to_depth = 0;
     foreach ($catalog as $catalog_item) {
         $catalog_depth = $catalog_item['depth'];
         if ($prev_depth) {
             if ($catalog_depth == $prev_depth) {
-                $str .= '</li>'."\n";
+                $str .= '</li>';
             } elseif ($catalog_depth > $prev_depth) {
                 $to_depth++;
-                $str .= '<ul class="sub-list ml-2">'."\n";
+                $str .= '<ul class="sub-list ml-2">';
             } else {
                 $to_depth2 = ($to_depth > ($prev_depth - $catalog_depth)) ? ($prev_depth - $catalog_depth) : $to_depth;
                 if ($to_depth2) {
-                    for ($i = 0; $i < $to_depth2; $i++) {$str .= '</li>'."\n".'</ul>'."\n";
+                    for ($i = 0; $i < $to_depth2; $i++) {$str .= '</li></ul>';
                         $to_depth--;}
                 }
                 $str .= '</li>';
             }
         }
-        $str .= '<li class="atoc-item"><a class="atoc-link" href="#cl-'.$catalog_item['count'].'"
-            data-target="cl-'.$catalog_item['count'].'"
-            title="'.$catalog_item['text'].'">'.$catalog_item['text'].'</a>';
+        $str
+        .= '<li class="atoc-item"><a class="atoc-link" href="#cl-'.$catalog_item['count'].'"
+        data-target="cl-'.$catalog_item['count'].'" title="'.$catalog_item['text'].'">'.$catalog_item['text'].'</a>';
         $prev_depth = $catalog_item['depth'];
     }
-    for ($i = 0; $i <= $to_depth; $i++) {$str .= '</li>'."\n".'</ul>'."\n"
-        ;}
-    $str = '<section class="toc">'."\n"."\n".$str.'</section>'."\n";
-
+    for ($i = 0; $i <= $to_depth; $i++) {$str .= '</li></ul>';}
     return $str;
 }
-
-/* 判断评论敏感词是否在字符串内 */
-function checkSensitiveWords($words_str, $str) {
-    $words = explode('|', $words_str);
-    if (empty($words)) {
-        return false;
-    }
-    foreach ($words as $word) {
-        if (false !== strpos($str, trim($word))) {
-            return true;
-        }
-    }
-    return false;
-}
-
+ /* 判断评论敏感词是否在字符串内 */function
+checkSensitiveWords($words_str, $str) {$words = explode('|', $words_str);if (empty($words)) {return false;}
+    foreach ($words as $word) {if (false !== strpos($str, trim($word))) {return true;}}
+    return false;}
 ?>

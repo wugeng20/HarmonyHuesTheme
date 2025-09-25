@@ -1,11 +1,12 @@
 <?php
-/* ------------------------------------
+
+/**
  * Harmony Hues主题
  *
  * @author  星语社长
- * @link  https://biibii.cn
+ * @link    https://biibii.cn
  * @update  2024-7-6 18:00:04
- * --------------------------------- */
+ */
 if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
@@ -22,7 +23,7 @@ function themeConfig($form) {
 <div class="harmonyhues-config card mt-2 mb-4 p-2">
   <?php
 
-//---------------------------- 基础设置 ----------------------------//
+    //---------------------------- 基础设置 ----------------------------//
     // 网站favicon图标
     $favicon = new Typecho_Widget_Helper_Form_Element_Text(
         'favicon',
@@ -216,6 +217,7 @@ function themeConfig($form) {
             'ShowSidebarYiyan' => '一言',
             'ShowSidebarComments' => '最新评论',
             'ShowHotPosts' => '热门文章',
+            'ShowBlogSignage' => '博客路牌',
             'ShowDevilEyes' => '恶魔之眼',
         ),
         array('ShowAboutMe', 'ShowSidebarYiyan', 'ShowHotPosts'),
@@ -224,6 +226,17 @@ function themeConfig($form) {
     );
     $form->addInput($sidebarBlock->multiMode());
     $sidebarBlock->setAttribute('class', 'setting-content my-3');
+
+    // 侧边栏-博客路牌
+    $blogSignageText = new Typecho_Widget_Helper_Form_Element_Text(
+        'blogSignageText',
+        NULL,
+        '我在贵州很想你',
+        '侧边栏-博客路牌（非必填）',
+        '介绍：在这里填入你的博客路牌内容,例如：我在贵州很想你'
+    );
+    $form->addInput($blogSignageText);
+    $blogSignageText->setAttribute('class', 'setting-content my-3');
 
     // 首页内容显示
     $indexBlock = new Typecho_Widget_Helper_Form_Element_Checkbox(
@@ -242,34 +255,34 @@ function themeConfig($form) {
     $form->addInput($indexBlock->multiMode());
     $indexBlock->setAttribute('class', 'setting-content my-3');
 
-    // Hello文字
-    $helloText = new Typecho_Widget_Helper_Form_Element_Text(
-        'helloText',
-        NULL,
-        'Welcome to BIIBII.CN',
-        'Hello内容（非必填）',
-        '介绍：在这里填入你的Hello内容,例如：Welcome to BIIBII.CN'
-    );
-    $form->addInput($helloText);
-    $helloText->setAttribute('class', 'setting-content my-3');
-
-    // 轮播幻灯片
+    // 首页顶部-轮播幻灯片
     $swiperText = new Typecho_Widget_Helper_Form_Element_Textarea(
         'swiperText',
         NULL,
         'HarmonyHues主题|欢迎使用HarmonyHues主题|2月29日 今日标题|https://www.biibii.cn/usr/themes/HarmonyHues/assets/images/themeImg.webp|https://www.biibii.cn/harmonyhues.html',
-        '轮播幻灯片内容（非必填）',
+        '首页顶部-轮播幻灯片内容（非必填）',
         '介绍：在这里填入你的轮播幻灯片内容，格式：标题|描述|标签|图片URL或者MP4格式|链接URL（用|号隔开，内容没有的用NULL，内容一行一个，建议最多5个），例如：HarmonyHues主题|欢迎使用HarmonyHues主题|2月28日 今日标题|https://www.biibii.cn/usr/themes/HarmonyHues/assets/images/themeImg.webp|https://www.biibii.cn/harmonyhues.html'
     );
     $form->addInput($swiperText);
     $swiperText->setAttribute('class', 'setting-content my-3');
 
-    // 时间之旅内容
+    // 首页底部-Hello文字
+    $helloText = new Typecho_Widget_Helper_Form_Element_Text(
+        'helloText',
+        NULL,
+        'Welcome to BIIBII.CN',
+        '首页底部-Hello内容（非必填）',
+        '介绍：在这里填入你的Hello内容,例如：Welcome to BIIBII.CN'
+    );
+    $form->addInput($helloText);
+    $helloText->setAttribute('class', 'setting-content my-3');
+
+    // 首页底部-时间之旅内容
     $timeJourneyText = new Typecho_Widget_Helper_Form_Element_Text(
         'timeJourneyText',
         NULL,
         '2025-03-26|天|星际旅行|本站服务器燃料剩余{remainingPercentage}%',
-        '时间之旅内容（非必填）',
+        '首页底部-时间之旅内容（非必填）',
         '介绍：在这里填入你的时间之旅内容，格式：时间|单位|标题|{剩余百分比：remainingPercentage|已过去百分比：progressPercentage},例如：2025-03-26|天|星际旅行|本站服务器燃料剩余{remainingPercentage}%'
     );
     $form->addInput($timeJourneyText);

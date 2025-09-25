@@ -1,5 +1,22 @@
-.wmd-button-row { margin-bottom: 1rem; height: auto !important; }
+.wmd-button-row {
+  margin-bottom: 1rem;
+  height: auto !important;
+}
 
-.wmd-prompt-background { position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; opacity: 0.5; z-index: 1000; }
+.wmd-prompt-background {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  z-index: 1000;
+}
 
-.wmd-prompt-dialog textarea { width: 100%; }
+.wmd-prompt-dialog {
+  top: 20%;
+}
+
+.wmd-prompt-dialog textarea {
+  width: 100%;
+}

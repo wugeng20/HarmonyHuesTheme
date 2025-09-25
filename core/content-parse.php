@@ -1,12 +1,13 @@
 <?php
-/* ------------------------------------
+
+/**
  * Harmony Hues主题
  *
  * @author  星语社长
  * @link  https://biibii.cn
  * @update  2024-12-21 17:55:16
- * --------------------------------- */
-if ( ! defined('__TYPECHO_ROOT_DIR__')) {
+ */
+if (! defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 
@@ -15,7 +16,8 @@ use Utils\Helper;
 <?php
 
 // 添加文章标题锚点
-function createAnchor($obj) {
+function createAnchor($obj)
+{
     global $catalog;
     global $catalog_count;
     $catalog = array();
@@ -25,20 +27,22 @@ function createAnchor($obj) {
         global $catalog_count;
         $catalog_count++;
         $catalog[] = array('text' => trim(strip_tags($obj[3])), 'depth' => $obj[1], 'count' => $catalog_count);
-        return '<h'.$obj[1].$obj[2].' id="cl-'.$catalog_count.'">'.$obj[3].'</h'.$obj[1].'>';
+        return '<h' . $obj[1] . $obj[2] . ' id="cl-' . $catalog_count . '">' . $obj[3] . '</h' . $obj[1] . '>';
     }, $obj);
     return $obj;
 }
 
 // 灯箱
-function replaceImgSrc($content) {
+function replaceImgSrc($content)
+{
     $pattern = '/<img(.*?)src="(.*?)"(.*?)title="(.*?)"(.*?)>/i';
-    $replacement = '<img data-original="$2" $3title="$4"$5 src="'.getLazyload(false).'" show-img class="lazy" />';
+    $replacement = '<img data-original="$2" $3title="$4"$5 src="' . getLazyload(false) . '" show-img class="lazy" />';
     return preg_replace($pattern, $replacement, $content);
 }
 
 // 提示短代码
-function ContentHint($content) {
+function ContentHint($content)
+{
     $patterns = array(
         '/\[(success)\]\s*(.*?)\s*\[\s*\/\1\s*\]/s',
         '/\[(info)\]\s*(.*?)\s*\[\s*\/\1\s*\]/s',
@@ -47,10 +51,10 @@ function ContentHint($content) {
     );
 
     $replacements = array(
-        'success' => '<div class="hint-content hint-success p-2"><i class="iconfont p-2 icon-success"></i>%s</div>',
-        'info' => '<div class="hint-content hint-info p-2"><i class="iconfont p-2 icon-info"></i>%s</div>',
-        'warning' => '<div class="hint-content hint-warning p-2"><i class="iconfont p-2 icon-warning"></i>%s</div>',
-        'danger' => '<div class="hint-content hint-danger p-2"><i class="iconfont p-2 icon-danger"></i>%s</div>',
+        'success' => '<div class="hint-content hint-success p-2"><i class="iconfont icon-success"></i><div>%s</div></div>',
+        'info' => '<div class="hint-content hint-info p-2"><i class="iconfont icon-info"></i><div>%s</div></div>',
+        'warning' => '<div class="hint-content hint-warning p-2"><i class="iconfont icon-warning"></i><div>%s</div></div>',
+        'danger' => '<div class="hint-content hint-danger p-2"><i class="iconfont icon-danger"></i><div>%s</div></div>',
     );
 
     $callback = function ($matches) use ($replacements) {
@@ -69,7 +73,8 @@ function ContentHint($content) {
 }
 
 // 视频短代码
-function ContentVideo($content) {
+function ContentVideo($content)
+{
     $pattern = '/\[player\s+url="([^"]*)"(?:\s+pic="([^"]*)")?\s+\/\]/';
 
     $content = preg_replace_callback($pattern, function ($matches) {
@@ -77,17 +82,18 @@ function ContentVideo($content) {
         $posterSrc = @strip_tags($matches[2]); // 获取 pic 的值
 
         if (empty($posterSrc)) {
-            $posterSrc = getAssets('assets/images/thumb/'.rand(1, 20).'.webp', false);
+            $posterSrc = getAssets('assets/images/thumb/' . rand(1, 20) . '.webp', false);
         }
 
-        return '<video class="video-content" src="'.$videoSrc.'" poster="'.$posterSrc.'" title="视频" controls></video>';
+        return '<video class="video-content" src="' . $videoSrc . '" poster="' . $posterSrc . '" title="视频" controls></video>';
     }, $content);
 
     return $content;
 }
 
 // 链接短代码
-function extractToLinks($content) {
+function extractToLinks($content)
+{
     $pattern = '/\[tolink\s+title="([^"]*)"\s+url="([^"]*)"(?:\s+favicon="([^"]*)")?\s+\/\]/';
 
     $content = preg_replace_callback($pattern, function ($matches) {
@@ -97,14 +103,15 @@ function extractToLinks($content) {
             $url = @strip_tags($matches[2]);
             $favicon = @strip_tags($matches[3]);
 
-            $tohtml .= '<a data-links href="'.$url.'" class="d-flex align-items-center p-2 to-links-item short-code-card"
-    target="_blank" title="'.($name ?: ' 短代码链接').'">';
-            if ( ! empty($favicon)) {
-                $tohtml .= '<img src="'.getLazyload(false).'" data-original="'.$favicon.'" class="lazy" alt="'.$name.'" />';
+            $tohtml .= '<a data-links href="' . $url . '" class="d-flex align-items-center p-2 to-links-item short-code-card"
+    target="_blank" title="' . ($name ?: ' 短代码链接') . '">';
+            if (! empty($favicon)) {
+                $tohtml .= '<img src="' . getLazyload(false) . '" data-original="' . $favicon . '" class="lazy"
+      alt="' . $name . '" />';
             }
             $tohtml .= '<div class="to-links-text">';
-            $tohtml .= '<span>'.$name.'</span>';
-            $tohtml .= '<span class="to-links-url"><i class="iconfont icon-lianjie mr-1"></i>'.$url.'</span>';
+            $tohtml .= '<span>' . $name . '</span>';
+            $tohtml .= '<span class="to-links-url"><i class="iconfont icon-lianjie mr-1"></i>' . $url . '</span>';
             $tohtml .= '</div></a>';
         } else {
             $tohtml .= 'ToLinks短代码格式不正确，请检查名称、URL是否填写。';
@@ -119,13 +126,14 @@ function extractToLinks($content) {
 }
 
 // 过滤a标签链接
-function ContentLink($content) {
+function ContentLink($content)
+{
 
     if (empty(Helper::options()->isGoLink)) {
         return $content;
     }
 
-// 正则表达式匹配所有的<a>标签及其属性
+    // 正则表达式匹配所有的<a>标签及其属性
     $pattern = '/<a\s+([^>]*?)>/i';
 
     // 替换回调函数
@@ -135,7 +143,7 @@ function ContentLink($content) {
         // 检查是否包含需要排除的属性
         if (preg_match('/\b(data-fancybox|data-cloud|data-test2)\b/', $attributes)) {
             // 包含需要排除的属性，不处理
-            return '<a '.$attributes.'>';
+            return '<a ' . $attributes . '>';
         }
 
         // 获取href属性
@@ -146,7 +154,7 @@ function ContentLink($content) {
             $newHref = getGoLink($originalHref);
 
             // 替换href属性
-            $newAttributes = preg_replace('/\bhref=["\'][^"\']*["\']/i', 'href="'.$newHref.'"', $attributes);
+            $newAttributes = preg_replace('/\bhref=["\'][^"\']*["\']/i', 'href="' . $newHref . '"', $attributes);
 
             // 检查是否已存在rel或target属性
             if (strpos($attributes, 'rel=') === false) {
@@ -157,19 +165,19 @@ function ContentLink($content) {
                 $newAttributes .= ' target="_blank"';
             }
 
-            return '<a '.$newAttributes.'>';
+            return '<a ' . $newAttributes . '>';
         }
 
         // 没有href属性，保持不变
-        return '<a '.$attributes.'>';
-
+        return '<a ' . $attributes . '>';
     }, $content);
 
     return $content;
 }
 
 // 过滤网盘下载
-function ContentCloud($content) {
+function ContentCloud($content)
+{
     $pattern = '/\[cloud\s+type="([^"]*)"\s+title="([^"]*)"\s+url="([^"]*)"\s+password="([^"]*)"\s+\/\]/';
     $cloudList = array(
         'default' => '默认网盘',
@@ -193,17 +201,17 @@ function ContentCloud($content) {
         // 根据 type 获取网盘名称
         $name = isset($cloudList[$type]) ? $cloudList[$type] : '未知网盘';
         $password = $password ? $password : '无';
-        $icon = '<div data-svg="'.$type.'cloud" data-viewbox="0 0 1024 1024" data-class="cloud-icon"></div>';
+        $icon = '<div data-svg="' . $type . 'cloud" data-viewbox="0 0 1024 1024" data-class="cloud-icon"></div>';
 
         $cloudHtml = '<div class="cloud-download-box p-2 short-code-card d-flex align-items-center">';
-        $cloudHtml .= '<div class="cloud-download-icon">'.$icon.'</div>';
+        $cloudHtml .= '<div class="cloud-download-icon">' . $icon . '</div>';
         $cloudHtml .= '<div class="cloud-download-info">';
-        $cloudHtml .= '<div class="cloud-download-title"><a data-cloud href="'.$url.'" target="_blank"
-                  title="'.$title.'">'.$title.'</a></div>';
-        $cloudHtml .= '<div class="cloud-download-password">提取码: '.$password.'</div>';
+        $cloudHtml .= '<div class="cloud-download-title"><a data-cloud href="' . $url . '" target="_blank"
+                  title="' . $title . '">' . $title . '</a></div>';
+        $cloudHtml .= '<div class="cloud-download-password">提取码: ' . $password . '</div>';
         $cloudHtml .= '<div class="cloud-download-btn d-flex justify-content-between align-items-center">
-                <span>来源：'.$name.'</span><a class="px-2 py-1" data-cloud href="'.$url.'" target="_blank"
-                  title="'.$title.'"><i class="iconfont icon-xiazai"></i></a>
+                <span>来源：' . $name . '</span><a class="px-2 py-1" data-cloud href="' . $url . '" target="_blank"
+                  title="' . $title . '"><i class="iconfont icon-xiazai"></i></a>
               </div>';
         $cloudHtml .= '</div>';
         $cloudHtml .= '</div>';
@@ -215,7 +223,8 @@ function ContentCloud($content) {
 }
 
 // 过滤pre代码标签
-function ContentCode($content) {
+function ContentCode($content)
+{
     // 正则表达式匹配
     $pattern = '#<pre([^>]*)>(.*?)</pre>#si';
 
@@ -236,7 +245,8 @@ function ContentCode($content) {
 }
 
 // 过滤fold折叠框
-function ContentFold($content) {
+function ContentFold($content)
+{
     $pattern = '#\[fold\s+title="([^"]*)"\s+type="(open|close)"\s*\](.*?)\[/fold\]#si';
 
     $content = preg_replace_callback($pattern, function ($matches) {
@@ -247,12 +257,12 @@ function ContentFold($content) {
         $openAttr = ($type === 'open') ? 'open' : '';
 
         return '
-            <details class="fold-container mb-3" '.$openAttr.'>
+            <details class="fold-container mb-3" ' . $openAttr . '>
               <summary class="fold-header py-2 px-3">
-                '.$title.'
+                ' . $title . '
               </summary>
               <div class="fold-content py-2 px-3">
-                '.$contentText.'
+                ' . $contentText . '
               </div>
             </details>
             ';
@@ -262,7 +272,8 @@ function ContentFold($content) {
 }
 
 // 过滤多余的html标签
-function ContentHtml($content) {
+function ContentHtml($content)
+{
     // 使用一个正则表达式同时匹配并删除空段落和仅包含两个换行符的段落
     $content = preg_replace('#<p></p>|<br><br></p>#si', '', $content);
 
@@ -270,7 +281,8 @@ function ContentHtml($content) {
 }
 
 // 运行所以函数
-function parseContens($content) {
+function parseContens($content)
+{
     // 添加文章标题锚点
     $content = createAnchor($content);
     // 添加图片懒加载

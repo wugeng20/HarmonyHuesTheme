@@ -1,11 +1,12 @@
 <?php
+
 /**
  * 文章内容
  *
  * @author  星语社长
  * @link  https://biibii.cn
  * @update  2025-1-20 12:58:35
- * --------------------------------- */
+ */
 if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
@@ -23,12 +24,12 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
               href="<?php $this->author->permalink(); ?>" title="由<?php $this->author(); ?>发布"
               rel="author"><?php $this->author(); ?></a></name>
           <time datetime="<?php $this->date('c'); ?>" class="d-inline-block"><i
-              class="iconfont icon-31shijian mr-1"></i><?php $this->date(); ?></time>
+              class="iconfont icon-shijian mr-1"></i><?php $this->date(); ?></time>
         </div>
         <div class="author-right ml-auto text-sm">
           <a title="浏览量" role="button"><i class="iconfont icon-liulanjilu mr-1"></i><?php PostViewCount($this); ?></a>
           <a class="mx-1" href="<?php $this->permalink()?>#comments" title="评论" role="button"><i
-              class="iconfont icon-pinglun mr-1"></i><?php $this->commentsNum('0', '1', '%d'); ?></a>
+              class="iconfont icon-pinglun1 mr-1"></i><?php $this->commentsNum('0', '1', '%d'); ?></a>
         </div>
       </div>
       <?php endif; ?>
@@ -39,7 +40,7 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
       <?php $this->content(); ?>
     </div>
     <?php if ( ! $this->is('page')): ?>
-    <div class="post-end d-flex align-items-center justify-content-center m-4">THE END</div>
+    <div class="post-end d-flex align-items-center justify-content-center my-4">THE END</div>
     <!-- 文章标签+分类 -->
     <div class="category-and-tags d-flex flex-wrap align-items-center">
       <div class="post-category d-flex flex-wrap align-items-center mt-2">
@@ -54,12 +55,16 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     <!-- 分享+赞助 -->
     <div class="post-tools d-flex justify-content-center mt-4">
       <div class="post-tools-item d-flex flex-column align-items-center">
-        <button class="btn" id="reward-btn" title="赞赏"><i class="iconfont icon-zanshangma"></i></button>
-        <span>赞赏</span>
+        <button class="btn" id="poster-btn" title="文章海报"><i class="iconfont icon-haibao"></i></button>
+        <span class="post-tools-title">海报</span>
       </div>
       <div class="post-tools-item d-flex flex-column align-items-center">
-        <button class="btn" id="share-btn" title="分享"><i class="iconfont icon-fenxiang1"></i></button>
-        <span>分享</span>
+        <button class="btn" id="reward-btn" title="赞赏作者"><i class="iconfont icon-zanshangma"></i></button>
+        <span class="post-tools-title">赞赏</span>
+      </div>
+      <div class="post-tools-item d-flex flex-column align-items-center">
+        <button class="btn" id="share-btn" title="分享文章"><i class="iconfont icon-fenxiang1"></i></button>
+        <span class="post-tools-title">分享</span>
       </div>
     </div>
     <!-- 版权声明 -->

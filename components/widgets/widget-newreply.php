@@ -1,11 +1,12 @@
 <?php
+
 /**
  * 最新评论
  *
  * @author  星语社长
  * @link  https://biibii.cn
  * @update  2024-7-6 18:00:04
- * --------------------------------- */
+ */
 if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
@@ -22,7 +23,7 @@ function parseCommentContens($content) {
 ?>
 <!-- 最新评论 -->
 <div class="hh-widget mt-3 p-3">
-  <div class="widget-title mb-2">最新评论</div>
+  <div class="widget-title mb-3"><i class="iconfont icon-pinglun1 mr-1"></i>最新评论</div>
   <div class="widget-content newreply-widget scroll-cover">
     <!-- 评论项模板 -->
     <?php $this->widget('Widget_Comments_Recent', 'ignoreAuthor=true&pageSize=5')->to($item); ?>
@@ -35,12 +36,14 @@ function parseCommentContens($content) {
             data-original="<?php echo getGravatar($item->mail); ?>" alt="<?php $item->author(false)?>">
         </div>
         <div class="comment-name ml-2">
-          <a href="<?php $item->url()?>" title="<?php $item->author(false)?>"><?php $item->author(false)?></a>：
+          <a href="<?php $item->url()?>" title="<?php $item->author(false)?>"
+            target="_blank"><?php $item->author(false)?></a>：
         </div>
       </div>
       <div class="comment-content mt-1 p-2">
-        <a href="<?php echo $item->permalink; ?>"
-          title="<?php echo $item->title.'评论' ?>"><?php echo parseCommentContens($item->content); ?></a>
+        <a href="<?php echo $item->permalink; ?>" title="<?php echo $item->title.'评论' ?>">
+          <div class="comment-content-text"><?php echo parseCommentContens($item->content); ?></div>
+        </a>
       </div>
     </div>
     <?php endwhile; ?>

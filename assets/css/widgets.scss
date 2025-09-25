@@ -97,9 +97,8 @@ $breakpoints: (
       color: var(--font-color-main);
       font-weight: 500;
       font-size: 0.85rem;
-      background-image: linear-gradient(90deg, var(--color-primary-light-5), transparent);
+      background-image: linear-gradient(to right, var(--overlay-color-dark-1), transparent);
       border-radius: var(--border-radius-base);
-      border: var(--border-solid-small);
       overflow: hidden;
     }
   }
@@ -134,6 +133,7 @@ $breakpoints: (
     right: 0.25rem;
     color: var(--font-color-main-light);
     animation: spin 8s linear infinite;
+    -webkit-animation: spin 8s linear infinite;
 
     &:hover {
       cursor: pointer;
@@ -194,6 +194,7 @@ $breakpoints: (
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     animation: naturalBlink 3.5s infinite;
+    -webkit-animation: naturalBlink 3.5s infinite;
   }
 
 
@@ -229,6 +230,7 @@ $breakpoints: (
     background-color: #000;
     border-radius: 10px;
     animation: eyeMoveSmooth 5s ease-in-out infinite;
+    -webkit-animation: eyeMoveSmooth 5s ease-in-out infinite;
   }
 
   @keyframes eyeMoveSmooth {
@@ -244,50 +246,45 @@ $breakpoints: (
   }
 
   .devil-text {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #6c757d;
   }
 }
 
 /* 侧边栏 - 热门文章 */
 .hotposts-widget {
-  .hotposts-item {
-    font-size: 0.95rem;
-    line-height: 2;
+  $rank-colors: (
+    1: #1a1a1a,
+    2: #333333,
+    3: #4d4d4d,
+    4: #666666,
+    5: #808080,
+    6: #999999
+  );
 
-    .hotposts-number {
-      font-size: 0.9rem;
-      padding: 0 0.35rem;
-      border-radius: var(--border-radius-small);
-      color: var(--white);
-      overflow: hidden;
-    }
+.hotposts-item {
+  font-size: 0.95rem;
+  line-height: 2;
 
-    /* 文字颜色 */
-    /* 第1名 */
-    &:nth-child(1) .hotposts-number {
-      background-color: var(--red);
-    }
+  .hotposts-number {
+    font-size: 0.9rem;
+    padding: 0 0.35rem;
+    border-radius: var(--border-radius-small);
+    color: var(--white);
+    overflow: hidden;
+  }
 
-    /* 第2名 */
-    &:nth-child(2) .hotposts-number {
-      background-color: var(--success);
-    }
-
-    /* 第3名 */
-    &:nth-child(3) .hotposts-number {
-      background-color: var(--primary);
-    }
-
-    /* 其他名次 */
-    &:nth-child(n+4) .hotposts-number {
-      background-color: var(--overlay-color-dark-2);
-    }
-
-    .hotposts-title {
-      @include text-ellipsis;
+  /* 排名文字颜色背景 */
+  @each $rank, $color in $rank-colors {
+    &:nth-child(#{$rank}) .hotposts-number {
+      background-color: $color;
     }
   }
+
+  .hotposts-title {
+    @include text-ellipsis;
+  }
+}
 }
 
 /* 侧边栏 - 最新评论 */
@@ -295,6 +292,8 @@ $breakpoints: (
   font-size: 0.9rem;
   overflow: hidden;
   max-height: 15rem;
+  -webkit-mask: linear-gradient(var(--bg-color-main) 80%, transparent);
+  mask: linear-gradient(var(--bg-color-main) 80%, transparent);
 
   &:hover {
     overflow: auto;
@@ -311,9 +310,8 @@ $breakpoints: (
   .comment-content {
     position: relative;
     line-height: 1.5rem;
-    background-color: var(--bg-color-body);
-    border-radius: var(--border-radius-medium);
-    z-index: 1;
+    background-color: var(--bg-color-primary);
+    border-radius: var(--border-radius-small);
     word-break: break-all;
 
     &::before {
@@ -321,7 +319,7 @@ $breakpoints: (
       content: "";
       width: 0.8rem;
       height: 0.8rem;
-      background: var(--bg-color-body);
+      background-color: var(--bg-color-primary);
       top: -2px;
       left: 5px;
       z-index: -1;
@@ -329,10 +327,10 @@ $breakpoints: (
     }
 
     &:hover {
-      background: var(--overlay-color-light-8);
+      background-color: var(--overlay-color-light-8);
 
       &::before {
-        background: var(--overlay-color-light-8);
+        background-color: var(--overlay-color-light-8);
       }
     }
 
@@ -344,26 +342,59 @@ $breakpoints: (
     p {
       margin: 0;
     }
+
+    .comment-content-text {
+      @include text-ellipsis;
+    }
   }
 }
 
 /* 文章页面侧边栏 - 目录导航 */
 .atoc-content {
   font-size: 0.95rem;
-  color: var(--font-color-main);
-  border-radius: var(--border-radius-medium);
-  padding: var(--border-radius-base);
-  border: var(--border-solid-small);
 
   .atoc-item {
     position: relative;
 
     .atoc-link {
       @include text-ellipsis;
+      transition: all 0.3s ease-in-out;
 
       &.active {
         font-weight: bold;
         color: var(--color-primary-light-1);
+      }
+    }
+  }
+}
+
+/* 首页侧边栏 - 博客路牌 */
+.blogsignage-widget {
+  .blogsignage-head {
+    background-color: var(--color-primary-dark-1);
+    color: var(--white);
+    height: 3.5rem;
+    font-size: 1.15rem;
+    letter-spacing: 0.15rem;
+  }
+
+  .blogsignage-foot {
+    font-size: 0.9rem;
+
+    .iconfont {
+      font-size: 1rem;
+      display: inline-block;
+    }
+
+    .blogsignage-foot-west {
+      .iconfont {
+        transform: rotate(90deg);
+      }
+    }
+
+    .blogsignage-foot-east {
+      .iconfont {
+        transform: rotate(-90deg);
       }
     }
   }
@@ -422,10 +453,9 @@ $breakpoints: (
       color: var(--bg-color-body);
       font-weight: bold;
       background-color: var(--font-color-main);
-      border-radius: var(--border-radius-medium);
       z-index: -1;
 
-      @include max-media-breakpoint('sm') {
+      @include max-media-breakpoint('md') {
         font-size: 0.85rem;
       }
     }
@@ -439,7 +469,7 @@ $breakpoints: (
         font-size: 1.5rem;
         font-weight: bold;
 
-        @include max-media-breakpoint('sm') {
+        @include max-media-breakpoint('md') {
           font-size: 0.85rem;
         }
       }
@@ -450,6 +480,7 @@ $breakpoints: (
       }
 
       .timejourney-desc {
+        color: var(--white);
         mix-blend-mode: difference;
       }
     }
@@ -491,10 +522,6 @@ $breakpoints: (
         border-bottom-right-radius: var(--border-radius-base);
         border-bottom-left-radius: var(--border-radius-base);
         overflow: hidden;
-        mix-blend-mode: overlay;
-        -webkit-backdrop-filter: saturate(50%) blur(4px);
-        backdrop-filter: saturate(50%) blur(4px);
-        transition: background-color 0.3s ease-in-out;
         border-bottom: var(--border-solid-main);
         border-inline: var(--border-solid-main);
       }

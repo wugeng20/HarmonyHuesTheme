@@ -1,28 +1,29 @@
 <?php
+
 /**
  * 404页面
  *
  * @author  星语社长
  * @link  https://biibii.cn
  * @update  2024-7-6 18:00:04
- * --------------------------------- */
-if ( ! defined('__TYPECHO_ROOT_DIR__')) {
-    exit;
+ */
+if (! defined('__TYPECHO_ROOT_DIR__')) {
+  exit;
 }
 ?>
-<?php $this->need('components/header.php');?>
+<?php $this->need('components/header.php'); ?>
 <style>
-.error-btn {
-  color: var(--font-color-main);
-  background-image: var(--gradient-45deg);
-  box-shadow: var(--shadow-nav);
-  border: var(--border-solid-main);
-  border-radius: var(--border-radius-xlarge);
-}
+  .error-btn {
+    color: var(--font-color-main);
+    background-image: var(--gradient-45deg);
+    box-shadow: var(--shadow-nav);
+    border: var(--border-solid-main);
+    border-radius: var(--border-radius-xlarge);
+  }
 
-.error-btn:hover {
-  box-shadow: var(--shadow-inset-box);
-}
+  .error-btn:hover {
+    box-shadow: var(--shadow-inset-box);
+  }
 </style>
 <main class="container my-5" style="height: calc(100vh - 260px);">
   <div class="card p-4">
@@ -54,10 +55,10 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
       </svg>
     </div>
     <div class="text-center my-4">
-      <h2>404 - <?php _e('页面没找到');?></h2>
-      <p><?php _e('你想查看的页面已被转移或删除了');?></p>
-      <a class="error-btn d-inline-block my-4 py-2 px-3" href="/" role="button" target="_self"><?php _e('回到首页');?></a>
+      <h2>404 - <?php _e('页面没找到'); ?></h2>
+      <p><?php _e('你想查看的页面已被转移或删除了'); ?></p>
+      <a class="error-btn d-inline-block my-4 py-2 px-3" href="/" role="button" target="_self"><?php _e('回到首页'); ?></a>
     </div>
   </div>
 </main>
-<?php $this->need('components/footer.php');?>
+<?php $this->need('components/footer.php'); ?>

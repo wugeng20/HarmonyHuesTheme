@@ -1,17 +1,18 @@
 <?php
+
 /**
  * 评论主体内容
  *
  * @author  星语社长
- * @link  https://biibii.cn
+ * @link    https://biibii.cn
  * @update  2024-7-6 18:00:04
- * --------------------------------- */
+ */
 if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
-?>
-<?php function threadedComments($comments, $options) {
-    // ====>评论层级样式
+
+function threadedComments($comments, $options) {
+    // 评论层级样式
     $commentLevelClass = $comments->levels > 0 ? ' comment-child' : ' comment-parent';
     ?>
 <li id="li-<?php $comments->theId(); ?>" class="comment<?php echo $commentLevelClass; ?> p-1">
@@ -50,33 +51,32 @@ $email = $comments->mail;
   </div>
   <?php if ($comments->children): ?>
   <?php $comments->threadedComments($options); ?>
-  <?php endif?>
+  <?php endif; ?>
 </li>
 <?php
 }
 
-?>
-<?php $this->comments()->to($comments); ?>
-<?php if ($this->allow('comment')): ?>
+$this->comments()->to($comments);
+if ($this->allow('comment')): ?>
 <div class="card my-2 p-2 p-md-3 my-md-3">
   <div id="comments">
     <div id="<?php $this->respondId(); ?>" class="respond flex-grow-1 w-100">
       <form method="post" action="<?php $this->commentUrl()?>" id="comment-form" role="form">
-        <?php if ($this->user->hasLogin()): // ===> 已登录用户 ?>
-	        <div class="mb-3"><?php _e('当前用户: '); ?><a
-	            href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a>.
-	          <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('退出'); ?> &raquo;</a>
-	        </div>
-	        <?php else: // ===> 未登录用户 ?>
-	        <ul class="row comment-form-info">
-	          <li class="col-12 col-md-4 col-xl-4 mb-2">
-	            <input type="text" name="author" id="author" class="form-control" placeholder="昵称"
-	              value="<?php $this->remember('author'); ?>" required />
-	          </li>
-	          <li class="col-12 col-md-4 col-xl-4 mb-2">
-	            <input type="email" name="mail" id="mail" class="form-control" placeholder="Email"
-	              value="<?php $this->remember('mail'); ?>" <?php if ($this->options->commentsRequireMail): ?>
-	              required<?php endif; ?> />
+        <?php if ($this->user->hasLogin()): ?>
+        <div class="mb-3"><?php echo '当前用户: '; ?><a
+            href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a>.
+          <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php echo '退出'; ?> &raquo;</a>
+        </div>
+        <?php else: ?>
+        <ul class="row comment-form-info">
+          <li class="col-12 col-md-4 col-xl-4 mb-2">
+            <input type="text" name="author" id="author" class="form-control" placeholder="昵称"
+              value="<?php $this->remember('author'); ?>" required />
+          </li>
+          <li class="col-12 col-md-4 col-xl-4 mb-2">
+            <input type="email" name="mail" id="mail" class="form-control" placeholder="Email"
+              value="<?php $this->remember('mail'); ?>" <?php if ($this->options->commentsRequireMail): ?>
+              required<?php endif; ?> />
           </li>
           <li class="col-12 col-md-4 col-xl-4 mb-2">
             <input type="url" name="url" id="url" class="form-control" placeholder="http(s)://"
@@ -106,13 +106,13 @@ $email = $comments->mail;
       </form>
     </div>
     <!-- 评论列表主体st -->
-    <?php if ($comments->have()): // ===>评论列表 ?>
-	    <p><?php $this->commentsNum(_t('暂无评论'), _t('仅有一条评论'), _t('全部 %d 条评论')); ?></p>
-	    <?php $comments->listComments(); ?>
-	    <div class="comment-pagination">
-	      <?php $comments->pageNav('<', '>', '2', '...', array('wrapClass' => 'd-flex justify-content-center mt-3')); ?>
-	    </div>
-	    <?php else: ?>
+    <?php if ($comments->have()): ?>
+    <p><?php $this->commentsNum('暂无评论', '仅有一条评论', '全部 %d 条评论'); ?></p>
+    <?php $comments->listComments(); ?>
+    <div class="comment-pagination">
+      <?php $comments->pageNav('<i class="iconfont icon-shangyiye"></i>', '<i class="iconfont icon-xiayiye"></i>', '2', '...', array('wrapClass' => 'd-flex justify-content-center mt-3', 'prevClass' => 'com-prev', 'nextClass' => 'com-next')); ?>
+    </div>
+    <?php else: ?>
     <div class="no-comments d-flex flex-column align-items-center">
       <svg viewBox="0 0 1462 1024" height="7rem">
         <path d="M673.192229 403.426743v241.7664l300.163657 129.316571V485.902629l-300.163657-82.475886z"

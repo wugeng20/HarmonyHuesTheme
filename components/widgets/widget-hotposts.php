@@ -1,11 +1,12 @@
 <?php
+
 /**
  * 热门文章
  *
  * @author  星语社长
  * @link  https://biibii.cn
  * @update  2024-7-6 18:00:04
- * --------------------------------- */
+ */
 if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
@@ -33,7 +34,7 @@ $hotPosts = array_map(function ($post) {
 ?>
 <!-- 热门文章 -->
 <div class="hh-widget mt-3 p-3">
-  <div class="widget-title mb-2">热门文章</div>
+  <div class="widget-title mb-3"><i class="iconfont icon-remen mr-1"></i>热门文章</div>
   <div class="widget-content hotposts-widget scroll-cover">
     <ul class="hotposts-list">
       <?php foreach ($hotPosts as $index => $post): ?>
