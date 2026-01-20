@@ -1,8 +1,13 @@
 @charset "UTF-8";
 /* ------------------------------------ Harmony Hues主题 @author  星语社长 @link  https://biibii.cn @update  2024-7-6 18:00:04 --------------------------------- */
+:root[data-theme=light] { /* 侧边栏-一言顶部渐变色 */ --hotposts-h-bg: linear-gradient(to right, rgba(254, 125, 125, 0.5), transparent); --newreply-h-bg: linear-gradient(to right, rgba(125, 254, 147, 0.5), transparent); --atoc-h-bg: linear-gradient(to right, rgba(125, 125, 254, 0.5), transparent); }
+
 .hh-widget { overflow: hidden; background-image: var(--widget-bg-gradient); }
 
 .hh-widget:first-child { margin-top: 0 !important; }
+
+/* 侧边栏-工具-标题-顶部-背景 */
+.widget-title-top-bg { position: absolute; top: 0; left: 0; width: 100%; height: 3rem; opacity: 0.8; -webkit-mask: linear-gradient(var(--bg-color-main) -20%, transparent); mask: linear-gradient(var(--bg-color-main) -20%, transparent); z-index: -1; backdrop-filter: blur(5px); }
 
 /* 侧边栏 - 博主信息 */
 .author-content { cursor: default; }
@@ -89,6 +94,8 @@
 .newreply-widget { font-size: 0.9rem; overflow: hidden; max-height: 15rem; -webkit-mask: linear-gradient(var(--bg-color-main) 80%, transparent); mask: linear-gradient(var(--bg-color-main) 80%, transparent); }
 
 .newreply-widget:hover { overflow: auto; }
+
+.newreply-widget .newreply-item:last-child { padding-bottom: 1rem; }
 
 .newreply-widget .avatar-img { width: 2rem; height: 2rem; border-radius: var(--border-radius-circle); overflow: hidden; border: var(--border-solid-main); }
 

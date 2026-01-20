@@ -23,7 +23,10 @@ function parseCommentContens($content) {
 ?>
 <!-- 最新评论 -->
 <div class="hh-widget mt-3 p-3">
-  <div class="widget-title mb-3"><i class="iconfont icon-pinglun1 mr-1"></i>最新评论</div>
+  <div class="widget-title mb-3">
+    <div class="widget-title-top-bg" style="background:var(--newreply-h-bg);"></div>
+    <i class="iconfont icon-pinglun1 mr-1"></i>最新评论
+  </div>
   <div class="widget-content newreply-widget scroll-cover">
     <!-- 评论项模板 -->
     <?php $this->widget('Widget_Comments_Recent', 'ignoreAuthor=true&pageSize=5')->to($item); ?>

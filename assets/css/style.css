@@ -284,7 +284,7 @@ img.loaded { background-color: transparent; filter: blur(0px); -webkit-transitio
 
 .main-sidebar .sidebar-sticky.visible-top { top: 20px; }
 
-.main-sidebar .widget-title { position: relative; display: inline-block; font-size: 1rem; font-weight: 700; }
+.main-sidebar .widget-title { display: inline-block; font-size: 1rem; font-weight: 700; }
 
 .main-sidebar .widget-title > .iconfont { font-size: 1.1rem; }
 

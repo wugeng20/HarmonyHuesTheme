@@ -13,9 +13,9 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
 ?>
 <?php if ( ! empty($this->options->sidebarBlock) && in_array('ShowHotPosts', $this->options->sidebarBlock)): ?>
 <?php
-function getHotPosts($limit = 10) {
+function getHotPostsCid($limit = 10) {
     $db = Typecho_Db::get();
-    $select = $db->select('cid', 'title', 'slug', 'type', 'status', 'created', 'commentsNum', 'views')
+    $select = $db->select('cid')
         ->from('table.contents')
         ->where('type = ?', 'post')
         ->where('status = ?', 'publish')
@@ -27,20 +27,21 @@ function getHotPosts($limit = 10) {
     return $posts;
 }
 
-$hotPosts = getHotPosts(6);
-$hotPosts = array_map(function ($post) {
-    return Typecho_Widget::widget('Widget_Abstract_Contents')->push($post);
-}, $hotPosts);
+$hotPostsCid = getHotPostsCid(6);
 ?>
 <!-- 热门文章 -->
 <div class="hh-widget mt-3 p-3">
-  <div class="widget-title mb-3"><i class="iconfont icon-remen mr-1"></i>热门文章</div>
+  <div class="widget-title mb-3">
+    <div class="widget-title-top-bg" style="background:var(--hotposts-h-bg);"></div>
+    <i class="iconfont icon-remen mr-1"></i>热门文章
+  </div>
   <div class="widget-content hotposts-widget scroll-cover">
     <ul class="hotposts-list">
-      <?php foreach ($hotPosts as $index => $post): ?>
-      <?php $postTitle = htmlspecialchars($post['title']); ?>
+      <?php foreach ($hotPostsCid as $index => $postcid): ?>
+      <?php $post = Helper::widgetById('Contents', $postcid['cid']); ?>
+      <?php $postTitle = htmlspecialchars($post->title); ?>
       <li class="hotposts-item">
-        <a class="hotposts-title" href="<?php echo $post['permalink']; ?>" title="<?php echo $postTitle; ?>">
+        <a class="hotposts-title" href="<?php $post->permalink(); ?>" title="<?php echo $postTitle; ?>">
           <span class="hotposts-number mr-1"><?php echo $index + 1; ?></span><?php echo $postTitle; ?>
         </a>
       </li>

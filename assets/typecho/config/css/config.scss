@@ -3,6 +3,7 @@
     &.col-tb-offset-2 {
       margin-left: 0;
       width: 100%;
+      max-width: 100%;
     }
   }
 }
@@ -111,6 +112,8 @@
 }
 
 .harmonyhues-backup {
+  gap: 1rem;
+
   input[type=submit] {
     width: 150px;
     height: 40px;
@@ -120,6 +123,16 @@
 
     &:hover {
       box-shadow: var(--shadow-inset-box) !important;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .harmonyhues-backup {
+    gap: 0.5rem;
+
+    input[type=submit] {
+      width: 33.333%;
     }
   }
 }
