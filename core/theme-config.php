@@ -131,10 +131,10 @@ function themeConfig($form) {
     $navbarInfo = new Typecho_Widget_Helper_Form_Element_Textarea(
         'navbarInfo',
         NULL,
-        '{"name":"自定义","link":"/","target":"_self","sub":[{"name":"子菜单名称","link":"https://www.xxx.com/xxxx.html","target":"_self"}]}',
+        '{"name":"自定义","link":"","target":"_self","sub":[{"name":"子菜单名称","link":"https://www.example.com/xxxx.html","target":"_self"}]}',
         '导航栏菜单配置（非必填）',
         '介绍：支持自定义菜单,不支持三级目录，优先分类和独立页面里面找，没有才匹配link<br/>
-    在这里填入JSON格式模板：{name":"菜单名称","link":"https://www.xxx.com/xxxx.html","target":"_self","sub":[{"name":"子菜单名称","link":"https://www.xxx.com/xxxx.html","target":"_self"}]}'
+    在这里填入JSON格式模板：{name":"菜单名称","link":"https://www.example.com/xxxx.html","target":"_self","sub":[{"name":"子菜单名称","link":"https://www.example.com/xxxx.html","target":"_self"}]}'
     );
     $form->addInput($navbarInfo);
     $navbarInfo->setAttribute('class', 'setting-content my-3');
@@ -418,7 +418,7 @@ function themeConfig($form) {
         NULL,
         NULL,
         '备案HTML内容（非必填）',
-        '介绍：在这里填入你的网站备案HTML内容， 注意：底部footer内容会覆盖此内容，只适合默认的底部内容'
+        '介绍：在这里填入你的网站备案HTML内容， 注意：底部footer内容会覆盖此内容，只适合默认的底部内容，示例：  &Iota; <a href="https://beian.miit.gov.cn/" target="_blank">ICP备xxxx号-1</a>'
     );
     $form->addInput($icp);
     $icp->setAttribute('class', 'setting-content my-3');
