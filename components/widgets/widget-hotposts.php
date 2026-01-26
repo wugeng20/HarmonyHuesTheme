@@ -15,7 +15,7 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
 <?php
 function getHotPostsCid($limit = 10) {
     $db = Typecho_Db::get();
-    $select = $db->select('cid')
+    $select = $db->select()
         ->from('table.contents')
         ->where('type = ?', 'post')
         ->where('status = ?', 'publish')
