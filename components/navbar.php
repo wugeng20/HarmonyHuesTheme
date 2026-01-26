@@ -25,36 +25,83 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
     </div>
     <nav class="d-none d-md-block nav-inner">
       <ul class="d-flex flex-column flex-md-row nav-menu m-0">
-        <li class="nav-item"><a class="nav-a <?php echo $this->is('index') ? 'active' : '' ?>"
-            href="<?php $this->options->siteUrl(); ?>" title="<?php $this->options->title(); ?>">首页</a></li>
-        <!-- 默认导航 -->
-        <?php $this->widget('Widget_Metas_Category_List')->to($category); ?>
-        <?php while ($category->next()): if ($category->levels === 0): ?>
-	        <?php $children = $category->getAllChildren($category->mid); ?>
-	        <?php if (empty($children)): ?>
-	        <li class="nav-item"><a class="nav-a <?php echo $this->is('category', $category->slug) ? 'active' : '' ?>"
-	            href="<?php $category->permalink(); ?>" target="_self"
-	            title="<?php $category->name(); ?>"><?php $category->name(); ?></a></li>
-	        <?php else: ?>
         <li class="nav-item">
-          <a class="nav-a <?php echo( ! $this->is('index') && isParentActive($this->category, $category, $children)) ? 'active' : ''; ?>"
-            href="<?php $category->permalink(); ?>" title="<?php $category->name(); ?>"
-            target="_self"><?php $category->name(); ?><i class="iconfont nav-icon icon-xiala"></i></a>
+          <a class="nav-a <?php echo $this->is('index') ? 'active' : '' ?>" href="<?php $this->options->siteUrl(); ?>"
+            title="<?php $this->options->title(); ?>">首页</a>
+        </li>
+
+        <?php
+// 一次性获取并组织所有分类数据
+$this->widget('Widget_Metas_Category_List')->to($category);
+$categories = array();
+$childCategories = array();
+
+// 单次遍历处理所有分类
+while ($category->next()) {
+    $catData = array(
+        'mid' => $category->mid,
+        'name' => $category->name,
+        'slug' => $category->slug,
+        'permalink' => $category->permalink,
+        'levels' => $category->levels,
+        'parent' => $category->parent,
+        'children' => array(),
+    );
+
+    $categories[$category->mid] = $catData;
+
+    if ($category->levels !== 0) {
+        // 如果是子分类，添加到父分类的children数组中
+        if ( ! isset($childCategories[$category->parent])) {
+            $childCategories[$category->parent] = array();
+        }
+        $childCategories[$category->parent][] = $catData;
+    }
+}
+
+// 输出分类导航
+foreach ($categories as $cat) {
+    if ($cat['levels'] !== 0) {
+        continue;
+    }
+    // 只处理父分类
+
+    $hasChildren = isset($childCategories[$cat['mid']]);
+    $isActive = $this->is('category', $cat['slug']);
+    ?>
+
+        <?php if ( ! $hasChildren): // 没有子分类 ?>
+        <li class="nav-item">
+          <a class="nav-a <?php echo $isActive ? 'active' : '' ?>" href="<?php echo $cat['permalink']; ?>"
+            target="_self" title="<?php echo $cat['name']; ?>">
+            <?php echo $cat['name']; ?>
+          </a>
+        </li>
+
+        <?php else: // 有子分类 ?>
+        <?php $isParentActive = isCategoryOrChildActive($childCategories[$cat['mid']])?>
+        <li class="nav-item">
+          <a class="nav-a <?php echo $isParentActive ? 'active' : '' ?>" href="<?php echo $cat['permalink']; ?>"
+            title="<?php echo $cat['name']; ?>" target="_self">
+            <?php echo $cat['name']; ?>
+            <i class="iconfont nav-icon icon-xiala"></i>
+          </a>
           <div class="pt-md-4 sub-menu">
             <ul class="d-md-flex flex-md-wrap p-md-2">
-              <?php foreach ($children as $mid) {?>
-              <?php $child = $category->getCategory($mid); ?>
-              <li class="p-2 <?php echo $this->is('category', $child['slug']) ? ' active' : ''; ?>">
-                <a href="<?php echo $child['permalink'] ?>" target="_self"
-                  title="<?php echo $child['name']; ?>"><?php echo $child['name']; ?></a>
+              <?php foreach ($childCategories[$cat['mid']] as $child): ?>
+              <li class="p-2 <?php echo $this->is('category', $child['slug']) ? 'active' : ''; ?>">
+                <a href="<?php echo $child['permalink']; ?>" target="_self" title="<?php echo $child['name']; ?>">
+                  <?php echo $child['name']; ?>
+                </a>
               </li>
-              <?php }?>
+              <?php endforeach; ?>
             </ul>
           </div>
         </li>
-        <?php endif;
-endif; ?>
-        <?php endwhile; ?>
+        <?php endif; ?>
+
+        <?php } // end foreach ?>
+
         <!-- 添加自定义菜单 -->
         <?php echo getCustomMenu($this->request->getRequestUrl()); ?>
       </ul>

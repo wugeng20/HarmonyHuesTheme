@@ -407,18 +407,16 @@ function formatEmoji($text, $type = true) {
 }
 
 /**
- * @description: 父级菜单是否高亮
- * @param {*} $activeSlug 选中的菜单slug，也就是名称
- * @param {*} $category 父级分类信息
- * @param {*} $children 子级分类信息
+ * 判断当前页面是否属于某个分类（包括子分类）
  */
-function isParentActive($activeSlug, $category, $children) {
-    foreach ($children as $mid) {
-        $child = $category->getCategory($mid);
-        if ($child['slug'] === $activeSlug) {
+function isCategoryOrChildActive($children = array()) {
+// 检查是否是子分类
+    foreach ($children as $child) {
+        if (Typecho_Widget::widget('Widget_Archive')->is('category', $child['slug'])) {
             return true;
         }
     }
+
     return false;
 }
 
