@@ -37,16 +37,16 @@ $email = $comments->mail;
         <em class="comment-ua">评论审核中...</em>
         <?php endif; ?>
       </div>
-      <div class="reply comment-footer">
-        <span class="comment-reply-link">
-          <?php $comments->reply('<i class="iconfont icon-pinglun"></i>'); ?>
-        </span>
-      </div>
     </div>
     <div class="comment-card flex-grow-1">
       <div class="comment-content ml-3 ml-md-5">
         <?php echo getCommentAt($comments->coid); ?> <?php echo formatEmoji($comments->content); ?>
       </div>
+    </div>
+    <div class="reply comment-footer">
+      <span class="comment-reply-link">
+        <?php $comments->reply('<i class="iconfont icon-pinglun"></i>'); ?>
+      </span>
     </div>
   </div>
   <?php if ($comments->children): ?>

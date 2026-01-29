@@ -38,7 +38,7 @@
   /* 主背景色-黑 */
   --bg-color-main-dark: #000;
   /* 页面背景色 */
-  --bg-color-body: #f6f7f9;
+  --bg-color-body: #f5f7fa;
   /* 遮罩层浅色1 */
   --overlay-color-light-1: rgba(255, 255, 255, .1);
   /* 遮罩层浅色2 */
@@ -102,9 +102,11 @@
   /* 浅色中等蓝色灰色 */
   --color-blue-gray-medium-light: var(--color-primary-dark-3);
   /* 主阴影 */
-  --shadow-box-main: 8px 8px 15px 0 rgba(55, 99, 170, .1), -8px -8px 15px 0 var(--bg-color-main), inset 0 4px 15px 0 var(--overlay-color-light-5);
+  // --shadow-box-main: 8px 8px 15px 0 rgba(55, 99, 170, .1), -8px -8px 15px 0 var(--bg-color-main), inset 0 4px 15px 0 var(--overlay-color-light-5);
+  --shadow-box-main: 8px 8px 20px 0 rgba(55, 99, 170, .1), -8px -8px 20px 0 var(--bg-color-main);
   /* 小阴影 */
-  --shadow-box-small: 5px 5px 12px 0 rgba(55, 99, 170, .1), -5px -5px 12px 0 var(--bg-color-main), inset 0 4px 10px 0 var(--overlay-color-light-5);
+  // --shadow-box-small: 5px 5px 12px 0 rgba(55, 99, 170, .1), -5px -5px 12px 0 var(--bg-color-main), inset 0 4px 10px 0 var(--overlay-color-light-5);
+  --shadow-box-small: 5px 5px 12px 0 rgba(55, 99, 170, .1), -5px -5px 12px 0 var(--bg-color-main);
   /* 悬停阴影 */
   --shadow-box-hover: 8px 8px 15px 0 rgba(55, 99, 170, .2), -8px -8px 15px 0 var(--bg-color-main);
   /* 0度渐变 */
@@ -152,8 +154,10 @@
   --gradient-primary-transparent: linear-gradient(0deg, #333, rgba(0, 0, 0, 0.3));
   --color-blue-gray-medium: var(--color-primary);
   --color-blue-gray-medium-light: var(--color-primary-dark-3);
-  --shadow-box-main: 8px 8px 15px 0 rgba(0, 0, 0, .3), -8px -8px 15px 0 var(--bg-color-main), inset 0 4px 15px 0 var(--bg-color-body);
-  --shadow-box-small: 5px 5px 12px 0 rgba(0, 0, 0, .3), -5px -5px 12px 0 var(--bg-color-main), inset 0 4px 10px 0 var(--bg-color-body);
+  // --shadow-box-main: 8px 8px 15px 0 rgba(0, 0, 0, .3), -8px -8px 15px 0 var(--bg-color-main), inset 0 4px 15px 0 var(--bg-color-body);
+  --shadow-box-main: 8px 8px 15px 0 rgba(0, 0, 0, .3), -8px -8px 15px 0 var(--bg-color-main);
+  // --shadow-box-small: 5px 5px 12px 0 rgba(0, 0, 0, .3), -5px -5px 12px 0 var(--bg-color-main), inset 0 4px 10px 0 var(--bg-color-body);
+  --shadow-box-small: 5px 5px 12px 0 rgba(0, 0, 0, .3), -5px -5px 12px 0 var(--bg-color-main);
   --shadow-box-hover: 8px 8px 15px 0 rgba(0, 0, 0, .4), -8px -8px 15px 0 var(--bg-color-main);
   --gradient-0deg: linear-gradient(0deg, var(--bg-color-body), var(--overlay-color-light-5));
   --gradient-45deg: linear-gradient(45deg, var(--bg-color-body), var(--overlay-color-light-5));
@@ -529,6 +533,7 @@ img {
   }
 
   img {
+    width: 106px;
     height: 40px;
   }
 }
@@ -1515,9 +1520,10 @@ main>.container {
   }
 
   .comment-footer {
+    display: inline-block;
     position: absolute;
-    right: 0;
-    bottom: 0;
+    top: 0.25rem;
+    right: 0.25rem;
     color: var(--font-color-main-transparent);
     font-size: 0.85rem;
 
