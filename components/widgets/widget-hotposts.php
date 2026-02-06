@@ -14,17 +14,30 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
 <?php if ( ! empty($this->options->sidebarBlock) && in_array('ShowHotPosts', $this->options->sidebarBlock)): ?>
 <?php
 function getHotPostsCid($limit = 10) {
-    $db = Typecho_Db::get();
-    $select = $db->select()
-        ->from('table.contents')
-        ->where('type = ?', 'post')
-        ->where('status = ?', 'publish')
-        ->order('views', Typecho_Db::SORT_DESC)
-        ->limit($limit);
+    try {
+        $db = Typecho_Db::get(); // 获取数据库对象
+        $prefix = $db->getPrefix(); // 获取表前缀
 
-    $posts = $db->fetchAll($select);
+        // 检查是否存在 views 字段
+        $columns = $db->fetchRow($db->select()->from('table.contents'));
+        if ( ! array_key_exists('views', $columns)) {
+            $db->query('ALTER TABLE `'.$prefix.'contents` ADD `views` INT(10) DEFAULT 0;');
+        }
 
-    return $posts;
+        // 获取热门文章
+        $select = $db->select()
+            ->from('table.contents')
+            ->where('type = ?', 'post')
+            ->where('status = ?', 'publish')
+            ->order('views', Typecho_Db::SORT_DESC)
+            ->limit($limit);
+
+        $posts = $db->fetchAll($select);
+
+        return $posts;
+    } catch (Exception $e) {
+        return array();
+    }
 }
 
 $hotPostsCid = getHotPostsCid(6);
@@ -36,6 +49,7 @@ $hotPostsCid = getHotPostsCid(6);
     <i class="iconfont icon-remen mr-1"></i>热门文章
   </div>
   <div class="widget-content hotposts-widget scroll-cover">
+    <?php if ( ! empty($hotPostsCid)): ?>
     <ul class="hotposts-list">
       <?php foreach ($hotPostsCid as $index => $postcid): ?>
       <?php $post = Helper::widgetById('Contents', $postcid['cid']); ?>
@@ -47,6 +61,9 @@ $hotPostsCid = getHotPostsCid(6);
       </li>
       <?php endforeach; ?>
     </ul>
+    <?php else: ?>
+    <div class="text-center">正在统计数据中...</div>
+    <?php endif; ?>
   </div>
 </div>
 <?php endif; ?>
