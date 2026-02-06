@@ -27,8 +27,26 @@ Typecho 主题-《HarmonyHues - 和谐色调》
 
 ## 安装与食用
 
+### 环境要求
+
+- Typecho 1.2.0 及以上版本
+- PHP 7.2 及以上版本
+- MySQL 5.6 及以上版本（utf8mb4）
+
+### 方式一：
+
 1. 下载主题压缩包，解压后上传至 Typecho 主题目录（`usr/themes/`）
 2. 【重要】把解压后的文件夹重命名为 `HarmonyHues`
+3. 登录 Typecho 后台，进入外观管理，启用主题即可
+4. 进入主题设置，根据需求进行配置
+
+### 方式二（推荐）：
+
+1. 系统安装Git（具体请自行百度安装）
+2. 在Typecho 主题`usr/themes/`目录下输入以下命令：
+```bash
+git clone https://github.com/wugeng20/HarmonyHuesTheme.git HarmonyHues
+```
 3. 登录 Typecho 后台，进入外观管理，启用主题即可
 4. 进入主题设置，根据需求进行配置
 
