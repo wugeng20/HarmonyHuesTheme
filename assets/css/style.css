@@ -111,7 +111,7 @@ img.loaded { background-color: transparent; filter: blur(0px); -webkit-transitio
 
 .navbar-logo span { font-size: 1.5rem; }
 
-.navbar-logo img { width: 106px; height: 40px; }
+.navbar-logo img { max-width: 106px; height: 40px; }
 
 .nav-inner { position: relative; }
 
