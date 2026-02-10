@@ -49,6 +49,10 @@ git clone https://github.com/wugeng20/HarmonyHuesTheme.git HarmonyHues
 ```
 3. 登录 Typecho 后台，进入外观管理，启用主题即可
 4. 进入主题设置，根据需求进行配置
+5. 后期更新主题，只需要在`usr/themes/HarmonyHues`目录下输入以下命令：
+```bash
+git pull
+```
 
 ## 预览
 
