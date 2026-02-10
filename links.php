@@ -85,6 +85,10 @@ $content = parseLinksShortcode($this->content);
   mask: linear-gradient(var(--bg-color-main) 50%, transparent)
 }
 
+.links-group:hover .links-group-title {
+  -webkit-text-fill-color: var(--font-color-main);
+}
+
 .links-list .links-card {
   position: relative;
   border: var(--border-solid-main);
