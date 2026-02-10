@@ -292,7 +292,7 @@ img.loaded { background-color: transparent; filter: blur(0px); -webkit-transitio
 /*----------底部样式st ----------*/
 .footer { color: var(--font-color-main); background-color: var(--bg-color-main); font-size: 14px; min-height: var(--height-footer); }
 
-@media (max-width: 767.98px) { .footer .container { flex-direction: column; align-items: center; }
+@media (max-width: 767.98px) { .footer .container { flex-direction: column-reverse; align-items: center; }
   .footer .footer-left { text-align: center; justify-content: center; } }
 
 .footer .theme-toggle { margin: 0 auto; gap: 0.15rem; background: var(--bg-color-body); border-radius: var(--border-radius-xlarge); border: var(--border-solid-small); }

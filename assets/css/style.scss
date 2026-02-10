@@ -1060,7 +1060,7 @@ img {
 
   @include max-media-breakpoint('md') {
     .container {
-      flex-direction: column;
+      flex-direction: column-reverse;
       align-items: center;
     }
 
