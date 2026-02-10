@@ -292,7 +292,7 @@ function themeConfig($form) {
     $iconfont = new Typecho_Widget_Helper_Form_Element_Text(
         'iconfont',
         NULL,
-        '//at.alicdn.com/t/c/font_4612620_nzptu6bs4cb.css',
+        NULL,
         'iconfont图标（非必填）',
         '介绍：在这里填入你自定义的iconfont图标外链，前往iconfont图标：https://www.iconfont.cn，<br/>
     例如：//at.alicdn.com/t/c/font_4612620_nzptu6bs4cb.css'
