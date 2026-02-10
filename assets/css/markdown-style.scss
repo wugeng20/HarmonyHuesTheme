@@ -248,7 +248,7 @@ $border-base: 1px solid rgba(230, 230, 240, .75);
       }
 
       th {
-        background-color: var(--bg-color-main-dark);
+        background-color: var(--font-color-main);
         color: var(--bg-color-main);
       }
 
@@ -304,8 +304,20 @@ $border-base: 1px solid rgba(230, 230, 240, .75);
       border-radius: unset;
       max-height: $base-size * 120;
 
+      &:not([class^="lang-"]):not([class^="language-"]) {
+        // 无语言代码块
+        padding: 1rem;
+        background-color: #272b33;
+        color: #fff;
+      }
+
       code {
         font-size: $base-font-size;
+      }
+
+      &>code:not([class^="lang-"]):not([class^="language-"]) {
+        background-color: transparent;
+        color: unset;
       }
 
       &::-webkit-scrollbar {
