@@ -205,7 +205,7 @@ if ($linksCount === 1 && isset($links[0]['status']) && $links[0]['status'] === '
         <div class="col-6 col-lg-3 d-flex flex-column align-self-stretch">
           <div class="links-card flex-fill p-2 m-1">
             <a class="d-flex flex-direction align-items-center"
-              href="<?php echo $link['status'] != '失联' ?: $link['url']; ?>" target="_blank"
+              <?php echo $link['status'] == '失联' ? '' : 'href="'.$link['url'].'"'; ?> target="_blank"
               title="<?php echo $link['title']; ?>">
               <div class="link-avatar">
                 <img src="<?php getLazyload(); ?>" data-original="<?php echo $link['avatar'] ?: getAvatarLazyload(); ?>"
