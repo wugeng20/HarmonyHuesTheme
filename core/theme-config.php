@@ -40,11 +40,22 @@ function themeConfig($form) {
         'logoUrl',
         NULL,
         '/usr/themes/HarmonyHues/assets/images/logo.webp',
-        '站点LOGO地址（必填）',
-        '介绍：在这里填入一个图片URL地址, 以在网站标题前加上一个LOGO'
+        '站点日间模式的LOGO地址（必填）',
+        '介绍：在这里填入一个日间模式的LOGO图片URL地址'
     );
     $form->addInput($logoUrl);
     $logoUrl->setAttribute('class', 'setting-content my-3');
+
+    // 网站logo-暗黑模式
+    $logoUrlDark = new Typecho_Widget_Helper_Form_Element_Text(
+        'logoUrlDark',
+        NULL,
+        NULL,
+        '站点夜间模式的LOGO地址（非必填）',
+        '介绍：在这里填入一个日间模式的LOGO图片URL地址'
+    );
+    $form->addInput($logoUrlDark);
+    $logoUrlDark->setAttribute('class', 'setting-content my-3');
 
     // 网站个人简介
     $blogmeabout = new Typecho_Widget_Helper_Form_Element_Text(

@@ -54,6 +54,21 @@ $(document).ready(function () {
     $('html').attr('data-theme', effectiveTheme);
     setCookie('theme', theme, 7); // 过期时间为 7 天
     setCookie('system_theme', effectiveTheme, 1); // 过期时间为 1 天
+
+    // 切换主题LOGO
+    $('img.logo-light').each(function () {
+      var _this = $(this);
+      var _src = _this.attr('src');
+      var _dark_src = _this.attr('dark-src') || "";
+      var _white_src = _this.attr('white-src') || "";
+
+      if (effectiveTheme === "light" && _white_src) {
+        _this.attr('src', _white_src).attr('dark-src', _src).removeAttr('white-src');
+      } else if (effectiveTheme === "dark" && _dark_src) {
+        _this.attr('src', _dark_src).attr('white-src', _src).removeAttr('dark-src');
+      }
+
+    });
   }
 
   // 获取系统主题

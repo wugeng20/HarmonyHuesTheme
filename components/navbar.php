@@ -15,9 +15,8 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
   <div class="container navbar-box p-1 p-md-2">
     <div class="navbar-logo flex-shrink-0">
       <a id="logo" href="<?php $this->options->siteUrl(); ?>" title="<?php $this->options->title()?>">
-        <?php if ($this->options->logoUrl): ?>
-        <img src="<?php $this->options->logoUrl(); ?>" alt="<?php $this->options->title()?>"
-          class="d-inline-block logo-light" />
+        <?php if ($this->options->logoUrl || $this->options->logoUrlDark): ?>
+        <?php echo getLogoImg('d-inline-block logo-light'); ?>
         <?php else: ?>
         <span><?php $this->options->title()?></span>
         <?php endif; ?>

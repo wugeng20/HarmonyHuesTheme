@@ -128,6 +128,26 @@ function getThemeMode() {
     return htmlspecialchars($theme);
 }
 
+/* 根据主题筛选LOGO */
+function getLogoImg($class = '') {
+    $options = Helper::options();
+    $white_src = $options->logoUrl;
+    $dark_src = $options->logoUrlDark;
+    $alt = $options->title ?? $options->description;
+
+    if (empty($white_src)) {
+        $white_src = $dark_src;
+    }
+
+    if (empty($dark_src)) {
+        $dark_src = $white_src;
+    }
+
+    $logoImg = getThemeMode() == 'light' ? '<img class="'.$class.'" src="'.$white_src.'" dark-src="'.$dark_src.'" alt="'.$alt.'">' : '<img class="'.$class.'" src="'.$dark_src.'" white-src="'.$white_src.'" alt="'.$alt.'">';
+
+    return $logoImg;
+}
+
 /* 获取文章浏览量 */
 function PostViewCount($archive) {
     $postId = $archive->cid;
