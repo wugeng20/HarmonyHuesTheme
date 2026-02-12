@@ -105,6 +105,17 @@ function themeConfig($form) {
     $form->addInput($navStyle->multiMode());
     $navStyle->setAttribute('class', 'setting-content my-3');
 
+    // 自定义缩略图
+    $customThumbnail = new Typecho_Widget_Helper_Form_Element_Textarea(
+        'customThumbnail',
+        NULL,
+        NULL,
+        '自定义缩略图（非必填）',
+        '介绍：在这里填入一个图片URL地址，图片地址一行一个，用于修改主题默认缩略图，不填则使用默认缩略图'
+    );
+    $form->addInput($customThumbnail);
+    $customThumbnail->setAttribute('class', 'setting-content my-3');
+
     // 自定义懒加载IMG
     $lazyload = new Typecho_Widget_Helper_Form_Element_Text(
         'lazyload',

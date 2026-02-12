@@ -481,6 +481,7 @@ function getThumbnails($contx, $imgnum) {
     $pattern = '/\<img.*?src\=\"(.*?)\"[^>]*>/i';
     $patternMD = '/\!\[.*?\]\((http(s)?:\/\/.*?(jpg|jpeg|png))/i';
     $patternMDfoot = '/\[.*?\]:\s*(http(s)?:\/\/.*?(jpg|jpeg|png))/i';
+    $custom_thumbnail = Helper::options()->customThumbnail; //自定义缩略图
     //如果文章内有插图，则调用插图
     if (preg_match_all($pattern, $contx, $thumbUrl)) {
         return $thumbUrl[1][$imgnum];
@@ -492,6 +493,11 @@ function getThumbnails($contx, $imgnum) {
     //如果是脚注式markdown格式的图片
     elseif (preg_match_all($patternMDfoot, $contx, $thumbUrl)) {
         return $thumbUrl[1][$imgnum];
+    }
+    // 如果有自定义缩略图，则调用自定义缩略图
+    elseif ( ! empty($custom_thumbnail)) {
+        $custom_thumbnail_arr = explode("\r\n", $custom_thumbnail); //将自定义缩略图按行分割
+        return $custom_thumbnail_arr[array_rand($custom_thumbnail_arr, 1)].'?key='.mt_rand(0, 99999); //随机调用一行
     }
     //如果真的没有图片，就调用一张随机图片
     else {
