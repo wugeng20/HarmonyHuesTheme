@@ -171,6 +171,8 @@ img, video { width: 100%; height: 100%; object-fit: cover; }
 
 #nav-components .mobile-close-btn { position: absolute; display: flex; right: 0; top: 0; width: 2rem; height: 2rem; background-color: var(--bg-color-body); border-radius: var(--border-radius-circle); align-items: center; justify-content: center; }
 
+#nav-components .nav-menu { overflow-y: auto; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; }
+
 #nav-components .nav-menu > .nav-item { font-size: 1rem; color: var(--font-color-main); }
 
 #nav-components .nav-menu .nav-a .iconfont { font-size: 1rem; }

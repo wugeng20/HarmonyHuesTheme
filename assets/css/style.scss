@@ -724,6 +724,11 @@ video {
   }
 
   .nav-menu {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
     >.nav-item {
       font-size: 1rem;
       color: var(--font-color-main);
