@@ -616,29 +616,13 @@ $(document).ready(function () {
   }
   /*---------------------动态计时器结束---------------------*/
   /*---------------------懒加载开始---------------------*/
-  // 基础配置
-  var lazyLoadConfig = {
+  // 初始化懒加载
+  $("img.lazy,.hh-widget img.widget-lazy").lazyload({
     effect: "fadeIn",
     threshold: 200,
     container: window,
     failure_limit: 30
-  };
-
-  // 通用加载处理函数
-  function handleLazyLoad(loadedClass, removedClass) {
-    return function () {
-      $(this).addClass(loadedClass).removeClass(removedClass);
-    };
-  }
-
-  // 初始化懒加载
-  $("img.lazy").lazyload($.extend({}, lazyLoadConfig, {
-    load: handleLazyLoad("loaded", "lazy")
-  }));
-
-  $(".hh-widget img.widget-lazy").lazyload($.extend({}, lazyLoadConfig, {
-    load: handleLazyLoad("loaded", "widget-lazy")
-  }));
+  });
   /*---------------------懒加载结束---------------------*/
   /*---------------------顶部导航栏滚动隐藏与显示开始---------------------*/
   let lastScrollTop = 0;

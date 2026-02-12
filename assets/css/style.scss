@@ -436,23 +436,6 @@ video {
   stroke: var(--font-color-main);
 }
 
-// 图片懒加载
-img {
-  &.lazy {
-    background-color: var(--color-primary-light-5);
-    filter: blur(25px);
-    -webkit-transition: opacity 1s ease-in-out;
-    transition: opacity 1s ease-in-out;
-  }
-
-  &.loaded {
-    background-color: transparent;
-    filter: blur(0px);
-    -webkit-transition: filter 1s linear, -webkit-filter 1s linear;
-    transition: filter 1s linear, -webkit-filter 1s linear;
-  }
-}
-
 @keyframes drawSignature {
   0% {
     stroke-dashoffset: 2400;

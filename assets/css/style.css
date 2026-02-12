@@ -82,10 +82,6 @@ img, video { width: 100%; height: 100%; object-fit: cover; }
 
 .animated-signature path { stroke-dasharray: 2400; stroke-dashoffset: 2400; fill: transparent; animation: drawSignature 8s linear infinite both; -webkit-animation: drawSignature 8s linear infinite both; stroke-width: 2px; stroke: var(--font-color-main); }
 
-img.lazy { background-color: var(--color-primary-light-5); filter: blur(25px); -webkit-transition: opacity 1s ease-in-out; transition: opacity 1s ease-in-out; }
-
-img.loaded { background-color: transparent; filter: blur(0px); -webkit-transition: filter 1s linear, -webkit-filter 1s linear; transition: filter 1s linear, -webkit-filter 1s linear; }
-
 @keyframes drawSignature { 0% { stroke-dashoffset: 2400; }
   15% { fill: transparent; }
   35%, 75% { stroke-dashoffset: 0;
