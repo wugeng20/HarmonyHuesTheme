@@ -2,20 +2,20 @@
 
 /**
  * 独立页面
- * 
+ *
  * @author  星语社长
  * @link    https://biibii.cn
  * @update  2024-7-6 18:00:04
  */
-if (!defined('__TYPECHO_ROOT_DIR__')) {
-  exit;
+if ( ! defined('__TYPECHO_ROOT_DIR__')) {
+    exit;
 }
 
 $isSidebar = $this->fields->showSidebar;
-if (empty($isSidebar) && $isSidebar !== false) {
-  $isSidebar = true;
+if ( ! empty($isSidebar) && $isSidebar !== false) {
+    $isSidebar = true;
 } else {
-  $isSidebar = (bool)$isSidebar;
+    $isSidebar = (bool) $isSidebar;
 }
 
 $this->need('components/header.php');
@@ -34,7 +34,7 @@ $this->need('components/header.php');
       <!-- 文章内容end -->
       <!--侧边栏st-->
       <?php if ($isSidebar): ?>
-        <?php $this->need('components/sidebar.php'); ?>
+      <?php $this->need('components/sidebar.php'); ?>
       <?php endif; ?>
       <!--侧边栏end-->
     </div>
