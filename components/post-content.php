@@ -88,11 +88,11 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
 <div class="post-next-prev d-flex justify-content-between my-4">
   <div class="post-next card p-2 p-md-3 text-left">
     <div class="next-prev-title text-webkit-mask font-weight-bold">上一篇</div>
-    <?php $this->thePrev('%s', '没有了'); ?>
+    <?php $this->thePrev('%s', '<span style="color: var(--overlay-color-dark-5);">新故事即将开始</span>'); ?>
   </div>
   <div class="post-prev card p-2 p-md-3 text-right">
     <div class="next-prev-title text-webkit-mask font-weight-bold">下一篇</div>
-    <?php $this->theNext('%s', '没有了'); ?>
+    <?php $this->theNext('%s', '<span style="color: var(--overlay-color-dark-5);">新故事即将开始</span>'); ?>
   </div>
 </div>
 <?php endif; ?>
