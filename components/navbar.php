@@ -28,7 +28,6 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
           <a class="nav-a <?php echo $this->is('index') ? 'active' : '' ?>" href="<?php $this->options->siteUrl(); ?>"
             title="<?php $this->options->title(); ?>">首页</a>
         </li>
-
         <?php
 // 一次性获取并组织所有分类数据
 $this->widget('Widget_Metas_Category_List')->to($category);
@@ -68,30 +67,23 @@ foreach ($categories as $cat) {
     $hasChildren = isset($childCategories[$cat['mid']]);
     $isActive = $this->is('category', $cat['slug']);
     ?>
-
         <?php if ( ! $hasChildren): // 没有子分类 ?>
         <li class="nav-item">
           <a class="nav-a <?php echo $isActive ? 'active' : '' ?>" href="<?php echo $cat['permalink']; ?>"
-            target="_self" title="<?php echo $cat['name']; ?>">
-            <?php echo $cat['name']; ?>
-          </a>
+            target="_self" title="<?php echo $cat['name']; ?>"><?php echo $cat['name']; ?></a>
         </li>
-
         <?php else: // 有子分类 ?>
         <?php $isParentActive = isCategoryOrChildActive($childCategories[$cat['mid']])?>
         <li class="nav-item">
           <a class="nav-a <?php echo $isParentActive ? 'active' : '' ?>" href="<?php echo $cat['permalink']; ?>"
-            title="<?php echo $cat['name']; ?>" target="_self">
-            <?php echo $cat['name']; ?>
-            <i class="iconfont nav-icon icon-xiala"></i>
-          </a>
+            title="<?php echo $cat['name']; ?>" target="_self"><?php echo $cat['name']; ?><i
+              class="iconfont nav-icon icon-xiala"></i></a>
           <div class="pt-md-4 sub-menu">
             <ul class="d-md-flex flex-md-wrap p-md-2">
               <?php foreach ($childCategories[$cat['mid']] as $child): ?>
               <li class="p-2 <?php echo $this->is('category', $child['slug']) ? 'active' : ''; ?>">
-                <a href="<?php echo $child['permalink']; ?>" target="_self" title="<?php echo $child['name']; ?>">
-                  <?php echo $child['name']; ?>
-                </a>
+                <a href="<?php echo $child['permalink']; ?>" target="_self"
+                  title="<?php echo $child['name']; ?>"><?php echo $child['name']; ?></a>
               </li>
               <?php endforeach; ?>
             </ul>
