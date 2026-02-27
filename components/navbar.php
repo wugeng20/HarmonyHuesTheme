@@ -45,9 +45,7 @@ while ($category->next()) {
         'parent' => $category->parent,
         'children' => array(),
     );
-
     $categories[$category->mid] = $catData;
-
     if ($category->levels !== 0) {
         // 如果是子分类，添加到父分类的children数组中
         if ( ! isset($childCategories[$category->parent])) {

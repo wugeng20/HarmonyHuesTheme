@@ -430,14 +430,19 @@ function formatEmoji($text, $type = true) {
  * 判断当前页面是否属于某个分类（包括子分类）
  */
 function isCategoryOrChildActive($children = array()) {
+    try {
 // 检查是否是子分类
-    foreach ($children as $child) {
-        if (Typecho_Widget::widget('Widget_Archive')->is('category', $child['slug'])) {
-            return true;
+        foreach ($children as $child) {
+            if (Typecho_Widget::widget('Widget_Archive')->is('category', $child['slug'])) {
+                return true;
+            }
         }
+
+        return false;
+    } catch (Exception $e) {
+        return false;
     }
 
-    return false;
 }
 
 // 判断是否为同一路径
