@@ -975,7 +975,7 @@ video {
 
         &:nth-child(3) {
           z-index: 1;
-          right: 0;
+          right: -0.5rem;
           left: unset;
           transform: rotate(10deg);
         }
@@ -990,7 +990,7 @@ video {
         }
 
         &:last-child {
-          right: 0.25rem;
+          right: -0.25rem;
           transform: rotate(5deg);
         }
       }
