@@ -76,7 +76,7 @@ if ($sticky && $this->is('index') || $this->is('front')) {
                 <a href="<?php $this->permalink() ?>"
                   title="<?php $this->title() ?>"><?php $this->sticky() ?><?php $this->title() ?></a>
                 <div class="post-description">
-                  <?php echo substr($this->fields->abstract ?: $this->excerpt(15, ''), 15); ?>
+                  <?php echo mb_substr($this->fields->abstract, 0, 15) ?: $this->excerpt(15, ''); ?>
                 </div>
               </div>
             </div>
