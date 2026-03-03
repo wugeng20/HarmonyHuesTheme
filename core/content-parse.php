@@ -18,16 +18,12 @@ use Utils\Helper;
 // 添加文章标题锚点
 function createAnchor($obj)
 {
-    global $catalog;
-    global $catalog_count;
-    $catalog = array();
-    $catalog_count = 0;
-    $obj = preg_replace_callback('/<h([1-4])(.*?)>(.*?)<\/h\1>/i', function ($obj) {
-        global $catalog;
-        global $catalog_count;
-        $catalog_count++;
-        $catalog[] = array('text' => trim(strip_tags($obj[3])), 'depth' => $obj[1], 'count' => $catalog_count);
-        return '<h' . $obj[1] . $obj[2] . ' id="cl-' . $catalog_count . '">' . $obj[3] . '</h' . $obj[1] . '>';
+    // 计数，heading-id
+    $count = 0;
+    // 匹配h1-h4标签
+    $obj = preg_replace_callback('/<h([1-4])(.*?)>(.*?)<\/h\1>/i', function ($obj) use (&$count) {
+        $count++;
+        return '<h' . $obj[1] . $obj[2] . ' id="heading-' .  $count . '">' . $obj[3] . '</h' . $obj[1] . '>';
     }, $obj);
     return $obj;
 }

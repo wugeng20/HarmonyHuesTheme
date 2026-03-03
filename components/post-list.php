@@ -68,32 +68,60 @@ if ($sticky && $this->is('index') || $this->is('front')) {
 <div class="post-main">
   <div class="row no-gutters post-list">
     <?php while ($this->next()): ?>
-      <div class="col-6 col-md-4 col-xl-4 d-flex">
-        <div class="post-item d-flex flex-column m-1 m-md-2 p-0">
-          <div class="post-cover">
-            <a href="<?php $this->permalink() ?>" title="<?php $this->title() ?>">
-              <img class="lazy" src="<?php getLazyload(); ?>" data-original="<?php echo getImgLink($this); ?>"
-                alt="<?php $this->title() ?>" />
-            </a>
-          </div>
-          <div class="post-info d-flex flex-column align-content-center justify-content-between p-1 p-md-2">
-            <div class="post-head">
-              <a href="<?php $this->permalink() ?>"
-                title="<?php $this->title() ?>"><?php $this->sticky() ?><?php $this->title() ?></a>
-              <div class="post-description">
-                <?php echo $this->fields->abstract ?: $this->excerpt(100, '...'); ?>
+      <?php if ($this->fields->articleType == 'image'): ?>
+        <div class="col-6 col-md-4 col-xl-4 d-flex post-image-card">
+          <div class="post-item d-flex flex-column m-1 m-md-2 p-0">
+            <div class="post-info d-flex flex-column align-content-center justify-content-between p-1 px-md-2 pt-md-2">
+              <div class="post-head">
+                <a href="<?php $this->permalink() ?>"
+                  title="<?php $this->title() ?>"><?php $this->sticky() ?><?php $this->title() ?></a>
+                <div class="post-description">
+                  <?php echo substr($this->fields->abstract ?: $this->excerpt(15, ''), 15); ?>
+                </div>
               </div>
             </div>
-            <div class="post-meta-wrap d-flex justify-content-between">
-              <div class="author-name"><?php $this->category('/'); ?></div>
-              <div class="post-meta">
-                <time datetime="<?php $this->date('c'); ?>"
-                  class="post-meta-item"><?php echo ueTimeMini($this->date); ?></time>
+            <div class="post-cover">
+              <a href="<?php $this->permalink() ?>" title="<?php $this->title() ?>">
+                <?php $imgThumbs = getImgLink($this, 3); ?>
+                <!-- 遍历缩略图 -->
+                <?php foreach ($imgThumbs as $imgThumb): ?>
+                  <div class="post-cover-image">
+                    <img class="lazy" src="<?php getLazyload(); ?>" data-original="<?php echo $imgThumb; ?>"
+                      alt="<?php $this->title() ?>" />
+                  </div>
+                <?php endforeach; ?>
+              </a>
+            </div>
+          </div>
+        </div>
+      <?php else: ?>
+        <div class="col-6 col-md-4 col-xl-4 d-flex">
+          <div class="post-item d-flex flex-column m-1 m-md-2 p-0">
+            <div class="post-cover">
+              <a href="<?php $this->permalink() ?>" title="<?php $this->title() ?>">
+                <img class="lazy" src="<?php getLazyload(); ?>" data-original="<?php echo getImgLink($this); ?>"
+                  alt="<?php $this->title() ?>" />
+              </a>
+            </div>
+            <div class="post-info d-flex flex-column align-content-center justify-content-between p-1 p-md-2">
+              <div class="post-head">
+                <a href="<?php $this->permalink() ?>"
+                  title="<?php $this->title() ?>"><?php $this->sticky() ?><?php $this->title() ?></a>
+                <div class="post-description">
+                  <?php echo $this->fields->abstract ?: $this->excerpt(100, '...'); ?>
+                </div>
+              </div>
+              <div class="post-meta-wrap d-flex justify-content-between">
+                <div class="author-name"><?php $this->category('/'); ?></div>
+                <div class="post-meta">
+                  <time datetime="<?php $this->date('c'); ?>"
+                    class="post-meta-item"><?php echo ueTimeMini($this->date); ?></time>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      <?php endif; ?>
     <?php endwhile; ?>
   </div>
   <!-- 分页 -->
