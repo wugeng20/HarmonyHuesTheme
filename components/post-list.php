@@ -79,6 +79,14 @@ if ($sticky && $this->is('index') || $this->is('front')) {
                   <?php echo mb_substr($this->fields->abstract, 0, 15) ?: $this->excerpt(15, ''); ?>
                 </div>
               </div>
+              <div class="post-meta-wrap">
+                <div class="author-name">
+                  <?php $this->category('/'); ?></div>
+                <div class="post-meta">
+                  <time datetime="<?php $this->date('c'); ?>"
+                    class="post-meta-item"><?php echo ueTimeMini($this->date); ?></time>
+                </div>
+              </div>
             </div>
             <div class="post-cover">
               <a href="<?php $this->permalink() ?>" title="<?php $this->title() ?>">

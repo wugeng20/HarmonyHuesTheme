@@ -245,7 +245,7 @@ img, video { width: 100%; height: 100%; object-fit: cover; }
 
 .post-list .post-item .post-cover a { position: absolute; top: 0; bottom: 0; left: 0; right: 0; border: 0; border-radius: inherit; background-size: cover; background-repeat: no-repeat; background-position: 50% 50%; background-clip: padding-box; }
 
-.post-list .post-item .post-info { height: 100%; width: 100%; cursor: pointer; position: relative; overflow: hidden; gap: 0.5rem; }
+.post-list .post-item .post-info { height: 100%; width: 100%; cursor: pointer; position: relative; gap: 0.5rem; }
 
 @media (max-width: 767.98px) { .post-list .post-item .post-info { gap: 0.15rem; } }
 
@@ -259,6 +259,14 @@ img, video { width: 100%; height: 100%; object-fit: cover; }
 
 @media (max-width: 767.98px) { .post-list .post-item { box-shadow: var(--shadow-box-small); } }
 
+.post-list .post-image-card .post-info .author-name { position: absolute; text-align: center; width: 100%; font-size: 2rem; font-weight: 700; opacity: 0; transform: translateY(0); transition: all .3s ease 0s; }
+
+@media (max-width: 767.98px) { .post-list .post-image-card .post-info .author-name { font-size: 1.5rem; } }
+
+.post-list .post-image-card .post-info .post-meta { position: absolute; top: 0; right: .25rem; font-size: 1.5rem; font-weight: 700; opacity: .2; }
+
+@media (max-width: 767.98px) { .post-list .post-image-card .post-info .post-meta { font-size: 1rem; } }
+
 .post-list .post-image-card .post-cover { overflow: unset; height: 65%; padding-bottom: 15%; }
 
 .post-list .post-image-card .post-cover .post-cover-image { position: absolute; width: 50%; height: 100%; overflow: hidden; z-index: 2; left: 25%; bottom: -.25rem; border: var(--border-solid-main); border-radius: var(--border-radius-medium); transition: all 0.3s ease-in-out; box-shadow: var(--shadow-hover-nav); }
@@ -266,6 +274,8 @@ img, video { width: 100%; height: 100%; object-fit: cover; }
 .post-list .post-image-card .post-cover .post-cover-image:nth-child(1) { z-index: 3; left: -1rem; bottom: -1rem; transform: rotate(-10deg); }
 
 .post-list .post-image-card .post-cover .post-cover-image:nth-child(3) { z-index: 1; right: -0.5rem; left: unset; transform: rotate(10deg); }
+
+.post-list .post-image-card .post-item:hover .post-info .author-name { opacity: .15; transform: translateY(-2rem); }
 
 .post-list .post-image-card .post-item:hover .post-cover-image:first-child { left: -0.5rem; transform: rotate(-5deg); }
 

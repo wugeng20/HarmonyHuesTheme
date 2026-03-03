@@ -909,7 +909,7 @@ video {
       width: 100%;
       cursor: pointer;
       position: relative;
-      overflow: hidden;
+      // overflow: hidden;
       gap: 0.5rem;
 
       @include max-media-breakpoint('md') {
@@ -948,6 +948,36 @@ video {
   }
 
   .post-image-card {
+    .post-info {
+      .author-name {
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        font-size: 2rem;
+        font-weight: 700;
+        opacity: 0;
+        transform: translateY(0);
+        transition: all .3s ease 0s;
+
+        @include max-media-breakpoint('md') {
+          font-size: 1.5rem;
+        }
+      }
+
+      .post-meta {
+        position: absolute;
+        top: 0;
+        right: .25rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        opacity: .2;
+
+        @include max-media-breakpoint('md') {
+          font-size: 1rem;
+        }
+      }
+    }
+
     .post-cover {
       overflow: unset;
       height: 65%;
@@ -983,6 +1013,13 @@ video {
     }
 
     .post-item:hover {
+      .post-info {
+        .author-name {
+          opacity: .15;
+          transform: translateY(-2rem);
+        }
+      }
+
       .post-cover-image {
         &:first-child {
           left: -0.5rem;
