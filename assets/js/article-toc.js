@@ -7,7 +7,7 @@
  * --------------------------------- */
 $(document).ready(function () {
   // 获取所有标题的锚点元素
-  var headings = $('[id^="cl-"]');
+  var headings = $('[id^="heading-"]');
   // 获取所有目录项
   var catalogItems = $('.atoc-list a');
 
