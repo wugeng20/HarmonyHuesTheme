@@ -83,14 +83,13 @@ if ($sticky && $this->is('index') || $this->is('front')) {
                 <div class="author-name">
                   <?php $this->category('/'); ?></div>
                 <div class="post-meta">
-                  <time datetime="<?php $this->date('c'); ?>"
-                    class="post-meta-item"><?php echo ueTimeMini($this->date); ?></time>
+                  <time datetime="<?php $this->date('c'); ?>" class="post-meta-item"><?php $this->date('m-d'); ?></time>
                 </div>
               </div>
             </div>
             <div class="post-cover">
               <a href="<?php $this->permalink() ?>" title="<?php $this->title() ?>">
-                <?php $imgThumbs = getImgLink($this, 3); ?>
+                <?php $imgThumbs = getImgLink($this, 3, false); ?>
                 <!-- 遍历缩略图 -->
                 <?php foreach ($imgThumbs as $imgThumb): ?>
                   <div class="post-cover-image">

@@ -15,7 +15,7 @@ use Utils\Helper;
 ?>
 <?php
 
-// 添加文章标题锚点
+/* 添加文章标题锚点 */
 function createAnchor($obj)
 {
     // 计数，heading-id
@@ -28,7 +28,7 @@ function createAnchor($obj)
     return $obj;
 }
 
-// 灯箱
+/* 灯箱 */
 function replaceImgSrc($content)
 {
     $pattern = '/<img(.*?)src="(.*?)"(.*?)title="(.*?)"(.*?)>/i';
@@ -36,7 +36,7 @@ function replaceImgSrc($content)
     return preg_replace($pattern, $replacement, $content);
 }
 
-// 提示短代码
+/* 提示短代码 */
 function ContentHint($content)
 {
     $patterns = array(
@@ -68,7 +68,7 @@ function ContentHint($content)
     return $content;
 }
 
-// 视频短代码
+/* 视频短代码 */
 function ContentVideo($content)
 {
     $pattern = '/\[player\s+url="([^"]*)"(?:\s+pic="([^"]*)")?\s+\/\]/';
@@ -87,7 +87,7 @@ function ContentVideo($content)
     return $content;
 }
 
-// 链接短代码
+/* 链接短代码 */
 function extractToLinks($content)
 {
     $pattern = '/\[tolink\s+title="([^"]*)"\s+url="([^"]*)"(?:\s+favicon="([^"]*)")?\s+\/\]/';
@@ -121,7 +121,7 @@ function extractToLinks($content)
     return $content;
 }
 
-// 过滤a标签链接
+/* 过滤a标签链接 */
 function ContentLink($content)
 {
 
@@ -171,7 +171,7 @@ function ContentLink($content)
     return $content;
 }
 
-// 过滤网盘下载
+/* 过滤网盘下载 */
 function ContentCloud($content)
 {
     $pattern = '/\[cloud\s+type="([^"]*)"\s+title="([^"]*)"\s+url="([^"]*)"\s+password="([^"]*)"\s+\/\]/';
@@ -218,7 +218,7 @@ function ContentCloud($content)
     return $content;
 }
 
-// 过滤pre代码标签
+/* 过滤pre代码标签 */
 function ContentCode($content)
 {
     // 正则表达式匹配
@@ -240,7 +240,7 @@ function ContentCode($content)
     return $content;
 }
 
-// 过滤fold折叠框
+/* 过滤fold折叠框 */
 function ContentFold($content)
 {
     $pattern = '#\[fold\s+title="([^"]*)"\s+type="(open|close)"\s*\](.*?)\[/fold\]#si';
@@ -251,38 +251,94 @@ function ContentFold($content)
         $contentText = Markdown::convert($matches[3]);
 
         $openAttr = ($type === 'open') ? 'open' : '';
+        $html = '<details class="fold-container mb-3" ' . $openAttr . '>';
+        $html .= '<summary class="fold-header py-2 px-3">' . $title . '</summary>';
+        $html .= '<div class="fold-content py-2 px-3">' . $contentText . '</div>';
+        $html .= '</details>';
 
-        return '
-            <details class="fold-container mb-3" ' . $openAttr . '>
-              <summary class="fold-header py-2 px-3">
-                ' . $title . '
-              </summary>
-              <div class="fold-content py-2 px-3">
-                ' . $contentText . '
-              </div>
-            </details>
-            ';
+        return $html;
     }, $content);
 
     return $content;
 }
 
-// 过滤多余的html标签
+/* 过滤多余的html标签 */
 function ContentHtml($content)
 {
     // 使用一个正则表达式同时匹配并删除空段落和仅包含两个换行符的段落
-    $content = preg_replace('#<p></p>|<br><br></p>#si', '', $content);
+    $content = preg_replace('#<br>#si', '', $content);
+    $content = preg_replace('#<p></p>#si', '', $content);
 
     return $content;
 }
 
-// 运行所以函数
+/* 过滤宫格图片 */
+function ContentGridImg_bak($content)
+{
+    // 匹配短代码： [GridImg columns="3" gap="10px"] ... [/GridImg]
+    $pattern = '/\[GridImg\s+(.*?)\](.*?)\[\/GridImg\]/is';
+
+    $content = preg_replace_callback($pattern, function ($matches) {
+        $attrString = $matches[1]; // 属性字符串，如：columns="3" gap="10px"
+        $innerContent = $matches[2]; // 标签内的内容（图片URL列表）
+
+        // 默认值
+        $columns = 3;
+        $gap = '10px';
+
+        // 提取 columns 属性
+        if (preg_match('/columns="([^"]*)"/i', $attrString, $colMatch)) {
+            $columns = (int)$colMatch[1]; // 强制转为整数
+        }
+        // 提取 gap 属性
+        if (preg_match('/gap="([^"]*)"/i', $attrString, $gapMatch)) {
+            $gap = $gapMatch[1];
+        }
+
+        // 处理内部内容：先统一分隔符，再清除HTML标签
+        // 1. 将所有 <br> 变体替换为换行符
+        $innerContent = preg_replace('/<br>/i', "\n", $innerContent);
+        // 2. 移除其他HTML标签（如 <a>、<p> 等），保留纯文本
+        $innerContent = strip_tags($innerContent);
+        // 3. 解码HTML实体（如 &amp; 转为 &）
+        $innerContent = html_entity_decode($innerContent, ENT_QUOTES, 'UTF-8');
+        // 4. 按换行符分割，并过滤空行
+        $lines = explode("\n", trim($innerContent));
+        $lines = array_map('trim', $lines);
+        $urls = array_filter($lines);
+
+        // 生成HTML网格
+        $html = '<div
+                  style="display:grid;grid-template-columns:repeat(' . $columns . ', 1fr); gap:' . htmlspecialchars($gap) . ';margin: ' . htmlspecialchars($gap) . '  auto;">
+                  ';
+        foreach ($urls as $url) {
+            $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+            $html .= '<img class="lazy" src="' . getLazyload(false) . '" data-original="' . $safeUrl . '"
+                    style="width:100%; height: 100%; display:block;" alt=' . basename($safeUrl) . ' show-img>';
+        }
+        $html .= '</div>';
+
+        return $html;
+    }, $content);
+
+    return $content;
+}
+
+function ContentGridImg($content)
+{
+    $pattern = '/\[GridImg\s+columns="(\d+)"\s+gap="([^"]+)"\](.*?)\[\/GridImg\]/s';
+    $replacement = '<div class="grid-img-container"
+                  style="display:grid;grid-template-columns:repeat($1, 1fr); gap:$2; margin: $2 auto;">$3</div>';
+    $content = preg_replace($pattern, $replacement, $content);
+
+    return $content;
+}
+
+/* 运行所以函数 */
 function parseContens($content)
 {
     // 添加文章标题锚点
     $content = createAnchor($content);
-    // 添加图片懒加载
-    $content = replaceImgSrc($content);
     // 提示短代码
     $content = ContentHint($content);
     // 视频短代码
@@ -299,6 +355,10 @@ function parseContens($content)
     $content = ContentCode($content);
     // 过滤fold折叠框
     $content = ContentFold($content);
+    // 过滤宫格图片
+    $content = ContentGridImg($content);
+    // 添加图片懒加载
+    $content = replaceImgSrc($content);
     // 过滤多余的html标签
     $content = ContentHtml($content);
 

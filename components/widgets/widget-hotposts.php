@@ -55,9 +55,10 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
           <?php foreach ($hotPostsCid as $index => $postcid): ?>
             <?php $post = Helper::widgetById('Contents', $postcid['cid']); ?>
             <?php $postTitle = htmlspecialchars($post->title); ?>
-            <li class="hotposts-item">
-              <a class="hotposts-title" href="<?php $post->permalink(); ?>" title="<?php echo $postTitle; ?>">
-                <span class="hotposts-number mr-1"><?php echo $index + 1; ?></span><?php echo $postTitle; ?>
+            <li class="hotposts-item py-1">
+              <a class="hotposts-link" href="<?php $post->permalink(); ?>" title="<?php echo $postTitle; ?>">
+                <span class="hotposts-number"><?php echo $index + 1; ?></span>
+                <div class="hotposts-title"><span><?php echo $postTitle; ?></span></div>
               </a>
             </li>
           <?php endforeach; ?>

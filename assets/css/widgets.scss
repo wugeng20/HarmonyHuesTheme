@@ -8,7 +8,7 @@
 :root[data-theme=light] {
   /* 侧边栏-一言顶部渐变色 */
   --hotposts-h-bg: linear-gradient(to right, rgba(254, 125, 125, 0.5), transparent);
-  --newreply-h-bg: linear-gradient(to right, rgba(125, 254, 147, 0.5), transparent);
+  --newreply-h-bg: linear-gradient(to right, rgba(254, 227, 125, 0.5), transparent);
   --atoc-h-bg: linear-gradient(to right, rgba(125, 125, 254, 0.5), transparent);
 }
 
@@ -284,15 +284,36 @@ $breakpoints: (
   );
 
 .hotposts-item {
-  font-size: 0.95rem;
-  line-height: 2;
 
-  .hotposts-number {
-    font-size: 0.9rem;
-    padding: 0 0.35rem;
-    border-radius: var(--border-radius-small);
-    color: var(--white);
+  .hotposts-link {
+    display: flex;
     overflow: hidden;
+    gap: 0.25rem;
+    flex-direction: row;
+    align-items: baseline;
+
+    .hotposts-number {
+      display: flex;
+      width: 20px;
+      height: 20px;
+      font-size: 0.9rem;
+      color: var(--white);
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--border-radius-base);
+    }
+
+    .hotposts-title {
+      display: flex;
+      align-items: center;
+      flex: 1;
+
+      span {
+        flex: 1;
+        @include text-ellipsis;
+      }
+    }
   }
 
   /* 排名文字颜色背景 */
@@ -300,10 +321,6 @@ $breakpoints: (
     &:nth-child(#{$rank}) .hotposts-number {
       background-color: $color;
     }
-  }
-
-  .hotposts-title {
-    @include text-ellipsis;
   }
 }
 }
@@ -334,29 +351,12 @@ $breakpoints: (
 
   .comment-content {
     position: relative;
-    line-height: 1.5rem;
-    background-color: var(--bg-color-primary);
+    background: linear-gradient(to right, transparent 0%, var(--overlay-color-dark-1) 40%, transparent 100%);
     border-radius: var(--border-radius-small);
     word-break: break-all;
 
-    &::before {
-      position: absolute;
-      content: "";
-      width: 0.8rem;
-      height: 0.8rem;
-      background-color: var(--bg-color-primary);
-      top: -2px;
-      left: 5px;
-      z-index: -1;
-      transform: rotate(45deg);
-    }
-
     &:hover {
-      background-color: var(--overlay-color-light-8);
-
-      &::before {
-        background-color: var(--overlay-color-light-8);
-      }
+      background-color: var(--overlay-color-dark-1);
     }
 
     img {

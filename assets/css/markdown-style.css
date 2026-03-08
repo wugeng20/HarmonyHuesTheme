@@ -37,6 +37,8 @@
 
 .markdown-body a:not([data-fancybox]):not([data-links]):not([data-cloud]):hover { text-decoration: underline; background-size: 100% 100%; }
 
+.markdown-body br { display: none; }
+
 .markdown-body blockquote, .markdown-body details, .markdown-body dl, .markdown-body ol, .markdown-body pre, .markdown-body table, .markdown-body ul { margin-top: 0.5rem; margin-bottom: 0.5rem; }
 
 .markdown-body ul, .markdown-body ol { padding-left: 2rem; line-height: 1.7; }
@@ -157,3 +159,6 @@
 .fold-container .fold-header::after { content: "+"; font-size: 1.25rem; line-height: 1; float: right; }
 
 .fold-container[open] .fold-header::after { content: "-"; }
+
+/* 宫格图片样式 */
+.grid-img-container img { width: 100%; height: 100%; object-fit: cover; }
