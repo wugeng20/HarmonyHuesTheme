@@ -7,21 +7,22 @@
  * @link    https://biibii.cn
  * @update  2024-7-6 18:00:04
  */
-if ( ! defined('__TYPECHO_ROOT_DIR__')) {
+if (! defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 ?>
 <?php
 // 主题外观设置
-function themeConfig($form) {
+function themeConfig($form)
+{
     // 导入备份
     require_once 'theme-backup.php';
-    ?>
-<link rel="stylesheet" href="<?php getAssets('assets/lib/bootstrap4/bootstrap.min.css')?>" type="text/css" media="all">
-<link rel="stylesheet" href="<?php getAssets('assets/css/style.min.css')?>" type="text/css" media="all">
-<link rel="stylesheet" href="<?php getAssets('assets/typecho/config/css/config.min.css')?>">
-<div class="harmonyhues-config card mt-2 mb-4 p-2">
-  <?php
+?>
+    <link rel="stylesheet" href="<?php getAssets('assets/lib/bootstrap4/bootstrap.min.css') ?>" type="text/css" media="all">
+    <link rel="stylesheet" href="<?php getAssets('assets/css/style.min.css') ?>" type="text/css" media="all">
+    <link rel="stylesheet" href="<?php getAssets('assets/typecho/config/css/config.min.css') ?>">
+    <div class="harmonyhues-config card mt-2 mb-4 p-2">
+    <?php
 
     //---------------------------- 基础设置 ----------------------------//
     // 网站favicon图标
@@ -441,7 +442,7 @@ function themeConfig($form) {
         NULL,
         NULL,
         '备案HTML内容（非必填）',
-        '介绍：在这里填入你的网站备案HTML内容， 注意：底部footer内容会覆盖此内容，只适合默认的底部内容，示例：  &Iota; <a href="https://beian.miit.gov.cn/" target="_blank">ICP备xxxx号-1</a>'
+        '介绍：在这里填入你的网站备案HTML内容， 注意：底部footer内容会覆盖此内容，只适合默认的底部内容，示例： &Iota; [a href="https://beian.miit.gov.cn/" target="_blank"]ICP备xxxx号-1[/a]，[]符号改为<>'
     );
     $form->addInput($icp);
     $icp->setAttribute('class', 'setting-content my-3');
@@ -524,4 +525,4 @@ function themeConfig($form) {
     $form->addInput($customBodyEnd);
 }
 
-?>
+    ?>
