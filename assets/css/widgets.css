@@ -146,7 +146,7 @@
 
 .index-footer-widget .hello-widget .hello-btn-group .hello-btn-item { font-size: 0.8rem; color: var(--color-primary-light-5); background-color: var(--overlay-color-light-1); border-radius: var(--border-radius-small); }
 
-.index-footer-widget .timejourney-widget { position: relative; background-image: var(--gradient-45deg); z-index: 0; }
+.index-footer-widget .timejourney-widget { position: relative; background-image: var(--gradient-45deg); z-index: 0; overflow: hidden; }
 
 .index-footer-widget .timejourney-widget .timejourney-progress { position: absolute; width: 0%; height: 100%; color: var(--bg-color-body); font-weight: bold; background-color: var(--font-color-main); z-index: -1; }
 

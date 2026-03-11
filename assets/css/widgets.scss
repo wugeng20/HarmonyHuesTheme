@@ -470,6 +470,7 @@ $breakpoints: (
     position: relative;
     background-image: var(--gradient-45deg);
     z-index: 0;
+    overflow: hidden;
 
     .timejourney-progress {
       position: absolute;
