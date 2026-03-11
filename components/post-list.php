@@ -12,54 +12,73 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
 }
 ?>
 <?php
-/** 文章置顶 */
-$sticky = $this->options->sticky;
-if ($sticky && $this->is('index') || $this->is('front')) {
-  $sticky_cids = explode(',', $sticky); //分割文本
-  $cid_count = count($sticky_cids);
-  $sticky_html = "<span style='color:red'>[置顶] </span>"; //置顶标题的 html
-  $db = Typecho_Db::get(); // 获取数据库
-  $pageSize = $this->parameter->pageSize - $cid_count; // 每页显示文章数
-  $select1 = $this->select()->where('type = ?', 'post'); // 获取文章1
-  $select2 = $this->select()->where('type = ? && status = ? && created < ?', 'post', 'publish', time()); // 获取文章2
+/**
+ * 文章列表
+ */
+$stickyPostIds = $this->options->sticky ?? ''; // 置顶文章ID，逗号分隔
+$hiddenCategoryIds = $this->options->hideCategory ?? ''; // 要隐藏的分类ID，逗号分隔
 
-  //清空原有文章的列队
+// 仅在首页执行
+if ($stickyPostIds && $this->is('index') || $this->is('front')) {
+  $stickyIdList = explode(',', $stickyPostIds); //分割文本
+  $stickyCount = count($stickyIdList); // 置顶文章数量
+  $stickyLabelHtml = "<span style='color:red'>[置顶] </span>"; //置顶标题的 html
+  $db = Typecho_Db::get(); // 获取数据库
+  $adjustedPageSize = $this->parameter->pageSize - $stickyCount; // 每页显示文章数
+  $stickyPostQuery = $this->select()->where('type = ?', 'post'); // 获取文章1
+  $normalPostQuery = $this->select()->where('type = ? && status = ? && created < ?', 'post', 'publish', time()); // 获取文章2
+
+  // 清空原有文章的列队
   $this->row = array();
   $this->stack = array();
   $this->length = 0;
 
-  $order = '';
-  foreach ($sticky_cids as $i => $cid) {
-    if ($i == 0) {
-      $select1->where('cid = ?', $cid);
+  $sortOrder = '';
+  foreach ($stickyIdList as $index => $cid) {
+    if ($index == 0) {
+      $stickyPostQuery->where('cid = ?', $cid); // 第一个置顶文章
     } else {
-      $select1->orWhere('cid = ?', $cid);
+      $stickyPostQuery->orWhere('cid = ?', $cid); // 多个置顶文章
     }
 
-    $order .= " when $cid then $i";
-    $select2->where('table.contents.cid != ?', $cid); //避免重复
+    $sortOrder .= " when $cid then $index";
+    $normalPostQuery->where('table.contents.cid != ?', $cid); //避免重复
   }
 
-  if ($order) {
-    $select1->order('', "(case cid$order end)");
+  if ($sortOrder) {
+    $stickyPostQuery->order('', "(case cid$sortOrder end)");
   }
 
-  //置顶文章的顺序 按 $sticky 中 文章ID顺序
+  // 排除隐藏分类的文章
+  if (!empty($hiddenCategoryIds)) {
+    // 子查询获取隐藏分类下的所有文章ID
+    $hiddenPostSubQuery = $db->fetchAll($db->select('cid')->from('table.relationships')->where("mid IN ($hiddenCategoryIds)"));
+
+    // 提取所有 cid 值
+    $hiddenPostCids = array_column($hiddenPostSubQuery, 'cid');
+    // 用逗号连接成字符串
+    $hiddenPostCidsStr = implode(',', $hiddenPostCids);
+
+    // 排除这些文章ID
+    $normalPostQuery->where("table.contents.cid NOT IN ($hiddenPostCidsStr)");
+  }
+
+  //置顶文章的顺序 按 $stickyPostIds 中 文章ID顺序
   if ($this->_currentPage == 1 || $this->currentPage == 1) {
-    foreach ($db->fetchAll($select1) as $sticky_post) { //首页第一页才显示
-      $sticky_post['sticky'] = $sticky_html;
-      $this->push($sticky_post); //压入列队
+    foreach ($db->fetchAll($stickyPostQuery) as $stickyPost) { //首页第一页才显示
+      $stickyPost['sticky'] = $stickyLabelHtml;
+      $this->push($stickyPost); //压入列队
     }
   }
 
-  $uid = $this->user->uid; //登录时，显示用户各自的私密文章
-  if ($uid) {
-    $select2->orWhere('authorId = ? && status = ?', $uid, 'private');
+  $userId = $this->user->uid; //登录时，显示用户各自的私密文章
+  if ($userId) {
+    $normalPostQuery->orWhere('authorId = ? && status = ?', $userId, 'private');
   }
 
-  $sticky_posts = $db->fetchAll($select2->order('table.contents.created', Typecho_Db::SORT_DESC)->page($this->_currentPage, $pageSize));
-  foreach ($sticky_posts as $sticky_post) {
-    $this->push($sticky_post);
+  $normalPosts = $db->fetchAll($normalPostQuery->order('table.contents.created', Typecho_Db::SORT_DESC)->page($this->_currentPage, $adjustedPageSize));
+  foreach ($normalPosts as $stickyPost) {
+    $this->push($stickyPost);
   }
 
   //压入列队

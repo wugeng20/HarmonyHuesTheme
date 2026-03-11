@@ -168,10 +168,21 @@ function themeConfig($form)
         NULL,
         NULL,
         '文章置顶（非必填）',
-        '介绍：置顶的文章cid，按照排序输入, 请以半角逗号或空格分隔'
+        '介绍：置顶的文章cid，按照排序输入, 请以半角逗号分隔，例如：1,2,3'
     );
     $form->addInput($sticky);
     $sticky->setAttribute('class', 'setting-content my-3');
+
+    // 首页不显示分类文章
+    $hideCategory = new Typecho_Widget_Helper_Form_Element_Text(
+        'hideCategory',
+        NULL,
+        NULL,
+        '首页隐藏分类（非必填）',
+        '介绍：填写需要隐藏的分类的mid，首页文章列表将不显示分类下的文章，请以半角逗号分隔，例如：1,2,3'
+    );
+    $form->addInput($hideCategory);
+    $hideCategory->setAttribute('class', 'setting-content my-3');
 
     // 是否开启goLink外链
     $isGoLink = new Typecho_Widget_Helper_Form_Element_Select(
