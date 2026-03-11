@@ -19,71 +19,76 @@ $stickyPostIds = $this->options->sticky ?? ''; // 置顶文章ID，逗号分隔
 $hiddenCategoryIds = $this->options->hideCategory ?? ''; // 要隐藏的分类ID，逗号分隔
 
 // 仅在首页执行
-if ($stickyPostIds && $this->is('index') || $this->is('front')) {
-  $stickyIdList = explode(',', $stickyPostIds); //分割文本
-  $stickyCount = count($stickyIdList); // 置顶文章数量
-  $stickyLabelHtml = "<span style='color:red'>[置顶] </span>"; //置顶标题的 html
-  $db = Typecho_Db::get(); // 获取数据库
-  $adjustedPageSize = $this->parameter->pageSize - $stickyCount; // 每页显示文章数
-  $stickyPostQuery = $this->select()->where('type = ?', 'post'); // 获取文章1
-  $normalPostQuery = $this->select()->where('type = ? && status = ? && created < ?', 'post', 'publish', time()); // 获取文章2
+if (($stickyPostIds || $hiddenCategoryIds) && $this->is('index') || $this->is('front')) {
+  // 获取数据库对象
+  $db = Typecho_Db::get();
+  // 每页显示文章数量
+  $adjustedPageSize = $this->parameter->pageSize;
+  // 获取文章数据
+  $normalPostQuery = $this->select()->where('type = ? && status = ? && created < ?', 'post', 'publish', time());
+  // 需要移除的文章Cid
+  $hiddenPostCidArray = array();
 
   // 清空原有文章的列队
   $this->row = array();
   $this->stack = array();
   $this->length = 0;
 
-  $sortOrder = '';
-  foreach ($stickyIdList as $index => $cid) {
-    if ($index == 0) {
-      $stickyPostQuery->where('cid = ?', $cid); // 第一个置顶文章
-    } else {
-      $stickyPostQuery->orWhere('cid = ?', $cid); // 多个置顶文章
+  // 置顶的文章
+  if (!empty($stickyPostIds)) {
+    // 处理置顶
+    $stickyIdList = $stickyPostIds ? array_filter(explode(',', $stickyPostIds), 'strlen') : [];
+    $stickyLabelHtml = '<span style="color:red">[置顶] </span>';
+    $hiddenCidsx = implode(',', $stickyIdList);
+    $stickyPostQuery = $this->select()->where('type = ? && status = ? && created < ?', 'post', 'publish', time())->where("cid in ($hiddenCidsx)"); // 获取文章
+    $stickyPosts = $db->fetchAll($stickyPostQuery);
+    $adjustedPageSize -= count($stickyPosts); // 减去置顶文章数量
+
+    // 首页第一页才显示
+    if ($this->_currentPage == 1 || $this->currentPage == 1) {
+      foreach ($stickyPosts as $stickyPost) {
+        $stickyPost['sticky'] = $stickyLabelHtml;
+        $this->push($stickyPost); //压入列队
+      }
     }
 
-    $sortOrder .= " when $cid then $index";
-    $normalPostQuery->where('table.contents.cid != ?', $cid); //避免重复
+    // 将置顶文章Cid加入隐藏列表
+    $hiddenPostCidArray = array_merge($hiddenPostCidArray, $stickyIdList);
   }
 
-  if ($sortOrder) {
-    $stickyPostQuery->order('', "(case cid$sortOrder end)");
-  }
-
-  // 排除隐藏分类的文章
+  // 隐藏分类的文章
   if (!empty($hiddenCategoryIds)) {
     // 子查询获取隐藏分类下的所有文章ID
     $hiddenPostSubQuery = $db->fetchAll($db->select('cid')->from('table.relationships')->where("mid IN ($hiddenCategoryIds)"));
-
     // 提取所有 cid 值
-    $hiddenPostCids = array_column($hiddenPostSubQuery, 'cid');
+    $hiddenPostCids = array_column($hiddenPostSubQuery, 'cid') ?? [];
+    $hiddenPostCidArray = array_merge($hiddenPostCidArray, $hiddenPostCids); // 将隐藏分类的文章ID合并到数组中
+  }
+
+  // 所有要隐藏的文章DB
+  if (!empty($hiddenPostCidArray)) {
     // 用逗号连接成字符串
-    $hiddenPostCidsStr = implode(',', $hiddenPostCids);
-
-    // 排除这些文章ID
-    $normalPostQuery->where("table.contents.cid NOT IN ($hiddenPostCidsStr)");
+    $hiddenCids = implode(',', $hiddenPostCidArray);
+    $normalPostQuery->where("table.contents.cid NOT IN ($hiddenCids)");
   }
 
-  //置顶文章的顺序 按 $stickyPostIds 中 文章ID顺序
-  if ($this->_currentPage == 1 || $this->currentPage == 1) {
-    foreach ($db->fetchAll($stickyPostQuery) as $stickyPost) { //首页第一页才显示
-      $stickyPost['sticky'] = $stickyLabelHtml;
-      $this->push($stickyPost); //压入列队
-    }
-  }
-
-  $userId = $this->user->uid; //登录时，显示用户各自的私密文章
+  // 登录时，显示用户各自的私密文章
+  $userId = $this->user->uid;
   if ($userId) {
     $normalPostQuery->orWhere('authorId = ? && status = ?', $userId, 'private');
   }
 
-  $normalPosts = $db->fetchAll($normalPostQuery->order('table.contents.created', Typecho_Db::SORT_DESC)->page($this->_currentPage, $adjustedPageSize));
+  // 普通文章
+  $normalPostQuery->order('table.contents.created', Typecho_Db::SORT_DESC); // 文章按创建时间降序排列
+  $normalPosts = $db->fetchAll($normalPostQuery->page($this->_currentPage, $adjustedPageSize));
   foreach ($normalPosts as $stickyPost) {
     $this->push($stickyPost);
   }
 
   //压入列队
-  $this->setTotal($this->getTotal()); //置顶文章不计算在所有文章内
-} ?>
+  $this->setTotal($this->getTotal()); //隐藏文章不计算在所有文章内
+}
+?>
 <div class="post-main">
   <div class="row no-gutters post-list">
     <?php while ($this->next()): ?>
