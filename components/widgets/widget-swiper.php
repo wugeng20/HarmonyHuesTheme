@@ -60,7 +60,7 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
                 $slidesHtml .= '<source src="' . $image . '" type="video/mp4">';
                 $slidesHtml .= '</video>';
             } else {
-                $slidesHtml .= '<img class="swiper-lazy" src="' . getLazyload(false) . '" data-src="' . $image . '" alt="' . ($title ?: $description) . '图片">';
+                $slidesHtml .= '<img class="swiper-lazy" src="' . getLazyload(false) . '" data-src="' . $image . '" fetchPriority="high" alt="' . ($title ?: $description) . '图片">';
             }
 
             $slidesHtml .= empty($label) ? '' : '<div class="px-2 py-1 swiper-slide-label">' . $label . '</div>';
