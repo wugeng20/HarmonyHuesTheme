@@ -15,17 +15,30 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
 /**
  * 文章列表
  */
-$stickyPostIds = $this->options->sticky ?? ''; // 置顶文章ID，逗号分隔
 $hiddenCategoryIds = $this->options->hideCategory ?? ''; // 要隐藏的分类ID，逗号分隔
 
+// 判断是否有置顶文章函数
+function hasArticleTop()
+{
+  $db = Typecho_Db::get();
+  $select = $db->fetchObject($db->select('COUNT(*) as count')
+    ->from('table.fields')
+    ->where('name = ? && str_value = 1', 'articleTop')->limit(1));
+
+  return $select->count > 0; // 如果有置顶文章，返回true
+}
+
+// $isArticleTop = false; // 测试用
+$isArticleTop = hasArticleTop();
+
 // 仅在首页执行
-if (($stickyPostIds || $hiddenCategoryIds) && $this->is('index') || $this->is('front')) {
+if (($isArticleTop || $hiddenCategoryIds) && $this->is('index') || $this->is('front')) {
   // 获取数据库对象
   $db = Typecho_Db::get();
   // 每页显示文章数量
   $adjustedPageSize = $this->parameter->pageSize;
   // 获取文章数据
-  $normalPostQuery = $this->select()->where('type = ? && status = ? && created < ?', 'post', 'publish', time());
+  $normalPostQuery = $this->select('table.contents.*', 'table.fields.str_value')->from('table.contents')->where('table.contents.type = ? && table.contents.status = ? && table.contents.created < ?', 'post', 'publish', time());
   // 需要移除的文章Cid
   $hiddenPostCidArray = array();
 
@@ -35,25 +48,10 @@ if (($stickyPostIds || $hiddenCategoryIds) && $this->is('index') || $this->is('f
   $this->length = 0;
 
   // 置顶的文章
-  if (!empty($stickyPostIds)) {
-    // 处理置顶
-    $stickyIdList = $stickyPostIds ? array_filter(explode(',', $stickyPostIds), 'strlen') : [];
-    $stickyLabelHtml = '<span style="color:red">[置顶] </span>';
-    $hiddenCidsx = implode(',', $stickyIdList);
-    $stickyPostQuery = $this->select()->where('type = ? && status = ? && created < ?', 'post', 'publish', time())->where("cid in ($hiddenCidsx)"); // 获取文章
-    $stickyPosts = $db->fetchAll($stickyPostQuery);
-    $adjustedPageSize -= count($stickyPosts); // 减去置顶文章数量
-
-    // 首页第一页才显示
-    if ($this->_currentPage == 1 || $this->currentPage == 1) {
-      foreach ($stickyPosts as $stickyPost) {
-        $stickyPost['sticky'] = $stickyLabelHtml;
-        $this->push($stickyPost); //压入列队
-      }
-    }
-
-    // 将置顶文章Cid加入隐藏列表
-    $hiddenPostCidArray = array_merge($hiddenPostCidArray, $stickyIdList);
+  if (!empty($isArticleTop)) {
+    // 拼接查询条件
+    $normalPostQuery->join('table.fields', 'table.contents.cid = table.fields.cid AND table.fields.name = \'articleTop\'', Typecho_Db::LEFT_JOIN);
+    $normalPostQuery->order('table.fields.str_value = 1', Typecho_Db::SORT_DESC); // 按文章类型排序
   }
 
   // 隐藏分类的文章
@@ -86,7 +84,7 @@ if (($stickyPostIds || $hiddenCategoryIds) && $this->is('index') || $this->is('f
   }
 
   //压入列队
-  $this->setTotal($this->getTotal()); //隐藏文章不计算在所有文章内
+  $this->setTotal($this->getTotal() - count($hiddenPostCidArray)); //隐藏文章不计算在所有文章内
 }
 ?>
 <div class="post-main">
@@ -137,7 +135,7 @@ if (($stickyPostIds || $hiddenCategoryIds) && $this->is('index') || $this->is('f
             <div class="post-info d-flex flex-column align-content-center justify-content-between p-1 p-md-2">
               <div class="post-head">
                 <a href="<?php $this->permalink() ?>"
-                  title="<?php $this->title() ?>"><?php $this->sticky() ?><?php $this->title() ?></a>
+                  title="<?php $this->title() ?>"><?php echo $this->fields->articleTop ? '<span class="mr-1" style="color: var(--danger);">[置顶]</span>' : '' ?><?php $this->title() ?></a>
                 <div class="post-description">
                   <?php echo $this->fields->abstract ?: $this->excerpt(100, '...'); ?>
                 </div>

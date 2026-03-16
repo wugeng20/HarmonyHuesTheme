@@ -162,17 +162,6 @@ function themeConfig($form)
     $form->addInput($navbarInfo);
     $navbarInfo->setAttribute('class', 'setting-content my-3');
 
-    // 文章置顶
-    $sticky = new Typecho_Widget_Helper_Form_Element_Text(
-        'sticky',
-        NULL,
-        NULL,
-        '文章置顶（非必填）',
-        '介绍：置顶的文章cid，按照排序输入, 请以半角逗号分隔，例如：1,2,3'
-    );
-    $form->addInput($sticky);
-    $sticky->setAttribute('class', 'setting-content my-3');
-
     // 首页不显示分类文章
     $hideCategory = new Typecho_Widget_Helper_Form_Element_Text(
         'hideCategory',

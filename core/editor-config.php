@@ -17,6 +17,7 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
 function themeFields($layout)
 {
 
+    // 是否显示侧边栏
     $showSidebar = new Typecho_Widget_Helper_Form_Element_Radio(
         'showSidebar',
         array(
@@ -42,6 +43,19 @@ function themeFields($layout)
         _t('介绍：选择当前文章类型，默认为文章')
     );
     $layout->addItem($articleType);
+
+    // 文章置顶
+    $articleTop = new Typecho_Widget_Helper_Form_Element_Radio(
+        'articleTop',
+        array(
+            '0' => _t('不置顶'),
+            '1' => _t('置顶'),
+        ),
+        '0',
+        _t('文章置顶'),
+        _t('介绍：选择当前文章是否置顶，默认不置顶，分类隐藏的文章不生效')
+    );
+    $layout->addItem($articleTop);
 
     $keywords = new Typecho_Widget_Helper_Form_Element_Text(
         'keywords',
