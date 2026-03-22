@@ -51,6 +51,43 @@ $border-base: 1px solid rgba(230, 230, 240, .75);
   }
 }
 
+// 建议的标准断点定义
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+);
+
+// min-width 查询
+@mixin min-media-breakpoint($breakpoint-name) {
+  $min-width: map-get($breakpoints, $breakpoint-name);
+
+  @media (min-width: $min-width) {
+    @content;
+  }
+}
+
+// max-width 查询
+@mixin max-media-breakpoint($breakpoint-name) {
+  $max-width: map-get($breakpoints, $breakpoint-name) - 0.02;
+
+  @media (max-width: $max-width) {
+    @content;
+  }
+}
+
+// 范围查询 (需要两个参数)
+@mixin and-media-breakpoint($from, $to) {
+  $min: map-get($breakpoints, $from);
+  $max: map-get($breakpoints, $to) - 0.02;
+
+  @media (min-width: $min) and (max-width: $max) {
+    @content;
+  }
+}
+
 .markdown-body {
   word-break: break-all; // 英文单词换行
 
@@ -530,5 +567,9 @@ $border-base: 1px solid rgba(230, 230, 240, .75);
     max-width: 100%;
     max-height: 450px;
     object-fit: cover;
+
+    @include max-media-breakpoint('md') {
+      max-height: 300px;
+    }
   }
 }
