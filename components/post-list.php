@@ -86,6 +86,13 @@ if (($isArticleTop || $hiddenCategoryIds) && $this->is('index') || $this->is('fr
   //压入列队
   $this->setTotal($this->getTotal() - count($hiddenPostCidArray)); //隐藏文章不计算在所有文章内
 }
+
+/** 过滤掉[GridImg] */
+function filterGridImg($content)
+{
+  $content = preg_replace('/\[GridImg\s+columns="(\d+)"\s+gap="([^"]+)"\](.*?)\[\/GridImg\]/s', '', $content);
+  return strip_tags($content); // 去除HTML标签
+}
 ?>
 <div class="post-main">
   <div class="row no-gutters post-list">
@@ -98,7 +105,7 @@ if (($isArticleTop || $hiddenCategoryIds) && $this->is('index') || $this->is('fr
                 <a href="<?php $this->permalink() ?>"
                   title="<?php $this->title() ?>"><?php $this->sticky() ?><?php $this->title() ?></a>
                 <div class="post-description">
-                  <?php echo mb_substr($this->fields->abstract, 0, 15) ?: $this->excerpt(15, ''); ?>
+                  <?php echo mb_substr($this->fields->abstract, 0, 15) ?: mb_substr(filterGridImg($this->content), 0, 15); ?>
                 </div>
               </div>
               <div class="post-meta-wrap">

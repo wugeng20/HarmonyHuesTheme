@@ -615,28 +615,69 @@ function getCustomMenu($currentUrl = '')
     return $navhtml;
 }
 
-/** 
- * 获取图片链接
- * @param object $archive 文章对象
- * @param int $imgnum 图片序号，默认为0，表示获取第一张图片
- * @return string 图片链接
+/**
+ * 获取文章图片链接（支持单张或多张）
+ *
+ * @param object $archive  文章对象，需包含 fields->thumb 和 content 属性
+ * @param int    $imgnum   图片索引（0-based）。0 表示只取第一张，返回字符串；
+ *                         正数表示取前 $imgnum+1 张，返回数组。
+ * @param bool   $israndom 是否随机抽取图片（传递给 extractImageLinks）
+ *
+ * @return string|array 当 $imgnum == 0 时返回单个图片URL（字符串），
+ *                       当 $imgnum > 0 时返回包含图片URL的数组。
+ *                       若无图片则返回空字符串或空数组。
  */
 function getImgLink($archive, $imgnum = 0, $israndom = true)
 {
-    $thumb = $archive->fields->thumb ?? null;
-    if ($thumb && $imgnum === 0) {
-        return $thumb;
+    // 1. 获取自定义图片列表（优先使用）
+    $customImageUrls = [];
+    if (isset($archive->fields->thumb) && !empty($archive->fields->thumb)) {
+        $thumb = $archive->fields->thumb;
+        // 按行分割，清理空白行
+        $lines = explode("\n", str_replace(["\r\n", "\r"], "\n", $thumb));
+        $customImageUrls = array_filter(array_map('trim', $lines));
+        $customImageUrls = array_values($customImageUrls);
     }
 
+    // 2. 确定需要获取的图片总数（$imgnum + 1）
+    $targetCount = $imgnum + 1;
 
-    $content = $archive->content ?? null;
-    $content = $archive->is('post') ? $content : parseContens($archive->content);
+    // 3. 从自定义列表中提取前 $targetCount 张（不足则全取）
+    $collectedUrls = [];
+    if (!empty($customImageUrls)) {
+        $collectedUrls = array_slice($customImageUrls, 0, $targetCount);
+    }
 
-    $thumb = extractImageLinks($content, $imgnum, $israndom);
+    // 4. 如果自定义图片不足，从文章内容中补充
+    $remainingNeeded = $targetCount - count($collectedUrls);
+    if ($remainingNeeded > 0) {
+        // 准备文章内容
+        $content = $archive->content ?? '';
+        $content = $archive->is('post') ? $content : parseContens($archive->content);
 
-    return $imgnum ? $thumb : $thumb[0];
+        // 从内容中提取图片（extractImageLinks 的第二个参数是最后一个图片的索引）
+        // 剩余需要提取的图片数量为 $remainingNeeded，因此最后一个索引为 $remainingNeeded - 1
+        $maxIndex = $remainingNeeded - 1;
+        $contentImages = extractImageLinks($content, $maxIndex, $israndom);
+
+        // 合并结果
+        if (is_array($contentImages)) {
+            $collectedUrls = array_merge($collectedUrls, $contentImages);
+        } elseif (!empty($contentImages)) {
+            // 如果 extractImageLinks 返回的是单个字符串（例如 $maxIndex == 0）
+            $collectedUrls[] = $contentImages;
+        }
+    }
+
+    // 5. 根据 $imgnum 决定返回类型
+    if ($imgnum == 0) {
+        // 返回第一张图片（字符串），若没有则返回空字符串
+        return $collectedUrls[0] ?? '';
+    } else {
+        // 返回图片数组（可能为空数组）
+        return $collectedUrls;
+    }
 }
-
 /**
  * 判断评论敏感词是否在字符串内
  * @param string $words_str 敏感词字符串，多个敏感词用|分隔

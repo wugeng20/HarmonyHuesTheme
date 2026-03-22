@@ -273,7 +273,7 @@ function showGridImgPanel() {
         '<p><b>宫格图片</b></p>' +
         '<p><label>宫格图片列数</label><input type="text" name="imgColumns" value="3"></p>' +
         '<p><label>宫格图片间距</label><input type="text" name="imgGap" value="10px"></p>' +
-        '<p><span style="color:red;font-size:14px;">备注：在[GridImg][/GridImg]标签里面添加图片，目前只支持编辑器默认插入图片功能添加图片，其他待开发。</span></p>' +
+        '<p><span style="color:red;font-size:14px;">说明：在[GridImg][/GridImg]标签里面添加图片：![标题](xxxx.jpg)，文章可以添加对个宫格图片，其他待开发。</span></p>' +
         '</div>' +
         '<form>' +
         '<button type="button" class="btn btn-s primary" id="gridimg_ok">确定</button>' +
@@ -400,7 +400,7 @@ function handleGridImageConfirm() {
     const myField = document.getElementById('text');
     const imgColumns = $('.wmd-prompt-dialog input[name="imgColumns"]').val();
     const imgGap = $('.wmd-prompt-dialog input[name="imgGap"]').val();
-    const content = `[GridImg columns="${imgColumns}" gap="${imgGap}"]\n![请使用默认插入图片功能插入，这张请删除测试图片][999]\n[/GridImg]\n\n\n  [999]: /usr/themes/HarmonyHues/assets/images/thumb/7.webp`;
+    const content = `[GridImg columns="${imgColumns}" gap="${imgGap}"]\n![这张是默认图片，请删除，GridImg标签里面不要添加任何文本内容，会影响布局](/usr/themes/HarmonyHues/assets/images/thumb/7.webp)\n![这张是默认图片，请删除，GridImg标签里面不要添加任何文本内容，会影响布局](/usr/themes/HarmonyHues/assets/images/thumb/8.webp)\n[/GridImg]\n`;
     insertContentToTextArea(myField, content, '#gridImgPanel');
 }
 
