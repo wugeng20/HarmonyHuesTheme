@@ -639,44 +639,29 @@ function getImgLink($archive, $imgnum = 0, $israndom = true)
         $customImageUrls = array_values($customImageUrls);
     }
 
-    // 2. 确定需要获取的图片总数（$imgnum + 1）
-    $targetCount = $imgnum + 1;
-
-    // 3. 从自定义列表中提取前 $targetCount 张（不足则全取）
-    $collectedUrls = [];
-    if (!empty($customImageUrls)) {
-        $collectedUrls = array_slice($customImageUrls, 0, $targetCount);
+    // 当 $imgnum == 0 | 1 时，直接返回第一张图片
+    if (!empty($customImageUrls) && $imgnum <= 1) {
+        // 获取第一张图片
+        $firstImageUrl = $customImageUrls[0] ?? '';
+        return $firstImageUrl;
     }
 
     // 4. 如果自定义图片不足，从文章内容中补充
-    $remainingNeeded = $targetCount - count($collectedUrls);
-    if ($remainingNeeded > 0) {
+    $remainingNeeded = $imgnum - count($customImageUrls);
+    if ($remainingNeeded >= 0 && (count($customImageUrls) == 0 || count($customImageUrls) != $imgnum)) {
         // 准备文章内容
         $content = $archive->content ?? '';
         $content = $archive->is('post') ? $content : parseContens($archive->content);
 
-        // 从内容中提取图片（extractImageLinks 的第二个参数是最后一个图片的索引）
-        // 剩余需要提取的图片数量为 $remainingNeeded，因此最后一个索引为 $remainingNeeded - 1
-        $maxIndex = $remainingNeeded - 1;
-        $contentImages = extractImageLinks($content, $maxIndex, $israndom);
+        // 从内容中提取图片或者随机缩略图图片
+        $contentImages = extractImageLinks($content, $remainingNeeded, $israndom);
 
         // 合并结果
-        if (is_array($contentImages)) {
-            $collectedUrls = array_merge($collectedUrls, $contentImages);
-        } elseif (!empty($contentImages)) {
-            // 如果 extractImageLinks 返回的是单个字符串（例如 $maxIndex == 0）
-            $collectedUrls[] = $contentImages;
-        }
+        $customImageUrls = array_merge($customImageUrls, $contentImages);
     }
 
-    // 5. 根据 $imgnum 决定返回类型
-    if ($imgnum == 0) {
-        // 返回第一张图片（字符串），若没有则返回空字符串
-        return $collectedUrls[0] ?? '';
-    } else {
-        // 返回图片数组（可能为空数组）
-        return $collectedUrls;
-    }
+    // 返回图片数组,0则为字符串
+    return $imgnum > 1 ? $customImageUrls : $customImageUrls[0];
 }
 /**
  * 判断评论敏感词是否在字符串内
