@@ -35,21 +35,24 @@ Typecho 主题-《HarmonyHues - 和谐色调》
 
 ### 方式一：
 
-1. 下载主题压缩包，解压后上传至 Typecho 主题目录（`usr/themes/`）
+1. [下载主题压缩包](https://github.com/wugeng20/HarmonyHuesTheme/releases)，解压后上传至 Typecho 主题目录（`usr/themes/`）
 2. 【重要】把解压后的文件夹重命名为 `HarmonyHues`
 3. 登录 Typecho 后台，进入外观管理，启用主题即可
 4. 进入主题设置，根据需求进行配置
 
-### 方式二（推荐）：
+### 方式二（预览版）：
 
 1. 系统安装Git（具体请自行百度安装）
-2. 在Typecho 主题`usr/themes/`目录下输入以下命令：
+2. 在Typecho 主题 `usr/themes/`目录下输入以下命令：
+
 ```bash
 git clone https://github.com/wugeng20/HarmonyHuesTheme.git HarmonyHues
 ```
+
 3. 登录 Typecho 后台，进入外观管理，启用主题即可
 4. 进入主题设置，根据需求进行配置
-5. 后期更新主题，只需要在`usr/themes/HarmonyHues`目录下输入以下命令：
+5. 后期更新主题，只需要在 `usr/themes/HarmonyHues`目录下输入以下命令：
+
 ```bash
 git pull
 ```
