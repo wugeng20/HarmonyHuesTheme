@@ -38,7 +38,7 @@ if (($isArticleTop || $hiddenCategoryIds) && $this->is('index') || $this->is('fr
   // 每页显示文章数量
   $adjustedPageSize = $this->parameter->pageSize;
   // 获取文章数据
-  $normalPostQuery = $this->select('table.contents.*', 'table.fields.str_value')->from('table.contents')->where('table.contents.type = ? && table.contents.status = ? && table.contents.created < ?', 'post', 'publish', time());
+  $normalPostQuery = $db->select('table.contents.*')->from('table.contents')->where('table.contents.type = ? && table.contents.status = ? && table.contents.created < ?', 'post', 'publish', time());
   // 需要移除的文章Cid
   $hiddenPostCidArray = array();
 
