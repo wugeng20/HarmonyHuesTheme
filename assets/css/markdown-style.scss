@@ -9,8 +9,8 @@ $border-base: 1px solid rgba(230, 230, 240, .75);
 // 定义一个 mixin 用于设置标题的公共样式
 @mixin heading-styles($size) {
   position: relative;
-  margin-top: $base-margin;
-  margin-bottom: $base-size*3;
+  margin-top: $base-margin - 0.25rem;
+  margin-bottom: $base-margin / 2;
   font-size: $size * $base-font-size;
   font-weight: $base-font-weight;
   scroll-margin-top: 80px;
@@ -21,11 +21,11 @@ $border-base: 1px solid rgba(230, 230, 240, .75);
   &::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: -0.15rem;
+    top: -0.25rem;
+    left: -0.5rem;
     width: $width;
     height: $height;
-    background-image: linear-gradient(var(--color-primary-light-2), transparent);
+    background-image: radial-gradient(circle at center, var(--color-primary), transparent);
     opacity: .5;
     border-radius: var(--border-radius-circle);
     transition: all .3s;
@@ -46,9 +46,9 @@ $border-base: 1px solid rgba(230, 230, 240, .75);
     bottom: 0;
   }
 
-  &:hover::before {
-    transform: scale(1.5);
-  }
+  // &:hover::before {
+  //   transform: scale(1.5);
+  // }
 }
 
 // 建议的标准断点定义
@@ -93,30 +93,30 @@ $breakpoints: (
 
   // h标签
   h1 {
-    @include heading-styles(1.75);
-    @include heading-decoration($base-size * 8, $base-size * 8);
+    @include heading-styles(1.375);
+    // @include heading-decoration($base-size * 8, $base-size * 8);
   }
 
   h2 {
-    @include heading-styles(1.5);
-    @include heading-decoration($base-size * 7, $base-size * 7);
+    @include heading-styles(1.25);
+    // @include heading-decoration($base-size * 7, $base-size * 7);
   }
 
   h3 {
-    @include heading-styles(1.25);
-    @include heading-decoration($base-size * 5, $base-size * 5, $base-size);
+    @include heading-styles(1.125);
+    // @include heading-decoration($base-size * 5, $base-size * 5, $base-size);
   }
 
   h4 {
-    @include heading-styles(1.125);
-  }
-
-  h5 {
     @include heading-styles(1);
   }
 
-  h6 {
+  h5 {
     @include heading-styles(0.875);
+  }
+
+  h6 {
+    @include heading-styles(0.75);
   }
 
   // p标签
@@ -145,7 +145,7 @@ $breakpoints: (
     }
   }
 
-  br {
+  br:not(p>br) {
     display: none;
   }
 

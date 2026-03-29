@@ -916,17 +916,27 @@ video {
         gap: 0.15rem;
       }
 
-      .post-head>a {
-        margin-bottom: 0.25rem;
-        font-size: 1rem;
-        font-weight: 600;
-        line-height: 1.5;
-        color: var(--font-color-main);
-        transition: color .3s ease 0s;
-        @include ellipsis-style(1);
+      .post-head {
+        &>a {
+          margin-bottom: 0.25rem;
+          font-size: 1rem;
+          font-weight: 600;
+          line-height: 1.5;
+          color: var(--font-color-main);
+          transition: color .3s ease 0s;
+          @include ellipsis-style(1);
 
-        @include max-media-breakpoint('md') {
-          margin-bottom: 0;
+          @include max-media-breakpoint('md') {
+            margin-bottom: 0;
+          }
+        }
+
+        .top-tag {
+          padding: 0.15rem 0.35rem;
+          font-size: 0.85rem;
+          color: rgba(255, 20, 20, 0.8);
+          background-color: rgba(255, 130, 130, 0.2);
+          border-radius: var(--border-radius-base);
         }
       }
 
@@ -1557,7 +1567,6 @@ main>.container {
 .comment-body {
   position: relative;
   font-size: 0.85rem;
-  gap: 0.5rem;
 
   .comment-author {
     position: relative;
@@ -1566,8 +1575,8 @@ main>.container {
     .comment-name {
       .comment-author-ua {
         font-size: 0.7rem;
-        background-color: var(--color-primary);
-        color: var(--bg-color-main);
+        color: var(--color-primary);
+        background-color: var(--color-primary-light-5);
         padding: 0.1rem 0.25rem;
         border-radius: var(--border-radius-small);
       }

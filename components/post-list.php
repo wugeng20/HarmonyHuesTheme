@@ -142,7 +142,7 @@ function filterGridImg($content)
             <div class="post-info d-flex flex-column align-content-center justify-content-between p-1 p-md-2">
               <div class="post-head">
                 <a href="<?php $this->permalink() ?>"
-                  title="<?php $this->title() ?>"><?php echo $this->fields->articleTop ? '<span class="mr-1" style="color: var(--danger);">[置顶]</span>' : '' ?><?php $this->title() ?></a>
+                  title="<?php $this->title() ?>"><?php echo $this->fields->articleTop ? '<span class="mr-1 top-tag">置顶</span>' : '' ?><?php $this->title() ?></a>
                 <div class="post-description">
                   <?php echo $this->fields->abstract ?: $this->excerpt(100, '...'); ?>
                 </div>

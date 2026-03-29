@@ -262,16 +262,6 @@ function ContentFold($content)
     return $content;
 }
 
-/* 过滤多余的html标签 */
-function ContentHtml($content)
-{
-    // 使用一个正则表达式同时匹配并删除空段落和仅包含两个换行符的段落
-    $content = preg_replace('#<br>#si', '', $content);
-    $content = preg_replace('#<p></p>#si', '', $content);
-
-    return $content;
-}
-
 /* 过滤宫格图片 */
 function ContentGridImg_bak($content)
 {
@@ -359,8 +349,6 @@ function parseContens($content)
     $content = ContentGridImg($content);
     // 添加图片懒加载
     $content = replaceImgSrc($content);
-    // 过滤多余的html标签
-    $content = ContentHtml($content);
 
     return $content;
 }

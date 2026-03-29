@@ -7,3 +7,7 @@
 .wmd-prompt-dialog textarea { width: 100%; }
 
 .typecho-post-area .description { margin-top: 0.5rem; }
+
+.field .field-value { display: block !important; }
+
+.field .field-value textarea, .field .field-value input[type=text] { width: 100%; }

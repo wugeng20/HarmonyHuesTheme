@@ -1,10 +1,12 @@
 @charset "UTF-8";
 /* ------------------------------------ Harmony Hues主题 @author  星语社长 @link  https://biibii.cn @update  2024-7-6 18:00:04 --------------------------------- */
-:root[data-theme=light] { /* 侧边栏-一言顶部渐变色 */ --hotposts-h-bg: linear-gradient(to right, rgba(254, 125, 125, 0.5), transparent); --newreply-h-bg: linear-gradient(to right, rgba(254, 227, 125, 0.5), transparent); --atoc-h-bg: linear-gradient(to right, rgba(125, 125, 254, 0.5), transparent); }
+:root[data-theme=light] { /* 侧边栏-一言顶部渐变色 */ --hotposts-h-bg: linear-gradient(45deg, #fe7d7d, rgba(255, 255, 255, 0.2)); --newreply-h-bg: linear-gradient(45deg, #ffd83b, rgba(255, 255, 255, 0.2)); --atoc-h-bg: linear-gradient(45deg, #00b7ff, rgba(255, 255, 255, 0.2)); }
 
 .hh-widget { overflow: hidden; background-image: var(--widget-bg-gradient); }
 
 .hh-widget:first-child { margin-top: 0 !important; }
+
+.hh-widget .widget-content { margin: 0.2rem; background-color: var(--bg-color-main); border-radius: var(--border-radius-medium); box-shadow: 0px 0px 20px 10px var(--bg-color-body); }
 
 /* 侧边栏-工具-标题-顶部-背景 */
 .widget-title-top-bg { position: absolute; top: 0; left: 0; width: 100%; height: 3rem; opacity: 0.8; -webkit-mask: linear-gradient(var(--bg-color-main) -20%, transparent); mask: linear-gradient(var(--bg-color-main) -20%, transparent); z-index: -1; backdrop-filter: blur(5px); }
@@ -117,6 +119,10 @@
 .atoc-content { font-size: 0.95rem; }
 
 .atoc-content .atoc-item { position: relative; }
+
+.atoc-content .atoc-item .sub-list { border-left: 2px solid var(--border-color-main); }
+
+.atoc-content .atoc-item .sub-list .atoc-item { padding-left: 0.25rem; }
 
 .atoc-content .atoc-item .atoc-link { overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; white-space: normal; transition: all 0.3s ease-in-out; }
 

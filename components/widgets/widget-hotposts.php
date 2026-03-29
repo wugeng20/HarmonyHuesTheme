@@ -44,12 +44,12 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
   $hotPostsCid = getHotPostsCid(6);
   ?>
   <!-- 热门文章 -->
-  <div class="hh-widget mt-3 p-3">
-    <div class="widget-title mb-3">
+  <div class="hh-widget mt-3">
+    <div class="widget-title p-2 w-100">
       <div class="widget-title-top-bg" style="background:var(--hotposts-h-bg);"></div>
       <i class="iconfont icon-remen mr-1"></i>热门文章
     </div>
-    <div class="widget-content hotposts-widget scroll-cover">
+    <div class="widget-content hotposts-widget scroll-cover p-2">
       <?php if (! empty($hotPostsCid)): ?>
         <ul class="hotposts-list">
           <?php foreach ($hotPostsCid as $index => $postcid): ?>

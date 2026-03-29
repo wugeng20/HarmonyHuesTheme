@@ -7,9 +7,9 @@
  * --------------------------------- */
 :root[data-theme=light] {
   /* 侧边栏-一言顶部渐变色 */
-  --hotposts-h-bg: linear-gradient(to right, rgba(254, 125, 125, 0.5), transparent);
-  --newreply-h-bg: linear-gradient(to right, rgba(254, 227, 125, 0.5), transparent);
-  --atoc-h-bg: linear-gradient(to right, rgba(125, 125, 254, 0.5), transparent);
+  --hotposts-h-bg: linear-gradient(45deg, #fe7d7d, rgba(255, 255, 255, 0.2));
+  --newreply-h-bg: linear-gradient(45deg, #ffd83b, rgba(255, 255, 255, 0.2));
+  --atoc-h-bg: linear-gradient(45deg, #00b7ff, rgba(255, 255, 255, 0.2));
 }
 
 // 建议的标准断点定义
@@ -46,6 +46,13 @@ $breakpoints: (
 
   &:first-child {
     margin-top: 0 !important;
+  }
+
+  .widget-content {
+    margin: 0.2rem;
+    background-color: var(--bg-color-main);
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0px 0px 20px 10px var(--bg-color-body);
   }
 }
 
@@ -380,6 +387,14 @@ $breakpoints: (
 
   .atoc-item {
     position: relative;
+
+    .sub-list {
+      border-left: 2px solid var(--border-color-main);
+
+      .atoc-item {
+        padding-left: 0.25rem;
+      }
+    }
 
     .atoc-link {
       @include text-ellipsis;
