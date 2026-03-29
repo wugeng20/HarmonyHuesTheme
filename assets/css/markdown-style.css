@@ -1,7 +1,7 @@
 @charset "UTF-8";
 .markdown-body { word-break: break-all; /* table表格样式 */ }
 
-.markdown-body h1 { position: relative; margin-top: 1rem; margin-bottom: 1rem; font-size: 2rem; font-weight: 700; scroll-margin-top: 80px; }
+.markdown-body h1 { position: relative; margin-top: 1rem; margin-bottom: 0.75rem; font-size: 1.75rem; font-weight: 700; scroll-margin-top: 80px; }
 
 .markdown-body h1::before { content: ""; position: absolute; top: 0; left: -0.15rem; width: 2rem; height: 2rem; background-image: linear-gradient(var(--color-primary-light-2), transparent); opacity: .5; border-radius: var(--border-radius-circle); transition: all .3s; z-index: -1; bottom: 0; }
 
@@ -9,7 +9,7 @@
 
 .markdown-body h1:hover::before { transform: scale(1.5); }
 
-.markdown-body h2 { position: relative; margin-top: 1rem; margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700; scroll-margin-top: 80px; }
+.markdown-body h2 { position: relative; margin-top: 1rem; margin-bottom: 0.75rem; font-size: 1.5rem; font-weight: 700; scroll-margin-top: 80px; }
 
 .markdown-body h2::before { content: ""; position: absolute; top: 0; left: -0.15rem; width: 1.75rem; height: 1.75rem; background-image: linear-gradient(var(--color-primary-light-2), transparent); opacity: .5; border-radius: var(--border-radius-circle); transition: all .3s; z-index: -1; bottom: 0; }
 
@@ -17,7 +17,7 @@
 
 .markdown-body h2:hover::before { transform: scale(1.5); }
 
-.markdown-body h3 { position: relative; margin-top: 1rem; margin-bottom: 1rem; font-size: 1.25rem; font-weight: 700; scroll-margin-top: 80px; }
+.markdown-body h3 { position: relative; margin-top: 1rem; margin-bottom: 0.75rem; font-size: 1.25rem; font-weight: 700; scroll-margin-top: 80px; }
 
 .markdown-body h3::before { content: ""; position: absolute; top: 0; left: -0.15rem; width: 1.25rem; height: 1.25rem; background-image: linear-gradient(var(--color-primary-light-2), transparent); opacity: .5; border-radius: var(--border-radius-circle); transition: all .3s; z-index: -1; bottom: 0.25rem; }
 
@@ -25,11 +25,11 @@
 
 .markdown-body h3:hover::before { transform: scale(1.5); }
 
-.markdown-body h4 { position: relative; margin-top: 1rem; margin-bottom: 1rem; font-size: 1.125rem; font-weight: 700; scroll-margin-top: 80px; }
+.markdown-body h4 { position: relative; margin-top: 1rem; margin-bottom: 0.75rem; font-size: 1.125rem; font-weight: 700; scroll-margin-top: 80px; }
 
-.markdown-body h5 { position: relative; margin-top: 1rem; margin-bottom: 1rem; font-size: 1rem; font-weight: 700; scroll-margin-top: 80px; }
+.markdown-body h5 { position: relative; margin-top: 1rem; margin-bottom: 0.75rem; font-size: 1rem; font-weight: 700; scroll-margin-top: 80px; }
 
-.markdown-body h6 { position: relative; margin-top: 1rem; margin-bottom: 1rem; font-size: 0.875rem; font-weight: 700; scroll-margin-top: 80px; }
+.markdown-body h6 { position: relative; margin-top: 1rem; margin-bottom: 0.75rem; font-size: 0.875rem; font-weight: 700; scroll-margin-top: 80px; }
 
 .markdown-body p { margin: 0; font-size: 1rem; line-height: 1.7; }
 

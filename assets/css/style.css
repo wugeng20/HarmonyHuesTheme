@@ -363,7 +363,7 @@ main > .container { min-height: calc(100vh - 6rem - var(--height-footer)); }
 .post-content { position: relative; box-sizing: border-box; }
 
 /* 文章版权样式 */
-.post-copyright { position: relative; font-size: 0.9rem; line-height: 1.8; color: var(--font-color-main); border-radius: var(--border-radius-medium); box-shadow: var(--shadow-inset-box); z-index: 1; border: var(--border-solid-small); }
+.post-copyright { position: relative; font-size: 0.9rem; line-height: 1.8; color: var(--font-color-main); border-radius: var(--border-radius-medium); z-index: 1; border: var(--border-solid-small); }
 
 .copyright-svgname { position: absolute; height: 3rem; top: 30%; right: 0; opacity: 0.9; z-index: -1; }
 
@@ -416,9 +416,11 @@ main > .container { min-height: calc(100vh - 6rem - var(--height-footer)); }
 /* 评论框 */
 #comment-form .form-control { font-size: 0.9rem; }
 
-#comment-form .comment-form-info input:focus { background-color: var(--overlay-color-light-5) !important; }
+#comment-form .comment-form-info .comment-form-info-label { color: var(--font-color-main); box-shadow: var(--shadow-inset-box); border-radius: var(--border-radius-base); border: var(--border-solid-small); }
 
-#comment-form .comment-form-info textarea:focus { background-color: var(--overlay-color-light-5) !important; }
+#comment-form .comment-form-info .comment-form-info-label .iconfont { padding-left: .75rem; font-size: 0.9rem; opacity: 0.75; }
+
+#comment-form .comment-form-info .comment-form-info-label input { box-shadow: unset !important; background-color: unset !important; border-radius: unset !important; border: unset !important; }
 
 .com-footer .com-tool-list .com-tool-item { position: relative; border-radius: var(--border-radius-base); }
 
@@ -446,7 +448,7 @@ main > .container { min-height: calc(100vh - 6rem - var(--height-footer)); }
 
 .com-footer .com-tool-list .com-emoji .emoji-bar li:hover, .com-footer .com-tool-list .com-emoji .emoji-bar li.emoji-active { background-color: var(--bg-color-secondary); }
 
-.com-footer .btn-card { color: var(--font-color-main); font-size: 0.85rem; background-image: var(--gradient-45deg); box-shadow: var(--shadow-box-main); border: var(--border-solid-small); border-radius: var(--border-radius-medium); background-clip: padding-box; }
+.com-footer .btn-card { color: var(--font-color-main); font-size: 0.85rem; background-image: var(--gradient-45deg); box-shadow: var(--shadow-box-small); border: var(--border-solid-small); border-radius: var(--border-radius-medium); background-clip: padding-box; }
 
 .com-footer .btn-card:hover { box-shadow: var(--shadow-inset-box); }
 

@@ -1297,7 +1297,6 @@ main>.container {
   line-height: 1.8;
   color: var(--font-color-main);
   border-radius: var(--border-radius-medium);
-  box-shadow: var(--shadow-inset-box);
   z-index: 1;
   border: var(--border-solid-small);
 }
@@ -1439,12 +1438,24 @@ main>.container {
   }
 
   .comment-form-info {
-    input:focus {
-      background-color: var(--overlay-color-light-5) !important;
-    }
+    .comment-form-info-label {
+      color: var(--font-color-main);
+      box-shadow: var(--shadow-inset-box);
+      border-radius: var(--border-radius-base);
+      border: var(--border-solid-small);
 
-    textarea:focus {
-      background-color: var(--overlay-color-light-5) !important;
+      .iconfont {
+        padding-left: .75rem;
+        font-size: 0.9rem;
+        opacity: 0.75;
+      }
+
+      input {
+        box-shadow: unset !important;
+        background-color: unset !important;
+        border-radius: unset !important;
+        border: unset !important;
+      }
     }
   }
 }
@@ -1531,7 +1542,7 @@ main>.container {
     color: var(--font-color-main);
     font-size: 0.85rem;
     background-image: var(--gradient-45deg);
-    box-shadow: var(--shadow-box-main);
+    box-shadow: var(--shadow-box-small);
     border: var(--border-solid-small);
     border-radius: var(--border-radius-medium);
     background-clip: padding-box;

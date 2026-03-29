@@ -10,7 +10,7 @@ $border-base: 1px solid rgba(230, 230, 240, .75);
 @mixin heading-styles($size) {
   position: relative;
   margin-top: $base-margin;
-  margin-bottom: $base-margin;
+  margin-bottom: $base-size*3;
   font-size: $size * $base-font-size;
   font-weight: $base-font-weight;
   scroll-margin-top: 80px;
@@ -93,7 +93,7 @@ $breakpoints: (
 
   // h标签
   h1 {
-    @include heading-styles(2);
+    @include heading-styles(1.75);
     @include heading-decoration($base-size * 8, $base-size * 8);
   }
 
