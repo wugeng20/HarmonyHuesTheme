@@ -16,9 +16,11 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
-require 'PHPMailer/PHPMailer.php';
-require 'PHPMailer/SMTP.php';
-require 'PHPMailer/Exception.php';
+if (!class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
+    require 'PHPMailer/PHPMailer.php';
+    require 'PHPMailer/SMTP.php';
+    require 'PHPMailer/Exception.php';
+}
 
 $options = Helper::options();
 
