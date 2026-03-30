@@ -402,24 +402,18 @@ function endCountTime($precision = 3)
 function getCommentAt($coid, $type = 'html')
 {
     $db = Typecho_Db::get();
-    $prow = $db->fetchRow(
-        $db
-            ->select('parent')
-            ->from('table.comments')
-            ->where('coid = ? AND status = ?', $coid, 'approved')
-    );
+    $prow = $db->fetchRow($db->select('parent')->from('table.comments')->where('coid = ? AND status = ?', $coid, 'approved')); // 获取父评论信息
     $parent = @$prow['parent'];
     if ($prow && $parent != '0') {
-        $arow = $db->fetchRow(
-            $db
-                ->select('author,url')
-                ->from('table.comments')
-                ->where('coid = ? AND status = ?', $parent, 'approved')
-        );
-        if ($type == 'html') {
-            echo '<span class="repy-to-author mr-1"><a href="' . $arow['url'] . '" title="' . $arow['author'] . '">@' . $arow['author'] . '</a>: </span>';
-        } elseif ($type == 'a') {
-            echo '<a href="' . $arow['url'] . '" title="' . $arow['author'] . '">' . $arow['author'] . '</a>';
+        try {
+            $arow = $db->fetchRow($db->select('author,url')->from('table.comments')->where('coid = ? AND status = ?', $parent, 'approved'));
+            if ($type == 'html' && $arow) {
+                echo '<span class="repy-to-author mr-1"><a href="' . $arow['url'] . '" title="' . $arow['author'] . '">@' . $arow['author'] . '</a>: </span>';
+            } elseif ($type == 'a' && $arow) {
+                echo '<a href="' . $arow['url'] . '" title="' . $arow['author'] . '">' . $arow['author'] . '</a>';
+            }
+        } catch (Exception $e) {
+            echo ''; // 防止报错
         }
     }
 }
