@@ -22,7 +22,7 @@ function threadedComments($comments, $options)
         <?php
         $email = $comments->mail;
         $imgUrl = getGravatar($email);
-        echo '<img class="lazy" src="' . getAvatarLazyload(false) . '" data-original="' . $imgUrl . '" alt="' . $comments->author . '">';
+        echo '<img class="lazy" src="' . getAvatarLazyload(false) . '" data-original="' . $imgUrl . '" alt="' . $comments->author . '" no-view>';
         ?>
         <div class="comment-header">
           <div class="comment-name">

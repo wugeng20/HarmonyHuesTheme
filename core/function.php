@@ -513,7 +513,7 @@ function formatEmoji($text, $type = true)
   data-original="' . getAssets('assets/emoji/Heo/', false) . $match[1] . '.webp" alt="' . $match[1] . '" no-view />';
             } else {
                 return '<img class="emoji-image" src="' . getAssets('assets/emoji/Heo/', false) . $match[1] . '.webp"
-  alt="' . $match[1] . '" style="width:20px;height:auto;" />';
+  alt="' . $match[1] . '" style="width:20px;height:auto;" no-view />';
             }
         },
         $text
