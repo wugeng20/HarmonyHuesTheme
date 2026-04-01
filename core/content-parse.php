@@ -81,8 +81,7 @@ function ContentVideo($content)
         $alignment = !empty($alignment) ? $alignment : 'center';
 
         return '<div class="video-box mb-3" style="text-align:' . $alignment . ';"><video class="video-content"
-    src="' . $videoSrc . '" ' . $posterHtml . ' title="视频" webkit-playsinline webkit-playsinline controls></video></div>
-';
+    src="' . $videoSrc . '" ' . $posterHtml . ' preload="metadata" webkit-playsinline controls></video></div>';
     }, $content);
 
     return $content;
