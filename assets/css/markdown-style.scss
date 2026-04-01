@@ -125,10 +125,6 @@ $breakpoints: (
     }
   }
 
-  br:not(p>br) {
-    display: none;
-  }
-
   blockquote,
   details,
   dl,
