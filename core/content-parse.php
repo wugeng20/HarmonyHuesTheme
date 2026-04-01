@@ -71,17 +71,18 @@ function ContentHint($content)
 /* 视频短代码 */
 function ContentVideo($content)
 {
-    $pattern = '/\[player\s+url="([^"]*)"(?:\s+pic="([^"]*)")?\s+\/\]/';
+    $pattern = '/\[player\s+url="([^"]*)"(?:\s+pic="([^"]*)")(?:\s+alignment="([^"]*)")?\s+\/\]/';
 
     $content = preg_replace_callback($pattern, function ($matches) {
         $videoSrc = @strip_tags($matches[1]); // 获取 url 的值
         $posterSrc = @strip_tags($matches[2]); // 获取 pic 的值
+        $alignment = @strip_tags($matches[3]); // 获取 alignment 的值
+        $posterHtml = !empty($posterSrc) ? 'poster="' . $posterSrc . '"' : '';
+        $alignment = !empty($alignment) ? $alignment : 'center';
 
-        if (empty($posterSrc)) {
-            $posterSrc = getAssets('assets/images/thumb/' . rand(1, 20) . '.webp', false);
-        }
-
-        return '<video class="video-content" src="' . $videoSrc . '" poster="' . $posterSrc . '" title="视频" controls></video>';
+        return '<div class="video-box mb-3" style="text-align:' . $alignment . ';"><video class="video-content"
+    src="' . $videoSrc . '" ' . $posterHtml . ' title="视频" webkit-playsinline webkit-playsinline controls></video></div>
+';
     }, $content);
 
     return $content;

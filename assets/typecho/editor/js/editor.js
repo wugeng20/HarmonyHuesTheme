@@ -136,8 +136,10 @@ function showTextStylePanel() {
 function showVideoPanel() {
     createPanel('videoPanel',
         '<p><b>插入视频</b></p>' +
+        '<p><labe>视频对齐方式</labe></p>' +
+        '<p><select id="AlignmentList"><option value="center">居中</option><option value="left">左对齐</option><option value="right">右对齐</option></select></p>' +
         '<p><label>输入视频地址</label><input type="text" name="url" placeholder="必填，不支持云解析（比如：https://xxx.com/xxx.mp4）"></p>' +
-        '<p><label>输入视频封面</label><input type="text" name="pic" placeholder="选填，不填则显示默认的背景图片"></p>' +
+        '<p><label>输入视频封面</label><input type="text" name="pic" placeholder="选填，不填则不显示封面"></p>' +
         '<form>' +
         '<button type="button" class="btn btn-s primary" id="video_ok">确定</button>' +
         '<button type="button" class="btn btn-s" id="video_cancel">取消</button>' +
@@ -292,9 +294,10 @@ function showGridImgPanel() {
  */
 function handleVideoConfirm() {
     const myField = document.getElementById('text');
+    const alignment = $('#AlignmentList').val();
     const textContent = $('.wmd-prompt-dialog input[name="url"]').val();
     const pic = $('.wmd-prompt-dialog input[name="pic"]').val();
-    const content = `[player url="${textContent}" pic="${pic}" /]`;
+    const content = `[player url="${textContent}" pic="${pic}" alignment="${alignment}" /]`;
     insertContentToTextArea(myField, content, '#videoPanel');
 }
 
