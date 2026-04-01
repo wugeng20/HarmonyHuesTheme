@@ -76,7 +76,7 @@ $content = parseLinksShortcode($this->content);
   }
 
   .links-title {
-    font-size: 5rem
+    font-size: 3.5rem
   }
 
   .links-group .links-group-title {
