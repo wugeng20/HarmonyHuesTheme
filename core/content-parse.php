@@ -71,17 +71,35 @@ function ContentHint($content)
 /* 视频短代码 */
 function ContentVideo($content)
 {
-    $pattern = '/\[player\s+url="([^"]*)"(?:\s+pic="([^"]*)")(?:\s+alignment="([^"]*)")?\s+\/\]/';
+    // 匹配自闭合的 [player] 短代码，允许属性值中包含引号和方括号
+    $pattern = '/\[player\s+((?:[^\]"\']|"[^"]*"|\'[^\']*\')*?)\s*\/\]/is';
 
     $content = preg_replace_callback($pattern, function ($matches) {
-        $videoSrc = @strip_tags($matches[1]); // 获取 url 的值
-        $posterSrc = @strip_tags($matches[2]); // 获取 pic 的值
-        $alignment = @strip_tags($matches[3]); // 获取 alignment 的值
+        $attrStr = $matches[1]; // 获取属性字符串
+
+        // 解析所有属性（键值对，支持双引号和单引号）
+        $attrs = [];
+        preg_match_all('/(\w+)=["\']([^"\']*)["\']/i', $attrStr, $attrMatches, PREG_SET_ORDER);
+        foreach ($attrMatches as $m) {
+            $attrs[strtolower($m[1])] = $m[2]; // 键名统一小写
+        }
+
+        $videoSrc = isset($attrs['url']) ? strip_tags($attrs['url']) : '';
+        if (empty($videoSrc)) {
+            // 没有 url 则保留原短代码不处理
+            return $matches[0];
+        }
+
+        $posterSrc = isset($attrs['pic']) ? strip_tags($attrs['pic']) : '';
+        $alignment = isset($attrs['alignment']) ? strip_tags($attrs['alignment']) : '';
+
         $posterHtml = !empty($posterSrc) ? 'poster="' . $posterSrc . '"' : '';
         $alignment = !empty($alignment) ? $alignment : 'center';
 
-        return '<div class="video-box mb-3" style="text-align:' . $alignment . ';"><video class="video-content"
-    src="' . $videoSrc . '" ' . $posterHtml . ' preload="metadata" webkit-playsinline controls></video></div>';
+        return '<div class="video-box mb-3" style="text-align:' . $alignment . ';">
+  <video class="video-content" src="' . $videoSrc . '" ' . $posterHtml . ' preload="metadata" webkit-playsinline
+    controls></video>
+</div>';
     }, $content);
 
     return $content;
