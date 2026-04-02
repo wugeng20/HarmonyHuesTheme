@@ -263,63 +263,20 @@ function ContentFold($content)
 }
 
 /* 过滤宫格图片 */
-function ContentGridImg_bak($content)
-{
-    // 匹配短代码： [GridImg columns="3" gap="10px"] ... [/GridImg]
-    $pattern = '/\[GridImg\s+(.*?)\](.*?)\[\/GridImg\]/is';
-
-    $content = preg_replace_callback($pattern, function ($matches) {
-        $attrString = $matches[1]; // 属性字符串，如：columns="3" gap="10px"
-        $innerContent = $matches[2]; // 标签内的内容（图片URL列表）
-
-        // 默认值
-        $columns = 3;
-        $gap = '10px';
-
-        // 提取 columns 属性
-        if (preg_match('/columns="([^"]*)"/i', $attrString, $colMatch)) {
-            $columns = (int)$colMatch[1]; // 强制转为整数
-        }
-        // 提取 gap 属性
-        if (preg_match('/gap="([^"]*)"/i', $attrString, $gapMatch)) {
-            $gap = $gapMatch[1];
-        }
-
-        // 处理内部内容：先统一分隔符，再清除HTML标签
-        // 1. 将所有 <br> 变体替换为换行符
-        $innerContent = preg_replace('/<br>/i', "\n", $innerContent);
-        // 2. 移除其他HTML标签（如 <a>、<p> 等），保留纯文本
-        $innerContent = strip_tags($innerContent);
-        // 3. 解码HTML实体（如 &amp; 转为 &）
-        $innerContent = html_entity_decode($innerContent, ENT_QUOTES, 'UTF-8');
-        // 4. 按换行符分割，并过滤空行
-        $lines = explode("\n", trim($innerContent));
-        $lines = array_map('trim', $lines);
-        $urls = array_filter($lines);
-
-        // 生成HTML网格
-        $html = '<div
-                  style="display:grid;grid-template-columns:repeat(' . $columns . ', 1fr); gap:' . htmlspecialchars($gap) . ';margin: ' . htmlspecialchars($gap) . '  auto;">
-                  ';
-        foreach ($urls as $url) {
-            $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
-            $html .= '<img class="lazy" src="' . getLazyload(false) . '" data-original="' . $safeUrl . '"
-                    style="width:100%; height: 100%; display:block;" alt=' . basename($safeUrl) . ' show-img>';
-        }
-        $html .= '</div>';
-
-        return $html;
-    }, $content);
-
-    return $content;
-}
-
 function ContentGridImg($content)
 {
     $pattern = '/\[GridImg\s+columns="(\d+)"\s+gap="([^"]+)"\](.*?)\[\/GridImg\]/s';
-    $replacement = '<div class="grid-img-container"
-                  style="display:grid;grid-template-columns:repeat($1, 1fr); gap:$2; margin: $2 auto;">$3</div>';
-    $content = preg_replace($pattern, $replacement, $content);
+
+    $content = preg_replace_callback($pattern, function ($matches) {
+        $columns = $matches[1] ?? 3;
+        $gap = $matches[2] ?? '10px';
+        // 清理内容中的 <br> 标签（不区分大小写）
+        $innerContent = preg_replace('/<br>/i', '', $matches[3]);
+
+        return '<div class="grid-img-container"
+              style="display:grid;grid-template-columns:repeat(' . $columns . ', 1fr); gap:' . $gap . '; margin:' . $gap . ' auto;">
+              ' . $innerContent . '</div>';
+    }, $content);
 
     return $content;
 }
