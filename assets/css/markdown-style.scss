@@ -557,4 +557,9 @@ $breakpoints: (
       max-height: 300px;
     }
   }
+
+  &+br,
+  br {
+    display: none;
+  }
 }
