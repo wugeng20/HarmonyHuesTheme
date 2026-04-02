@@ -91,7 +91,7 @@
 
 .markdown-body hr { border: 0; padding: 0.15rem; background: repeating-linear-gradient(135deg, var(--border-color-main) 0px, var(--font-color-main-transparent) 1px, transparent 1px, transparent 6px); }
 
-.markdown-body video { width: unset; max-width: 100%; height: auto; max-height: 35rem; vertical-align: middle; border-radius: var(--border-radius-medium); border: var(--border-solid-small); }
+.markdown-body video { width: unset; max-width: 100%; height: auto; max-height: 35rem; vertical-align: middle; border-radius: var(--border-radius-medium); }
 
 .markdown-body .video-box { position: relative; overflow: hidden; text-align: center; }
 
