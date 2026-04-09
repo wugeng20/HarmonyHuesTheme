@@ -411,8 +411,12 @@ function handleMeEquipmentConfirm() {
 function handleGridImageConfirm() {
     const myField = document.getElementById('text');
     const imgColumns = $('.wmd-prompt-dialog input[name="imgColumns"]').val();
+    let imgContent = '';
+    for (let i = 0; i < imgColumns; i++) {
+        imgContent += `![图片标题${i}](图片链接${i})\n`;
+    }
     const imgGap = $('.wmd-prompt-dialog input[name="imgGap"]').val();
-    const content = `[GridImg columns="${imgColumns}" gap="${imgGap}"]\n![这张是默认图片，请删除，GridImg标签里面不要添加任何文本内容，会影响布局](/usr/themes/HarmonyHues/assets/images/thumb/7.webp)\n![这张是默认图片，请删除，GridImg标签里面不要添加任何文本内容，会影响布局](/usr/themes/HarmonyHues/assets/images/thumb/8.webp)\n[/GridImg]\n`;
+    const content = `[GridImg columns="${imgColumns}" gap="${imgGap}"]\n${imgContent}[/GridImg]\n`;
     insertContentToTextArea(myField, content, '#gridImgPanel');
 }
 
