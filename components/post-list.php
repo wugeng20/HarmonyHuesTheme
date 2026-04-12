@@ -98,7 +98,8 @@ function filterGridImg($content)
   <div class="row no-gutters post-list">
     <?php while ($this->next()): ?>
       <?php if ($this->fields->articleType == 'image'): ?>
-        <div class="col-6 col-md-4 col-xl-4 d-flex post-image-card">
+        <div
+          class="<?php echo $this->options->indexLayout ? 'col-6 col-md-3 col-xl-3' : 'col-6 col-md-4 col-xl-4'; ?> d-flex post-image-card">
           <div class="post-item d-flex flex-column m-1 m-md-2 p-0">
             <div class="post-info d-flex flex-column align-content-center justify-content-between p-1 px-md-2 pt-md-2">
               <div class="post-head">
@@ -131,7 +132,8 @@ function filterGridImg($content)
           </div>
         </div>
       <?php else: ?>
-        <div class="col-6 col-md-4 col-xl-4 d-flex">
+        <div
+          class="<?php echo $this->options->indexLayout ? 'col-6 col-md-3 col-xl-3' : 'col-6 col-md-4 col-xl-4'; ?> d-flex">
           <div class="post-item d-flex flex-column m-1 m-md-2 p-0">
             <div class="post-cover">
               <a href="<?php $this->permalink() ?>" title="<?php $this->title() ?>">

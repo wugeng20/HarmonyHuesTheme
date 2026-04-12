@@ -26,7 +26,7 @@ function themeFields($layout)
         ),
         '1',
         _t('侧边栏显示'),
-        _t('介绍：选择当前文章页是否显示侧边栏，默认显示侧边栏，也推荐显示')
+        _t('介绍：选择当前文章页是否显示侧边栏，默认显示侧边栏，<b style="color:red;">单栏布局模式下侧边栏会自动隐藏</b>')
     );
     $layout->addItem($showSidebar);
 
@@ -86,7 +86,7 @@ function themeFields($layout)
         NULL,
         _t('自定义摘要（非必填）'),
         _t('填写时：将会显示填写的摘要 <br />
-不填写时：默认取文章里的内容')
+不填写时：默认取文章里的内容，<b style="color:red;">图片格式推荐填写15以内字符</b>')
     );
     $layout->addItem($abstract);
 
@@ -99,7 +99,8 @@ function themeFields($layout)
 不填写时：<br>
 1、若文章有图片则取文章内图片 <br />
 2、若文章无图片，并且外观设置里未填写·自定义缩略图·选项，则取模板自带图片 <br />
-3、若文章无图片，并且外观设置里填写了·自定义缩略图·选项，则取自定义缩略图图片')
+3、若文章无图片，并且外观设置里填写了·自定义缩略图·选项，则取自定义缩略图图片 <br />
+4、<b style="color:red;">图片格式：支持填写3个自定义缩略图，一行一个URL</b>')
     );
     $layout->addItem($thumb);
 }

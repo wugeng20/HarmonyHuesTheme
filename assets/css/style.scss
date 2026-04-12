@@ -88,7 +88,7 @@
   /* 圆形圆角 */
   --border-radius-circle: 50%;
   /* 固定导航栏高度 */
-  --height-nav-fixed: 80px;
+  --height-nav-fixed: 75px;
   /* 页脚高度 */
   --height-footer: 60px;
   /* 主背景滤镜 */
@@ -694,8 +694,8 @@ img {
     z-index: 1000;
     transform: translateY(100%);
     transition: transform 1s cubic-bezier(0.3, 0.7, 0, 1), opacity 1s linear, visibility 1s linear;
-    border-top-left-radius: var(--border-radius-medium);
-    border-top-right-radius: var(--border-radius-medium);
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
     box-shadow: 0 -0.15rem 1.5rem 0.25rem var(--overlay-color-dark-1);
 
     &.open {
@@ -750,7 +750,6 @@ img {
     .sub-menu {
       background-color: var(--bg-color-body);
       border-radius: var(--border-radius-medium);
-      border-top-left-radius: 0;
     }
   }
 }
@@ -812,28 +811,9 @@ img {
 
 /*---------- 文章列表样式st ----------*/
 .post-list {
-  $columns: 3; // 默认 3 列
-
-  &>div {
-
-    // 桌面端适配
-    @for $i from 0 through 8 {
-      &:nth-child(#{$i + 1}) .post-item {
-        animation-delay: 0.2s * (ceil(($i + 1)/$columns) + 1);
-      }
-    }
-
-    // 移动端适配
-    @include max-media-breakpoint("md") {
-      $columns: 2;
-
-      @for $i from 0 through 6 {
-        &:nth-child(#{$i + 1}) .post-item {
-          animation-delay: 0.2s * (ceil(($i + 1)/$columns) + 1);
-        }
-      }
-    }
-  }
+  opacity: 0;
+  animation: fade-in-top 0.5s 0.3s forwards;
+  -webkit-animation: fade-in-top 0.5s 0.3s forwards;
 
   .post-item {
     position: relative;
@@ -847,9 +827,6 @@ img {
     box-shadow: var(--shadow-box-main);
     background: var(--gradient-0deg);
     background-clip: padding-box;
-    opacity: 0;
-    animation: fade-in-top 0.5s 0.3s forwards;
-    -webkit-animation: fade-in-top 0.5s 0.3s forwards;
 
     &:hover {
       background: var(--bg-color-main) !important;

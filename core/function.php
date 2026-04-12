@@ -54,8 +54,10 @@ function getAssets($assetPath, $echo = true)
  */
 function themeInit($self)
 {
+    $options = Helper::options();
+
     // 设置评论排序为最新优先
-    Helper::options()->commentsOrder = 'DESC';
+    $options->commentsOrder = 'DESC';
 
     // 定义路由规则
     $routes = array(
@@ -63,10 +65,16 @@ function themeInit($self)
         '/golink' => 'golink.php',
     );
 
+    // PC端首页单栏模式布局的文章数量
+    if ($options->indexLayout && !isMobile() && $self->parameter->pageSize < 10) {
+        $self->parameter->pageSize += 3;
+    }
+
     // 手机文章数量
     if (isMobile()) {
         $self->parameter->pageSize += 1;
     }
+
 
     // 获取当前请求路径
     $pathInfo = $self->request->getPathInfo();

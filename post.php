@@ -12,11 +12,14 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
 }
 
 $isSidebar = $this->fields->showSidebar;
-if ((empty($isSidebar) || $isSidebar !== false) && $isSidebar != '0') {
+$indexLayout = $this->options->indexLayout;
+if ((empty($isSidebar) || $isSidebar !== false) && $isSidebar != '0' && $indexLayout != '1') {
   $isSidebar = true;
 } else {
   $isSidebar = (bool) $isSidebar;
 }
+
+$isSidebar = $this->options->indexLayout ? false : $isSidebar;
 
 $this->need('components/header.php');
 ?>

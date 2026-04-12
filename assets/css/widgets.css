@@ -173,6 +173,8 @@
 
 .swiper-widget .swiper-container { position: relative; width: 100%; height: 15rem; overflow: hidden; }
 
+.swiper-widget .swiper-container.no-sidebar { height: 16.5rem; }
+
 @media (max-width: 767.98px) { .swiper-widget .swiper-container { height: 12rem !important; } }
 
 @media (max-width: 575.98px) { .swiper-widget .swiper-container { height: 11rem !important; } }
@@ -186,6 +188,8 @@
 .swiper-widget .swiper-container .swiper-wrapper .swiper-slide-content .swiper-slide-title { overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; white-space: normal; }
 
 .swiper-widget .swiper-container .swiper-wrapper .swiper-slide-content .swiper-slide-description { font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; white-space: normal; }
+
+.swiper-widget .swiper-container .swiper-wrapper .swiper-slide-video { width: 100%; height: 100%; object-fit: cover; }
 
 .swiper-widget .swiper-container .swiper-button-wrapper { gap: 0.5rem; opacity: 0; position: absolute; bottom: 0; right: 0; z-index: 11; transition: opacity 0.5s ease-in-out; }
 

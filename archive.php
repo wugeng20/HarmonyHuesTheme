@@ -16,7 +16,7 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
   <div class="container p-2">
     <div class="row no-gutters">
       <!-- 左侧主体 -->
-      <div class="col-lg-9" id="main" role="main">
+      <div class="<?php echo $this->options->indexLayout ? 'col-lg-12' : 'col-lg-9'; ?>" id="main" role="main">
         <?php if ($this->have()): ?>
           <?php if ($this->is('category')): ?>
             <div class="px-1 px-md-2 my-2">
@@ -131,7 +131,7 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
           </div>
         <?php endif; ?>
       </div><!-- end #main -->
-      <?php $this->need('components/sidebar.php'); ?>
+      <?php $this->options->indexLayout ? '' : $this->need('components/sidebar.php'); ?>
     </div>
 </main>
 

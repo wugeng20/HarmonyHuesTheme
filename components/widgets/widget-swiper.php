@@ -87,7 +87,7 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
     ?>
     <!-- 轮播幻灯片 -->
     <div class="card w-auto m-1 m-md-2 swiper-widget">
-        <div class="swiper-container">
+        <div class="swiper-container <?php echo $this->options->indexLayout ? 'no-sidebar' : ''; ?>">
             <div class="swiper-wrapper"><?php slidesHtml($swiperText) ?></div>
             <div class="swiper-pagination d-flex align-items-center mx-1"></div>
             <div class="d-flex justify-content-center align-items-center m-2 swiper-button-wrapper">

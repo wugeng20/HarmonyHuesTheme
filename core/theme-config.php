@@ -117,6 +117,20 @@ function themeConfig($form)
     $form->addInput($navStyle->multiMode());
     $navStyle->setAttribute('class', 'setting-content my-3');
 
+    // 首页布局
+    $indexLayout = new Typecho_Widget_Helper_Form_Element_Select(
+        'indexLayout',
+        array(
+            '0' => '双栏模式',
+            '1' => '单栏模式',
+        ),
+        '0',
+        '首页布局（非必填）',
+        '介绍：首页布局，默认双栏模式，只PC端生效，移动端始终单栏。'
+    );
+    $form->addInput($indexLayout->multiMode());
+    $indexLayout->setAttribute('class', 'setting-content my-3');
+
     // 自定义缩略图
     $customThumbnail = new Typecho_Widget_Helper_Form_Element_Textarea(
         'customThumbnail',
