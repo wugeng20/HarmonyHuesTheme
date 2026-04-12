@@ -18,7 +18,7 @@ $this->need('components/header.php');
 <main>
   <div class="container p-2">
     <div class="row no-gutters">
-      <?php $this->need('components/index-layout.php'); ?>
+      <?php $this->need('components/layout.php'); ?>
     </div>
     <div class="index-footer-widget mt-3 px-1">
       <?php $this->need('components/widgets/widget-hello.php'); ?>
