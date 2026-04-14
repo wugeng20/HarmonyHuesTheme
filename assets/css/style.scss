@@ -1129,10 +1129,28 @@ img {
 .footer {
   color: var(--font-color-main);
   background-color: var(--bg-color-main);
-  font-size: 14px;
+  font-size: 0.875rem;
   min-height: var(--height-footer);
 
+  @include min-media-breakpoint('md') {
+    &.footer-ui-two {
+      background-color: transparent;
+
+      .container {
+        padding: 0.25rem 1rem;
+        background-color: var(--bg-color-main);
+        -webkit-box-shadow: var(--shadow-nav);
+        box-shadow: var(--shadow-nav);
+        border: var(--border-solid-main);
+        border-radius: var(--border-radius-medium);
+      }
+    }
+  }
+
   @include max-media-breakpoint('md') {
+    border-top-left-radius: var(--border-radius-medium);
+    border-top-right-radius: var(--border-radius-medium);
+
     .container {
       flex-direction: column-reverse;
       align-items: center;

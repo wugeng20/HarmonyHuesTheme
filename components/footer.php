@@ -34,7 +34,7 @@ function generateCopyright($siteCreationDate = '')
 }
 
 ?>
-<footer class="footer py-2">
+<footer class="footer py-2 <?php echo $this->options->navStyle == 'mini' ? 'footer-ui-two' : 'footer-ui-one'; ?>">
   <div class="container d-flex justify-content-between align-items-center">
     <?php if ($footercontent): ?>
       <?php echo $footercontent; ?>
