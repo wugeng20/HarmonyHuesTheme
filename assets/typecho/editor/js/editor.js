@@ -54,7 +54,7 @@ window.onload = function () {
  */
 function insertCustomButtons() {
     $('#wmd-spacer5').after(
-        '<li class="wmd-button" id="wmd-t-button" title="文字样式自定义"><svg viewBox="0 0 1024 1024" p-id="7281" width="20" height="20"><path d="M153.6 819.2v102.4h716.8v-102.4H153.6z m230.4-215.04h256l46.08 112.64h107.52L550.4 153.6h-76.8L230.4 716.8h107.52l46.08-112.64zM512 254.976L607.744 512H416.256L512 254.976z" fill="#9b9b9b" p-id="7282"></path></svg></li>'
+        '<li class="wmd-button" id="wmd-t-button" title="文本样式自定义"><svg viewBox="0 0 1024 1024" p-id="7281" width="20" height="20"><path d="M153.6 819.2v102.4h716.8v-102.4H153.6z m230.4-215.04h256l46.08 112.64h107.52L550.4 153.6h-76.8L230.4 716.8h107.52l46.08-112.64zM512 254.976L607.744 512H416.256L512 254.976z" fill="#9b9b9b" p-id="7282"></path></svg></li>'
         + '<li class="wmd-button" id="wmd-indentation-button" title="缩进2字符"><svg viewBox="0 0 1024 1024" p-id="16735" width="20" height="20"><path d="M896 192H128a64 64 0 1 1 0-128h768a64 64 0 1 1 0 128zM896 448H469.333333a64 64 0 1 1 0-128h426.666667a64 64 0 1 1 0 128zM896 704H469.333333a64 64 0 1 1 0-128h426.666667a64 64 0 1 1 0 128zM896 960H128a64 64 0 1 1 0-128h768a64 64 0 1 1 0 128zM153.770667 719.104c-13.184 0-26.453333-2.944-38.954667-8.96a88.917333 88.917333 0 0 1-50.773333-80.768V394.581333c0-34.730667 19.456-65.706667 50.773333-80.768a88.704 88.704 0 0 1 94.805333 10.837334l146.730667 117.333333c21.376 17.152 33.621333 42.666667 33.621333 70.016s-12.245333 52.821333-33.578666 69.973333l-146.816 117.418667a89.344 89.344 0 0 1-55.808 19.712z m38.229333-244.608v75.008L238.890667 512 192 474.496z" fill="#9b9b9b" p-id="11600"></path></svg></li>'
         + '<li class="wmd-button" id="wmd-video-button" title="插入视频"><svg viewBox="0 0 1024 1024" p-id="16735" width="20" height="20"><path d="M910.222336 284.444672H113.77664V170.667008c0-31.419392 25.469952-56.889344 56.889344-56.889344h682.665984c31.419392 0 56.889344 25.469952 56.889344 56.889344v113.77664z m0 56.88832v512c0 31.419392-25.469952 56.889344-56.889344 56.889344H170.667008c-31.419392 0-56.889344-25.469952-56.889344-56.889344v-512H910.22336zM284.444672 170.667008l57.2416 113.77664h56.88832l-57.2416-113.77664h-56.88832z m170.665984 0l57.2416 113.77664H569.2416L512 170.668032h-56.889344z m170.667008 0l57.2416 113.77664h56.88832l-57.2416-113.77664h-56.88832z m6.00576 452.108288a28.444672 28.444672 0 0 0 12.721152-12.721152c7.02464-14.051328 1.330176-31.136768-12.721152-38.162432L439.38816 475.69408a28.444672 28.444672 0 0 0-12.720128-3.003392c-15.710208 0-28.444672 12.735488-28.444672 28.444672v192.396288c0 4.415488 1.028096 8.77056 3.002368 12.720128 7.025664 14.051328 24.112128 19.746816 38.162432 12.721152l192.396288-96.197632z" fill="#9b9b9b" p-id="16736"></path></svg></li>'
         + '<li class="wmd-button" id="wmd-msgpro-button" title="消息提示框"><svg viewBox="0 0 1024 1024" p-id="8277" width="20" height="20"><path d="M606.656155 91.034827c0-50.196774-42.539639-91.034827-95.005193-91.034827S416.716669 40.767154 416.716669 91.034827a87.773454 87.773454 0 0 0 1.276189 15.314269c-131.092986 43.53223-238.718272 178.028387-238.718272 337.268435v125.279236s0 180.509866-46.226407 182.069653a45.588313 45.588313 0 1 0-1.20529 91.034826h759.687046a45.588313 45.588313 0 1 0 0-91.034826c-47.502596 0-47.502596-180.793464-47.502597-180.793464V443.617531c0-159.381846-100.535346-294.019802-238.647372-337.693831a87.348058 87.348058 0 0 0 1.276189-14.888873z m47.431697 796.412933c0 75.436959-63.313162 136.55224-142.43689 136.55224s-142.295091-60.831683-142.43689-136.55224z" fill="#9b9b9b" p-id="8278"></path></svg></li>'
@@ -119,10 +119,11 @@ function bindButtonEvents() {
  */
 function showTextStylePanel() {
     createPanel('TPanel',
-        '<p><b>文字样式自定义</b></p>' +
-        '<p><label>输入文字颜色</label><input name="color" type="text" placeholder="选填（如 #ffffff 、red）"></p>' +
-        '<p><label class="mr-1">是否居中</label><input type="checkbox" id="isCenter"></p>' +
-        '<p><label>输入文字内容</label><textarea name="text" type="text" placeholder="请输入内容，支持HTML语法"></textarea></p>' +
+        '<p><b>文本样式自定义</b></p>' +
+        '<p><label>输入文本颜色</label><input name="color" type="text" placeholder="选填（如 #ffffff 、red）"></p>' +
+        '<p><label class="mr-1">设置文本位置</label></p>' +
+        '<p><select id="textPosition"><option value="">默认</option><option value="text-center">居中</option><option value="text-left">左对齐</option><option value="text-right">右对齐</option></select></p>' +
+        '<p><label>输入文本内容</label><textarea name="text" type="text" placeholder="请输入内容，支持HTML语法"></textarea></p>' +
         '<form>' +
         '<button type="button" class="btn btn-s primary" id="text_ok">确定</button>' +
         '<button type="button" class="btn btn-s" id="text_cancel">取消</button>' +
@@ -308,9 +309,9 @@ function handleTextStyleConfirm() {
     const myField = document.getElementById('text');
     const content = $('.wmd-prompt-dialog textarea[name="text"]').val();
     const color = $('.wmd-prompt-dialog input[name="color"]').val();
-    const isCenter = $('#isCenter').is(':checked');
+    const textPosition = $('#textPosition').val();
     const colorStyle = color ? ` style="color:${color}"` : '';
-    const insertContent = isCenter ? `<p class="center"${colorStyle}>${content}</p>` : `<p${colorStyle}>${content}</p>`;
+    const insertContent = textPosition ? `<p class="${textPosition}"${colorStyle}>${content}</p>` : `<p${colorStyle}>${content}</p>`;
     insertContentToTextArea(myField, insertContent, '#TPanel');
 }
 
