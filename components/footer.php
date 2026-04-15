@@ -54,7 +54,7 @@ function generateCopyright($siteCreationDate = '')
           <div>Powered
             by <a href="//typecho.org/" title="Typecho" target="_blank">Typecho</a> & <a href="/harmonyhues.html"
               title="Harmony Hues 主题" target="_self">Harmony Hues</a><?php $this->options->icp(); ?> &Iota;
-            <a href="https://ipw.cn/ipv6webcheck/?site=<?php $this->options->siteUrl(); ?>" title="本站支持IPv6访问"
+            <a href="https://ipv6test.wcode.net/?q=<?php $this->options->siteUrl(); ?>" title="本站支持IPv6访问"
               target='_blank'>本站支持IPv6访问</a> &Iota; <a
               href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" title="CC BY-NC-SA 4.0"
               target="_blank">CC-BY-NC-SA 4.0</a>
