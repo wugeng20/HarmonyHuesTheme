@@ -688,9 +688,6 @@ $(document).ready(function () {
   // 选择所有.card元素，但不包括具有 .no-animation 类的元素
   applyAnimationDelay('.card:not(.no-animation)', 0.3);
 
-  // 友情链接添加动画
-  applyAnimationDelay('.links-card', 0.3);
-
   // 轮播图
   if (typeof Swiper !== 'undefined') {
     var indexSwiper = new Swiper('.swiper-container', {

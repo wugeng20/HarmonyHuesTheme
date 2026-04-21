@@ -69,12 +69,6 @@ function parseLinksShortcode($content)
 $content = parseLinksShortcode($this->content);
 ?>
 <style type="text/css">
-  .links-list .links-card {
-    opacity: 0;
-    animation: fade-in-top 0.5s 0.3s forwards;
-    -webkit-animation: fade-in-top 0.5s 0.3s forwards;
-  }
-
   .links-title {
     font-size: 3.5rem
   }
@@ -137,8 +131,8 @@ $content = parseLinksShortcode($this->content);
     position: absolute;
     top: 0;
     right: 1rem;
-    opacity: .5;
-    transition: all .5s ease-in-out
+    opacity: 0;
+    transition: all .3s ease-in-out;
   }
 
   .links-list .links-card:hover .iconfont {
