@@ -65,10 +65,10 @@ function themeInit($self)
         '/golink' => 'golink.php',
     );
 
-    // PC端首页单栏模式布局的文章数量
-    if ($options->indexLayout && !isMobile() && $self->parameter->pageSize < 10) {
-        $self->parameter->pageSize += 3;
-    }
+    // PC端首页单栏模式布局的文章数量，不太友好，先注释掉
+    // if ($options->indexLayout && !isMobile() && $self->parameter->pageSize < 10) {
+    //     $self->parameter->pageSize += 3;
+    // }
 
     // 手机文章数量
     if (isMobile()) {
