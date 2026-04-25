@@ -78,7 +78,7 @@ if (($isArticleTop || $hiddenCategoryIds) && $this->is('index') || $this->is('fr
   // 排序
   if (!empty($isArticleTop)) {
     // 置顶文章存在情况下：优先置顶文章，其次按照发布时间排序
-    $normalPostQuery->order('IF(table.fields.str_value = 1, 0, 1) ,table.contents.created', Typecho_Db::SORT_DESC);
+    $normalPostQuery->order('IF(table.fields.str_value = \'1\', 0, 1) ,table.contents.created', Typecho_Db::SORT_DESC);
   } else {
     // 按发布时间排序
     $normalPostQuery->order('table.contents.created', Typecho_Db::SORT_DESC);
