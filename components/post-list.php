@@ -49,9 +49,8 @@ if (($isArticleTop || $hiddenCategoryIds) && $this->is('index') || $this->is('fr
 
   // 置顶的文章
   if (!empty($isArticleTop)) {
-    // 拼接查询条件
+    // 拼接查询条件，获取置顶文章
     $normalPostQuery->join('table.fields', 'table.contents.cid = table.fields.cid AND table.fields.name = \'articleTop\'', Typecho_Db::LEFT_JOIN);
-    $normalPostQuery->order('table.fields.str_value = 1', Typecho_Db::SORT_DESC); // 按文章类型排序
   }
 
   // 隐藏分类的文章
@@ -76,8 +75,16 @@ if (($isArticleTop || $hiddenCategoryIds) && $this->is('index') || $this->is('fr
     $normalPostQuery->orWhere('authorId = ? && status = ?', $userId, 'private');
   }
 
-  // 普通文章
-  $normalPostQuery->order('table.contents.created', Typecho_Db::SORT_DESC); // 文章按创建时间降序排列
+  // 排序
+  if (!empty($isArticleTop)) {
+    // 置顶文章存在情况下：优先置顶文章，其次按照发布时间排序
+    $normalPostQuery->order('IF(table.fields.str_value = 1, 0, 1) ,table.contents.created', Typecho_Db::SORT_DESC);
+  } else {
+    // 按发布时间排序
+    $normalPostQuery->order('table.contents.created', Typecho_Db::SORT_DESC);
+  }
+
+  // 分页
   $normalPosts = $db->fetchAll($normalPostQuery->page($this->_currentPage, $adjustedPageSize));
   foreach ($normalPosts as $stickyPost) {
     $this->push($stickyPost);
