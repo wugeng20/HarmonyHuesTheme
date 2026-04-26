@@ -633,7 +633,8 @@ function getImgLink($archive, $imgnum = 0, $israndom = true)
 {
     // 1. 获取自定义图片列表（优先使用）
     $customImageUrls = [];
-    if (isset($archive->fields->thumb) && !empty($archive->fields->thumb)) {
+    $thumb = $archive->fields->thumb ?? '';
+    if ($thumb) {
         $thumb = $archive->fields->thumb;
         // 按行分割，清理空白行
         $lines = explode("\n", str_replace(["\r\n", "\r"], "\n", $thumb));
