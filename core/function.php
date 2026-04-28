@@ -71,7 +71,7 @@ function themeInit($self)
     // }
 
     // 手机文章数量
-    if (isMobile()) {
+    if (isMobile() && $self->parameter->pageSize % 2 != 0) {
         $self->parameter->pageSize += 1;
     }
 
