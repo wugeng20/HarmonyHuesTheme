@@ -69,6 +69,12 @@ function parseLinksShortcode($content)
 $content = parseLinksShortcode($this->content);
 ?>
 <style type="text/css">
+  .links-container {
+    opacity: 0;
+    animation: fade-in-top 0.5s 0.3s forwards;
+    -webkit-animation: fade-in-top 0.5s 0.3s forwards;
+  }
+
   .links-title {
     font-size: 3.5rem
   }
@@ -181,7 +187,7 @@ $content = parseLinksShortcode($this->content);
 </style>
 <!--主体st-->
 <main>
-  <div class="container p-2">
+  <div class="container p-2 links-container">
     <!-- 标题 -->
     <div class="links-head my-4 text-center">
       <div class="links-title font-weight-bold">
