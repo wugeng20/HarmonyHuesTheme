@@ -196,30 +196,31 @@ function PostViewCount($archive)
 {
     $postId = $archive->cid;
     $db = Typecho_Db::get();
-    $prefix = $db->getPrefix();
 
-    // 检查是否存在 views 字段
+    // 检查contents表是否存在views字段，如果不存在则添加
     $columns = $db->fetchRow($db->select()->from('table.contents'));
     if (! array_key_exists('views', $columns)) {
-        $db->query('ALTER TABLE `' . $prefix . 'contents` ADD `views` INT(10) DEFAULT 0;');
+        $db->query('ALTER TABLE `' . $db->getPrefix() . 'contents` ADD `views` INT(10) DEFAULT 0;');
         echo 0;
         return;
     }
 
-    // 获取当前文章的 views 值
+    // 获取当前文章的views值
     $row = $db->fetchRow($db->select('views')->from('table.contents')->where('cid = ?', $postId));
-    $views = $row['views'];
+    $views = $row['views'] ?? 0;
 
+    // 文章正文页面，更新views值
     if ($archive->is('single')) {
-        $cookieViews = Typecho_Cookie::get('extend_contents_views');
-        $viewedPosts = empty($cookieViews) ? array() : explode(',', $cookieViews);
+        // 查看过的文章ID Cookie值：10,11,22,33
+        $cookieViewIds = Typecho_Cookie::get('extend_contents_views');
+        $viewedPosts = empty($cookieViewIds) ? array() : explode(',', $cookieViewIds);
 
-        // 如果当前文章未被查看过，则增加 views 值
+        // 如果当前文章未被查看过，则更新views值
         if (! in_array($postId, $viewedPosts)) {
-            $db->query($db->update('table.contents')->rows(array('views' => (int) $views + 1))->where('cid = ?', $postId));
-            $views++;
+            $db->query($db->update('table.contents')->expression('views', 'views + 1')->where('cid = ?', $postId));
             array_push($viewedPosts, $postId);
-            Typecho_Cookie::set('extend_contents_views', implode(',', $viewedPosts)); // 记录查看 cookie
+            Typecho_Cookie::set('extend_contents_views', implode(',', $viewedPosts)); // 更新cookie中的查看过的文章ID数组
+            $views++; // 更新views值
         }
     }
 
