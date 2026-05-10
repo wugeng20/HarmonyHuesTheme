@@ -1,134 +1,167 @@
 /* ------------------------------------
- * Harmony Hues主题
+ * Harmony Hues 主题样式
  *
- * @author  星语社长
- * @link  https://biibii.cn
- * @update  2024-7-6 18:00:04
+ * @author    星语社长
+ * @link      https://biibii.cn
+ * @update    2024-7-6 18:00:04
  * --------------------------------- */
+// ==========================================
+// 1. SCSS 配置 — 断点与混合宏
+// ==========================================
+
+// 响应式断点（与 Bootstrap 4 一致）
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+);
+
+// min-width 媒体查询
+@mixin min-media-breakpoint($name) {
+  @media (min-width: map-get($breakpoints, $name)) {
+    @content;
+  }
+}
+
+// max-width 媒体查询
+@mixin max-media-breakpoint($name) {
+  @media (max-width: map-get($breakpoints, $name) - 0.02) {
+    @content;
+  }
+}
+
+// 区间媒体查询
+@mixin and-media-breakpoint($from, $to) {
+  $min: map-get($breakpoints, $from);
+  $max: map-get($breakpoints, $to) - 0.02;
+
+  @media (min-width: $min) and (max-width: $max) {
+    @content;
+  }
+}
+
+// 多行文本溢出省略号
+@mixin ellipsis-style($line-clamp: 2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $line-clamp;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  word-break: break-all;
+}
+
+// 毛玻璃效果
+@mixin backdrop-filter($background: var(--bg-color-main), $filter: blur(10px)) {
+  background: $background;
+  -webkit-backdrop-filter: $filter;
+  backdrop-filter: $filter;
+}
+
+// 导航栏背景（点阵 + 毛玻璃 + 阴影）
+@mixin nav-bg($background: var(--bg-color-main), $filter: blur(10px)) {
+  background-image: radial-gradient(transparent 1px, var(--bg-color-main) 1px);
+  background-size: 4px 4px;
+  -webkit-backdrop-filter: saturate(50%) blur(5px);
+  backdrop-filter: saturate(50%) blur(5px);
+  -webkit-box-shadow: var(--shadow-nav) !important;
+  box-shadow: var(--shadow-nav) !important;
+}
+
+// ==========================================
+// 2. 设计变量 — 亮色 / 暗色主题
+// ==========================================
+
 :root {
-  /*基础样式*/
+  // -------- 色调 ----------
+  // 主色调：现代蓝色
+  --color-primary: #165DFF;
+  --color-primary-dark-1: #0E42D2; // 更深
+  --color-primary-dark-2: #072A8A; // 很深
+  --color-primary-dark-3: #041957; // 极深
+  --color-primary-light-1: #4080FF; // 稍浅
+  --color-primary-light-2: #6AA1FF; // 浅
+  --color-primary-light-3: #94BFFF; // 较浅
+  --color-primary-light-4: #BEDAFF; // 很浅
+  --color-primary-light-5: #E8F3FF; // 极浅
+
+  // -------- 背景 ----------
+  --bg-color-main: #fff;
+  --bg-color-main-dark: #000;
+  --bg-color-body: #f5f7fa;
+  --bg-color-primary: #f2f2f2;
+  --bg-color-secondary: #f5f5f5;
+
+  // -------- 遮罩叠加层 ----------
+  --overlay-color-light-1: rgba(255, 255, 255, .1);
+  --overlay-color-light-2: rgba(255, 255, 255, .2);
+  --overlay-color-light-3: rgba(255, 255, 255, .3);
+  --overlay-color-light-4: rgba(255, 255, 255, .4);
+  --overlay-color-light-5: rgba(255, 255, 255, .5);
+  --overlay-color-light-8: rgba(255, 255, 255, .8);
+  --overlay-color-dark-1: rgba(0, 0, 0, .1);
+  --overlay-color-dark-2: rgba(0, 0, 0, .2);
+  --overlay-color-dark-3: rgba(0, 0, 0, .3);
+  --overlay-color-dark-4: rgba(0, 0, 0, .4);
+  --overlay-color-dark-5: rgba(0, 0, 0, .5);
+
+  // -------- 字体 ----------
+  --font-color-main: #333;
+  --font-color-main-light: #6c757d;
+  --font-color-main-transparent: rgba(60, 60, 60, 0.7);
+  --font-color-muted: #b2b2b2;
+
+  // -------- 边框 ----------
+  --border-color-main: #e4e4e4;
+
+  // -------- 圆角 ----------
+  --border-radius-base: 8px;
+  --border-radius-small: 5px;
+  --border-radius-medium: calc(var(--border-radius-small) * 2); // 10px
+  --border-radius-large: calc(var(--border-radius-small) * 6); // 30px
+  --border-radius-xlarge: calc(var(--border-radius-small) * 20); // 100px
+  --border-radius-circle: 50%;
+
+  // -------- 尺寸 ----------
+  --height-nav-fixed: 75px;
+  --height-footer: 60px;
+
+  // -------- 滤镜 ----------
+  --backdrop-filter-main: saturate(180%) blur(20px);
+
+  // -------- 渐变 ----------
+  --gradient-primary-transparent: linear-gradient(0deg, var(--color-primary-light-4), transparent);
+  --gradient-0deg: linear-gradient(0deg, var(--bg-color-body), #f8f8f8);
+  --gradient-45deg: linear-gradient(45deg, var(--bg-color-body), #f8f8f8);
+  --widget-bg-gradient: linear-gradient(-45deg, var(--bg-color-main), #f3f5f8);
+
+  // -------- 阴影 ----------
+  --shadow-box-main: 8px 8px 20px 0 rgba(55, 99, 170, .1), -8px -8px 20px 0 var(--bg-color-main);
+  --shadow-box-small: 5px 5px 12px 0 rgba(55, 99, 170, .1), -5px -5px 12px 0 var(--bg-color-main);
+  --shadow-box-hover: 8px 8px 15px 0 rgba(55, 99, 170, .2), -8px -8px 15px 0 var(--bg-color-main);
+  --shadow-nav: 0 5px 12px 0 rgba(50, 98, 170, .1);
+  --shadow-hover-nav: inset -8px -8px 16px var(--bg-color-body), inset 8px 8px 16px var(--bg-color-body), 8px 8px 16px rgba(0, 0, 0, 0.25);
+  --shadow-inset-box: inset -4px -4px 12px #f1f1f1, inset 4px 4px 12px #e2e2e2;
+
+  // -------- 其他 ----------
+  --color-blue-gray-medium: var(--color-primary);
+  --color-blue-gray-medium-light: var(--color-primary-dark-3);
+  --border-solid-main: 2px solid var(--bg-color-main);
+  --border-solid-small: 1px solid var(--bg-color-main);
+  --transition-ease-all: all .3s ease 0s;
+
+  // 基础样式
   font-synthesis: style;
   -webkit-text-size-adjust: none;
   -moz-text-size-adjust: none;
   text-size-adjust: none;
   word-wrap: break-word;
   color: var(--font-color-main);
-
-  /* 色调 */
-  /* 主色调：现代蓝色 */
-  --color-primary: #165DFF;
-  /* 比主色调更深 */
-  --color-primary-dark-1: #0E42D2;
-  /* 更深的色调 */
-  --color-primary-dark-2: #072A8A;
-  /* 非常深的色调 */
-  --color-primary-dark-3: #041957;
-  /* 比主色调稍浅 */
-  --color-primary-light-1: #4080FF;
-  /* 浅一些的色调 */
-  --color-primary-light-2: #6AA1FF;
-  /* 较浅的色调 */
-  --color-primary-light-3: #94BFFF;
-  /* 更浅的色调 */
-  --color-primary-light-4: #BEDAFF;
-  /* 非常浅的色调 */
-  --color-primary-light-5: #E8F3FF;
-  /* 主背景色 */
-  --bg-color-main: #fff;
-  /* 主背景色-黑 */
-  --bg-color-main-dark: #000;
-  /* 页面背景色 */
-  --bg-color-body: #f5f7fa;
-  /* 遮罩层浅色1 */
-  --overlay-color-light-1: rgba(255, 255, 255, .1);
-  /* 遮罩层浅色2 */
-  --overlay-color-light-2: rgba(255, 255, 255, .2);
-  /* 遮罩层浅色3 */
-  --overlay-color-light-3: rgba(255, 255, 255, .3);
-  /* 遮罩层浅色4 */
-  --overlay-color-light-4: rgba(255, 255, 255, .4);
-  /* 遮罩层浅色5 */
-  --overlay-color-light-5: rgba(255, 255, 255, .5);
-  /* 遮罩层浅色8 */
-  --overlay-color-light-8: rgba(255, 255, 255, .8);
-  /* 黑遮罩层浅色1 */
-  --overlay-color-dark-1: rgba(0, 0, 0, .1);
-  /* 黑遮罩层浅色2 */
-  --overlay-color-dark-2: rgba(0, 0, 0, .2);
-  /* 黑遮罩层浅色3 */
-  --overlay-color-dark-3: rgba(0, 0, 0, .3);
-  /* 黑遮罩层浅色4 */
-  --overlay-color-dark-4: rgba(0, 0, 0, .4);
-  /* 黑遮罩层浅色5 */
-  --overlay-color-dark-5: rgba(0, 0, 0, .5);
-  /* 主字体颜色 */
-  --font-color-main: #333;
-  /* 主字体颜色（浅色） */
-  --font-color-main-light: #6c757d;
-  /* 主字体颜色（透明） */
-  --font-color-main-transparent: rgba(60, 60, 60, 0.7);
-  /* 字体颜色（muted） */
-  --font-color-muted: #b2b2b2;
-  /* 主边框颜色 */
-  --border-color-main: #e4e4e4;
-  /* 主要背景色 */
-  --bg-color-primary: #f2f2f2;
-  /* 次要背景色 */
-  --bg-color-secondary: #f5f5f5;
-  /* 基础圆角大小 */
-  --border-radius-base: 8px;
-  /* 小圆角大小 */
-  --border-radius-small: 5px;
-  /* 中等圆角大小 */
-  --border-radius-medium: calc(var(--border-radius-small) * 2);
-  /* 大圆角大小 */
-  --border-radius-large: calc(var(--border-radius-small) * 6);
-  /* 超大圆角大小 */
-  --border-radius-xlarge: calc(var(--border-radius-small) * 20);
-  /* 圆形圆角 */
-  --border-radius-circle: 50%;
-  /* 固定导航栏高度 */
-  --height-nav-fixed: 75px;
-  /* 页脚高度 */
-  --height-footer: 60px;
-  /* 主背景滤镜 */
-  --backdrop-filter-main: saturate(180%) blur(20px);
-  /* 主渐变透明背景 */
-  --gradient-primary-transparent: linear-gradient(0deg, var(--color-primary-light-4), transparent);
-
-  /* 主题样式 */
-  /* 中等蓝色灰色 */
-  --color-blue-gray-medium: var(--color-primary);
-  /* 浅色中等蓝色灰色 */
-  --color-blue-gray-medium-light: var(--color-primary-dark-3);
-  /* 主阴影 */
-  // --shadow-box-main: 8px 8px 15px 0 rgba(55, 99, 170, .1), -8px -8px 15px 0 var(--bg-color-main), inset 0 4px 15px 0 var(--overlay-color-light-5);
-  --shadow-box-main: 8px 8px 20px 0 rgba(55, 99, 170, .1), -8px -8px 20px 0 var(--bg-color-main);
-  /* 小阴影 */
-  // --shadow-box-small: 5px 5px 12px 0 rgba(55, 99, 170, .1), -5px -5px 12px 0 var(--bg-color-main), inset 0 4px 10px 0 var(--overlay-color-light-5);
-  --shadow-box-small: 5px 5px 12px 0 rgba(55, 99, 170, .1), -5px -5px 12px 0 var(--bg-color-main);
-  /* 悬停阴影 */
-  --shadow-box-hover: 8px 8px 15px 0 rgba(55, 99, 170, .2), -8px -8px 15px 0 var(--bg-color-main);
-  /* 0度渐变 */
-  --gradient-0deg: linear-gradient(0deg, var(--bg-color-body), #f8f8f8);
-  /* 45度渐变 */
-  --gradient-45deg: linear-gradient(45deg, var(--bg-color-body), #f8f8f8);
-  /* 工具背景渐变 */
-  --widget-bg-gradient: linear-gradient(-45deg, var(--bg-color-main), #f3f5f8);
-  /* 主边框 */
-  --border-solid-main: 2px solid var(--bg-color-main);
-  /* 小边框 */
-  --border-solid-small: 1px solid var(--bg-color-main);
-  /* 导航栏阴影 */
-  --shadow-nav: 0 5px 12px 0 rgba(50, 98, 170, .1);
-  /* 导航栏shadow */
-  --shadow-hover-nav: inset -8px -8px 16px var(--bg-color-body), inset 8px 8px 16px var(--bg-color-body), 8px 8px 16px rgba(0, 0, 0, 0.25);
-  /* 内嵌阴影 */
-  --shadow-inset-box: inset -4px -4px 12px #f1f1f1, inset 4px 4px 12px #e2e2e2;
-  /* 所有属性过渡效果 */
-  --transition-ease-all: all .3s ease 0s;
 }
 
+// ------- 暗色主题覆盖 -------
 :root[data-theme=dark] {
   --bg-color-main: #262626;
   --bg-color-main-dark: #fff;
@@ -152,76 +185,22 @@
   --bg-color-primary: #2C2C2C;
   --bg-color-secondary: #171717;
   --gradient-primary-transparent: linear-gradient(0deg, #333, rgba(0, 0, 0, 0.3));
-  --color-blue-gray-medium: var(--color-primary);
-  --color-blue-gray-medium-light: var(--color-primary-dark-3);
-  // --shadow-box-main: 8px 8px 15px 0 rgba(0, 0, 0, .3), -8px -8px 15px 0 var(--bg-color-main), inset 0 4px 15px 0 var(--bg-color-body);
-  --shadow-box-main: 8px 8px 15px 0 rgba(0, 0, 0, .3), -8px -8px 15px 0 var(--bg-color-main);
-  // --shadow-box-small: 5px 5px 12px 0 rgba(0, 0, 0, .3), -5px -5px 12px 0 var(--bg-color-main), inset 0 4px 10px 0 var(--bg-color-body);
-  --shadow-box-small: 5px 5px 12px 0 rgba(0, 0, 0, .3), -5px -5px 12px 0 var(--bg-color-main);
-  --shadow-box-hover: 8px 8px 15px 0 rgba(0, 0, 0, .4), -8px -8px 15px 0 var(--bg-color-main);
   --gradient-0deg: linear-gradient(0deg, var(--bg-color-body), var(--overlay-color-light-5));
   --gradient-45deg: linear-gradient(45deg, var(--bg-color-body), var(--overlay-color-light-5));
   --widget-bg-gradient: linear-gradient(-45deg, var(--bg-color-main), var(--bg-color-body));
+  --color-blue-gray-medium: var(--color-primary);
+  --color-blue-gray-medium-light: var(--color-primary-dark-3);
+  --shadow-box-main: 8px 8px 15px 0 rgba(0, 0, 0, .3), -8px -8px 15px 0 var(--bg-color-main);
+  --shadow-box-small: 5px 5px 12px 0 rgba(0, 0, 0, .3), -5px -5px 12px 0 var(--bg-color-main);
+  --shadow-box-hover: 8px 8px 15px 0 rgba(0, 0, 0, .4), -8px -8px 15px 0 var(--bg-color-main);
   --shadow-nav: 0 5px 12px 0 rgba(0, 0, 0, .3);
   --shadow-inset-box: inset -4px -4px 12px #1a1a1a, inset 4px 4px 12px #1e1e1e;
 }
 
-// 建议的标准断点定义
-$breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px
-);
+// ==========================================
+// 3. 基础样式（Reset / Base）
+// ==========================================
 
-// min-width 查询
-@mixin min-media-breakpoint($breakpoint-name) {
-  $min-width: map-get($breakpoints, $breakpoint-name);
-
-  @media (min-width: $min-width) {
-    @content;
-  }
-}
-
-// max-width 查询
-@mixin max-media-breakpoint($breakpoint-name) {
-  $max-width: map-get($breakpoints, $breakpoint-name) - 0.02;
-
-  @media (max-width: $max-width) {
-    @content;
-  }
-}
-
-// 范围查询 (需要两个参数)
-@mixin and-media-breakpoint($from, $to) {
-  $min: map-get($breakpoints, $from);
-  $max: map-get($breakpoints, $to) - 0.02;
-
-  @media (min-width: $min) and (max-width: $max) {
-    @content;
-  }
-}
-
-// 定义文本溢出省略号样式
-@mixin ellipsis-style($line-clamp: 2) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: $line-clamp;
-  -webkit-box-orient: vertical;
-  white-space: normal;
-  word-break: break-all;
-}
-
-// 毛玻璃样式
-@mixin backdrop-filter($background: var(--bg-color-main), $filter: blur(10px)) {
-  background: $background;
-  -webkit-backdrop-filter: $filter;
-  backdrop-filter: $filter;
-}
-
-/* 全局样式 */
 html {
   scroll-behavior: smooth;
 }
@@ -250,7 +229,7 @@ ul {
   scroll-behavior: smooth;
 }
 
-/* 去除a标签默认样式 */
+// -------- 链接 ----------
 a {
   color: var(--font-color-main);
   cursor: pointer;
@@ -270,20 +249,17 @@ a {
   }
 }
 
-/*--------浏览器滚动条---------*/
-/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+// -------- 滚动条 ----------
 ::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 0.5rem;
   height: 0.5rem;
 }
 
-/*定义滚动条轨道 内阴影+圆角*/
 ::-webkit-scrollbar-track {
   background-color: #e4e4e4;
 }
 
-/*定义滑块 内阴影+圆角*/
 ::-webkit-scrollbar-thumb {
   cursor: pointer;
   border-radius: 10px;
@@ -292,7 +268,6 @@ a {
   transition: color .3s ease;
 }
 
-/* 指定滚动样式 */
 .scroll-cover {
   overflow: auto;
 
@@ -306,12 +281,9 @@ a {
   &::-webkit-scrollbar-track {
     background-color: transparent;
   }
-
 }
 
-/*--------浏览器滚动条---------*/
-
-/*---输入公共样式---*/
+// -------- 表单 ----------
 input,
 textarea,
 select {
@@ -339,6 +311,7 @@ button {
   }
 }
 
+// -------- 图片 ----------
 img {
   width: 100%;
   height: 100%;
@@ -351,36 +324,11 @@ img {
   }
 }
 
-/* 名字svg样式 */
-.svg-name {
-  path {
-    fill: var(--font-color-main);
-  }
-}
+// ==========================================
+// 4. 工具类（Utilities）
+// ==========================================
 
-/* 文字边框 */
-.title-text-stroke {
-  text-stroke: 1px var(--font-color-main);
-  -webkit-text-stroke: 1px var(--font-color-main);
-  -webkit-text-fill-color: transparent;
-}
-
-/* 文字阴影 */
-.text-shadow-style {
-  position: relative;
-  --text-col: var(--bg-color-main);
-  --text-show-col: var(--font-color-main);
-  color: var(--text-col);
-  text-shadow: 3px 3px 0 var(--text-show-col), -1px -1px 0 var(--text-show-col), 1px -1px 0 var(--text-show-col), -1px 1px 0 var(--text-show-col), 1px 1px 0 var(--text-show-col);
-}
-
-.text-webkit-mask {
-  opacity: 0.5;
-  -webkit-mask: linear-gradient(var(--bg-color-main) 50%, transparent);
-  mask: linear-gradient(var(--bg-color-main) 50%, transparent);
-}
-
-/* 图标公共样式 */
+// 图标字体
 .iconfont {
   font-family: "iconfont" !important;
   color: var(--font-color-main);
@@ -396,8 +344,64 @@ img {
   }
 }
 
-/* 公共动画 */
-// 淡入
+// SVG 名字签名
+.svg-name {
+  path {
+    fill: var(--font-color-main);
+  }
+}
+
+// 文字边框
+.title-text-stroke {
+  text-stroke: 1px var(--font-color-main);
+  -webkit-text-stroke: 1px var(--font-color-main);
+  -webkit-text-fill-color: transparent;
+}
+
+// 文字阴影
+.text-shadow-style {
+  position: relative;
+  --text-col: var(--bg-color-main);
+  --text-show-col: var(--font-color-main);
+  color: var(--text-col);
+  text-shadow: 3px 3px 0 var(--text-show-col), -1px -1px 0 var(--text-show-col), 1px -1px 0 var(--text-show-col), -1px 1px 0 var(--text-show-col), 1px 1px 0 var(--text-show-col);
+}
+
+.text-webkit-mask {
+  opacity: 0.5;
+  -webkit-mask: linear-gradient(var(--bg-color-main) 50%, transparent);
+  mask: linear-gradient(var(--bg-color-main) 50%, transparent);
+}
+
+// ---------- 布局辅助 ----------
+
+.main-sidebar .sidebar-sticky {
+  top: 88px;
+  z-index: 2 !important;
+  transition: top 0.3s ease;
+
+  &.visible-top {
+    top: 20px;
+  }
+}
+
+.nav-fixed {
+  padding-top: var(--height-nav-fixed);
+
+  @include max-media-breakpoint('md') {
+    padding-top: calc(var(--height-nav-fixed) - 1rem);
+  }
+}
+
+main>.container {
+  min-height: calc(100vh - 6rem - var(--height-footer));
+}
+
+// ==========================================
+// 5. 动画（Keyframes）
+// ==========================================
+
+// 淡入（向上）
 @keyframes fade-in-top {
   from {
     opacity: 0;
@@ -422,17 +426,7 @@ img {
   }
 }
 
-// SVG动画
-.animated-signature path {
-  stroke-dasharray: 2400;
-  stroke-dashoffset: 2400;
-  fill: transparent;
-  animation: drawSignature 8s linear infinite both;
-  -webkit-animation: drawSignature 8s linear infinite both;
-  stroke-width: 2px;
-  stroke: var(--font-color-main);
-}
-
+// SVG 签名描边动画
 @keyframes drawSignature {
   0% {
     stroke-dashoffset: 2400;
@@ -455,14 +449,26 @@ img {
   }
 }
 
-// 灯箱
+.animated-signature path {
+  stroke-dasharray: 2400;
+  stroke-dashoffset: 2400;
+  fill: transparent;
+  animation: drawSignature 8s linear infinite both;
+  -webkit-animation: drawSignature 8s linear infinite both;
+  stroke-width: 2px;
+  stroke: var(--font-color-main);
+}
+
+// 灯箱图片复位
 .view-image-lead img {
   width: auto;
   height: auto;
 }
 
-/*---------- 导航栏样式st ----------*/
-/* 导航栏样式 */
+// ==========================================
+// 6. 组件 — 导航栏
+// ==========================================
+
 .navbar {
   position: fixed;
   z-index: 99;
@@ -470,15 +476,7 @@ img {
   background-color: transparent;
   transition: var(--transition-ease-all);
 
-  @mixin nav-bg($background: var(--bg-color-main), $filter: blur(10px)) {
-    background-image: radial-gradient(transparent 1px, var(--bg-color-main) 1px);
-    background-size: 4px 4px;
-    -webkit-backdrop-filter: saturate(50%) blur(5px);
-    backdrop-filter: saturate(50%) blur(5px);
-    -webkit-box-shadow: var(--shadow-nav) !important;
-    box-shadow: var(--shadow-nav) !important;
-  }
-
+  // -------- 导航栏背景状态 ----------
   &.nav-ui-one {
     @include nav-bg();
   }
@@ -495,6 +493,7 @@ img {
     box-shadow: var(--shadow-nav) !important;
   }
 
+  // -------- 滚动显示/隐藏 ----------
   &.nav-hidden {
     transform: translateY(-100%) !important;
     opacity: 0 !important;
@@ -506,7 +505,7 @@ img {
   }
 }
 
-// LOGO样式
+// -------- LOGO ----------
 .navbar-logo {
   span {
     font-size: 1.5rem;
@@ -525,7 +524,7 @@ img {
   }
 }
 
-// -----》电脑导航栏菜单样式
+// -------- 桌面导航菜单 ----------
 .nav-inner {
   position: relative;
 
@@ -625,7 +624,7 @@ img {
   }
 }
 
-// ------》导航栏右侧图标样式
+// -------- 导航栏右侧图标 ----------
 .navbar-icon {
   gap: 1rem;
 
@@ -638,7 +637,7 @@ img {
   }
 }
 
-/*滚动进度+回到顶部样式*/
+// -------- 滚动进度 + 回到顶部 ----------
 .back-to-top {
   display: flex;
   overflow: hidden;
@@ -678,31 +677,29 @@ img {
   }
 }
 
-/* ----》手机导航栏菜单 */
-#nav-components {
-  &.mobile-aside {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    width: 100%;
-    max-height: 95vh;
-    min-height: 70vh;
-    opacity: 0;
-    visibility: hidden;
-    background-color: var(--bg-color-main);
-    bottom: 0;
-    z-index: 1000;
-    transform: translateY(100%);
-    transition: transform 1s cubic-bezier(0.3, 0.7, 0, 1), opacity 1s linear, visibility 1s linear;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
-    box-shadow: 0 -0.15rem 1.5rem 0.25rem var(--overlay-color-dark-1);
+// -------- 手机端导航菜单（底部弹出） ----------
+#nav-components.mobile-aside {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: 100%;
+  max-height: 95vh;
+  min-height: 70vh;
+  opacity: 0;
+  visibility: hidden;
+  background-color: var(--bg-color-main);
+  bottom: 0;
+  z-index: 1000;
+  transform: translateY(100%);
+  transition: transform 1s cubic-bezier(0.3, 0.7, 0, 1), opacity 1s linear, visibility 1s linear;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  box-shadow: 0 -0.15rem 1.5rem 0.25rem var(--overlay-color-dark-1);
 
-    &.open {
-      visibility: visible;
-      opacity: 1;
-      transform: translateY(0);
-    }
+  &.open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .back-box {
@@ -754,18 +751,10 @@ img {
   }
 }
 
-// 顶部站位样式
-.nav-fixed {
-  padding-top: var(--height-nav-fixed);
+// ==========================================
+// 7. 组件 — 文章分类
+// ==========================================
 
-  @include max-media-breakpoint('md') {
-    padding-top: calc(var(--height-nav-fixed) - 1rem);
-  }
-}
-
-/*---------- 导航栏样式end ----------*/
-
-/*---------- 文章分类样式st ----------*/
 .category-box {
   position: relative;
   width: 100%;
@@ -806,10 +795,10 @@ img {
   }
 }
 
-/*---------- 文章分类样式end ----------*/
+// ==========================================
+// 8. 组件 — 文章列表 + 分页
+// ==========================================
 
-
-/*---------- 文章列表样式st ----------*/
 .post-list {
   opacity: 0;
   animation: fade-in-top 0.5s 0.3s forwards;
@@ -832,10 +821,8 @@ img {
       background: var(--bg-color-main) !important;
       box-shadow: var(--shadow-box-hover);
 
-      .post-cover {
-        img {
-          transform: scale(1.1);
-        }
+      .post-cover img {
+        transform: scale(1.1);
       }
 
       .post-head>a {
@@ -843,6 +830,7 @@ img {
       }
     }
 
+    // -------- 文章封面 ----------
     .post-cover {
       position: relative;
       display: block;
@@ -878,40 +866,38 @@ img {
       }
     }
 
+    // -------- 文章信息 ----------
     .post-info {
       height: 100%;
       width: 100%;
       cursor: pointer;
       position: relative;
-      // overflow: hidden;
       gap: 0.5rem;
 
       @include max-media-breakpoint('md') {
         gap: 0.15rem;
       }
 
-      .post-head {
-        &>a {
-          margin-bottom: 0.25rem;
-          font-size: 1rem;
-          font-weight: 600;
-          line-height: 1.5;
-          color: var(--font-color-main);
-          transition: color .3s ease 0s;
-          @include ellipsis-style(1);
+      .post-head>a {
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.5;
+        color: var(--font-color-main);
+        transition: color .3s ease 0s;
+        @include ellipsis-style(1);
 
-          @include max-media-breakpoint('md') {
-            margin-bottom: 0;
-          }
+        @include max-media-breakpoint('md') {
+          margin-bottom: 0;
         }
+      }
 
-        .top-tag {
-          padding: 0.15rem 0.35rem;
-          font-size: 0.85rem;
-          color: rgba(255, 20, 20, 0.8);
-          background-color: rgba(255, 130, 130, 0.2);
-          border-radius: var(--border-radius-base);
-        }
+      .top-tag {
+        padding: 0.15rem 0.35rem;
+        font-size: 0.85rem;
+        color: rgba(255, 20, 20, 0.8);
+        background-color: rgba(255, 130, 130, 0.2);
+        border-radius: var(--border-radius-base);
       }
 
       .post-meta-wrap {
@@ -931,6 +917,7 @@ img {
     }
   }
 
+  // -------- 图片类型文章卡片 ----------
   .post-image-card {
     .post-info {
       .author-name {
@@ -997,11 +984,9 @@ img {
     }
 
     .post-item:hover {
-      .post-info {
-        .author-name {
-          opacity: .15;
-          transform: translateY(-2rem);
-        }
+      .post-info .author-name {
+        opacity: .15;
+        transform: translateY(-2rem);
       }
 
       .post-cover-image {
@@ -1019,7 +1004,7 @@ img {
   }
 }
 
-/* -------------段落省略--------- */
+// -------- 文章列表附属：作者元信息 ----------
 .author-content .author-text {
   @include ellipsis-style(2);
 }
@@ -1042,8 +1027,7 @@ img {
   }
 }
 
-/*---------- 文章列表样式end ----------*/
-/*---------- 文章列表->分页str ----------*/
+// -------- 分页 ----------
 .pagination {
   gap: 0.5rem;
   opacity: 0;
@@ -1081,9 +1065,10 @@ img {
   }
 }
 
-/*---------- 文章列表分页end ----------*/
+// ==========================================
+// 9. 组件 — 侧边栏
+// ==========================================
 
-/*---------- 侧边栏样式st ----------*/
 .hh-widget,
 .card {
   width: 100%;
@@ -1101,127 +1086,20 @@ img {
   }
 }
 
-.main-sidebar {
-  .sidebar-sticky {
-    top: 88px;
-    z-index: 2 !important;
-    transition: top 0.3s ease;
+.main-sidebar .widget-title {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 700;
 
-    &.visible-top {
-      top: 20px;
-    }
-  }
-
-  .widget-title {
-    display: inline-block;
-    font-size: 1rem;
-    font-weight: 700;
-
-    &>.iconfont {
-      font-size: 1.1rem;
-    }
+  &>.iconfont {
+    font-size: 1.1rem;
   }
 }
 
-/*----------侧边栏样式end ----------*/
+// ==========================================
+// 10. 组件 — 面包屑
+// ==========================================
 
-/*----------底部样式st ----------*/
-.footer {
-  color: var(--font-color-main);
-  background-color: var(--bg-color-main);
-  font-size: 0.875rem;
-  min-height: var(--height-footer);
-
-  @include min-media-breakpoint('md') {
-    &.footer-ui-two {
-      background-color: transparent;
-
-      .container {
-        padding: 0.25rem 1rem;
-        background-color: var(--bg-color-main);
-        -webkit-box-shadow: var(--shadow-nav);
-        box-shadow: var(--shadow-nav);
-        border: var(--border-solid-main);
-        border-radius: var(--border-radius-medium);
-      }
-    }
-  }
-
-  @include max-media-breakpoint('md') {
-    border-top-left-radius: var(--border-radius-medium);
-    border-top-right-radius: var(--border-radius-medium);
-
-    .container {
-      flex-direction: column-reverse;
-      align-items: center;
-    }
-
-    .footer-left {
-      text-align: center;
-      justify-content: center;
-    }
-  }
-
-  // 夜间模式
-  .theme-toggle {
-    margin: 0 auto;
-    gap: 0.15rem;
-    background: var(--bg-color-body);
-    border-radius: var(--border-radius-xlarge);
-    border: var(--border-solid-small);
-
-    button {
-      line-height: 1;
-      background: transparent;
-      border-radius: var(--border-radius-large);
-
-      &.active,
-      &:hover {
-        background: var(--bg-color-main);
-      }
-    }
-
-    .iconfont {
-      font-size: 0.85rem;
-      color: var(--font-color-main-light);
-    }
-  }
-
-  // 社交信息列表
-  .social-info-list {
-    a {
-      display: flex;
-      width: 1.75rem;
-      height: 1.75rem;
-      background-color: var(--bg-color-main-dark);
-      border-radius: var(--border-radius-circle);
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.2s;
-
-      i {
-        color: var(--bg-color-main);
-        font-size: 1rem;
-      }
-
-      &:hover {
-        background-color: var(--bg-color-body);
-
-        i {
-          color: var(--font-color-main);
-        }
-      }
-    }
-  }
-}
-
-main>.container {
-  min-height: calc(100vh - 6rem - var(--height-footer));
-}
-
-/*---------- 底部样式end ----------*/
-
-/*---------- 文章+页面-面包屑样式st ----------*/
 .breadcrumb {
   font-size: 0.85rem;
   background: none !important;
@@ -1249,10 +1127,8 @@ main>.container {
       box-shadow: var(--shadow-inset-box);
     }
 
-    &:hover {
-      a {
-        box-shadow: var(--shadow-inset-box);
-      }
+    &:hover a {
+      box-shadow: var(--shadow-inset-box);
     }
   }
 
@@ -1264,9 +1140,11 @@ main>.container {
   }
 }
 
-/*---------- 文章+页面-面包屑样式end ----------*/
+// ==========================================
+// 11. 组件 — 文章内容
+// ==========================================
 
-/*---------- 文章内容样式end ----------*/
+// ------- 文章头部 ----------
 .post-header {
 
   .author-left,
@@ -1275,7 +1153,6 @@ main>.container {
     color: var(--font-color-main) !important;
   }
 }
-
 
 .post-head,
 .post-content {
@@ -1286,13 +1163,13 @@ main>.container {
   font-size: 1rem;
 }
 
-/* 文章内容样式 */
+// ------- 正文 ----------
 .post-content {
   position: relative;
   box-sizing: border-box;
 }
 
-/* 文章版权样式 */
+// ------- 文章版权 ----------
 .post-copyright {
   position: relative;
   font-size: 0.9rem;
@@ -1312,7 +1189,7 @@ main>.container {
   z-index: -1;
 }
 
-/* 文章结束样式 */
+// ------- 文章结束分隔线 ----------
 .post-end {
   color: var(--border-color-main);
 
@@ -1327,8 +1204,7 @@ main>.container {
   }
 }
 
-
-/* 文章标签样式 */
+// ------- 分类 + 标签 ----------
 .category-and-tags {
   $gap-size: 0.5rem;
   gap: $gap-size;
@@ -1368,7 +1244,7 @@ main>.container {
   }
 }
 
-/* 分享+赞赏 */
+// ------- 分享 + 赞赏按钮 ----------
 .post-tools {
   gap: 1rem;
 
@@ -1399,7 +1275,7 @@ main>.container {
   }
 }
 
-/* 下一篇、上一篇 */
+// ------- 上一篇 / 下一篇 ----------
 .post-next-prev {
   gap: 1rem;
   line-height: 1.8;
@@ -1414,10 +1290,8 @@ main>.container {
       font-size: 1.25rem;
     }
 
-    &:hover {
-      .next-prev-title {
-        opacity: 0.7;
-      }
+    &:hover .next-prev-title {
+      opacity: 0.7;
     }
   }
 
@@ -1426,14 +1300,15 @@ main>.container {
   }
 }
 
-/*---------- 文章内容样式end ----------*/
+// ==========================================
+// 12. 组件 — 评论
+// ==========================================
 
-/*---------- 评论样式st ----------*/
 #comments {
   font-size: 0.9rem;
 }
 
-/* 评论框 */
+// ------- 评论表单 ----------
 #comment-form {
   .form-control {
     font-size: 0.9rem;
@@ -1555,7 +1430,7 @@ main>.container {
   }
 }
 
-/* 评论列表 */
+// ------- 评论列表 ----------
 .comment-body {
   position: relative;
   font-size: 0.85rem;
@@ -1564,14 +1439,12 @@ main>.container {
     position: relative;
     gap: 0.5rem;
 
-    .comment-name {
-      .comment-author-ua {
-        font-size: 0.7rem;
-        color: var(--color-primary);
-        background-color: var(--color-primary-light-5);
-        padding: 0.1rem 0.25rem;
-        border-radius: var(--border-radius-small);
-      }
+    .comment-name .comment-author-ua {
+      font-size: 0.7rem;
+      color: var(--color-primary);
+      background-color: var(--color-primary-light-5);
+      padding: 0.1rem 0.25rem;
+      border-radius: var(--border-radius-small);
     }
 
     .comment-time,
@@ -1614,10 +1487,8 @@ main>.container {
       border-radius: var(--border-radius-small);
     }
 
-    .repy-to-author {
-      a {
-        color: var(--red);
-      }
+    .repy-to-author a {
+      color: var(--red);
     }
   }
 
@@ -1633,20 +1504,17 @@ main>.container {
       color: var(--border-color-main);
     }
 
-    &:hover {
-      .iconfont {
-        color: var(--font-color-main) !important;
-      }
+    &:hover .iconfont {
+      color: var(--font-color-main) !important;
     }
   }
 
-  &:hover {
-    .comment-footer .iconfont {
-      color: var(--font-color-main-transparent);
-    }
+  &:hover .comment-footer .iconfont {
+    color: var(--font-color-main-transparent);
   }
 }
 
+// ------- 评论层级 ----------
 .comment-parent {
   border-radius: var(--border-radius-medium);
   box-shadow: var(--shadow-inset-box);
@@ -1680,7 +1548,7 @@ main>.container {
   }
 }
 
-/*评论下一页、上一页*/
+// ------- 评论分页 ----------
 .comment-pagination {
   ol {
     gap: 0.5rem;
@@ -1715,9 +1583,104 @@ main>.container {
   }
 }
 
-/*---------- 评论样式end ----------*/
+// ==========================================
+// 13. 组件 — 底部
+// ==========================================
 
-/*---------- 弹窗工具：搜索+分享+赞赏按钮样式st ----------*/
+.footer {
+  color: var(--font-color-main);
+  background-color: var(--bg-color-main);
+  font-size: 0.875rem;
+  min-height: var(--height-footer);
+
+  @include min-media-breakpoint('md') {
+    &.footer-ui-two {
+      background-color: transparent;
+
+      .container {
+        padding: 0.25rem 1rem;
+        background-color: var(--bg-color-main);
+        -webkit-box-shadow: var(--shadow-nav);
+        box-shadow: var(--shadow-nav);
+        border: var(--border-solid-main);
+        border-radius: var(--border-radius-medium);
+      }
+    }
+  }
+
+  @include max-media-breakpoint('md') {
+    border-top-left-radius: var(--border-radius-medium);
+    border-top-right-radius: var(--border-radius-medium);
+
+    .container {
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+
+    .footer-left {
+      text-align: center;
+      justify-content: center;
+    }
+  }
+
+  // 夜间模式切换
+  .theme-toggle {
+    margin: 0 auto;
+    gap: 0.15rem;
+    background: var(--bg-color-body);
+    border-radius: var(--border-radius-xlarge);
+    border: var(--border-solid-small);
+
+    button {
+      line-height: 1;
+      background: transparent;
+      border-radius: var(--border-radius-large);
+
+      &.active,
+      &:hover {
+        background: var(--bg-color-main);
+      }
+    }
+
+    .iconfont {
+      font-size: 0.85rem;
+      color: var(--font-color-main-light);
+    }
+  }
+
+  // 社交信息
+  .social-info-list {
+    a {
+      display: flex;
+      width: 1.75rem;
+      height: 1.75rem;
+      background-color: var(--bg-color-main-dark);
+      border-radius: var(--border-radius-circle);
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s;
+
+      i {
+        color: var(--bg-color-main);
+        font-size: 1rem;
+      }
+
+      &:hover {
+        background-color: var(--bg-color-body);
+
+        i {
+          color: var(--font-color-main);
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// 14. 弹窗工具—搜索 / 分享 / 赞赏 / 海报
+// ==========================================
+
+// ------- 遮罩背景 ----------
 .pop-tool-overlay-bg {
   opacity: 0;
   visibility: hidden;
@@ -1730,7 +1693,7 @@ main>.container {
   transform: rotate(45deg) scale(0);
 }
 
-/* 应用Mixins */
+// ------- 打开状态 ----------
 .open {
   .pop-tool-overlay-bg {
     opacity: 1 !important;
@@ -1746,6 +1709,7 @@ main>.container {
   }
 }
 
+// ------- 弹窗公共盒子 ----------
 .pop-tool-box {
   opacity: 0;
   visibility: hidden;
@@ -1762,7 +1726,49 @@ main>.container {
   transition: all 0.3s ease-out;
 }
 
-/* 海报生成 */
+// ------- 关闭按钮 ----------
+.close-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: var(--font-color-main);
+  border-bottom-left-radius: var(--border-radius-medium);
+
+  i {
+    color: var(--bg-color-main);
+  }
+}
+
+// ------- 搜索 ----------
+.search-box {
+  .search-form {
+    position: relative;
+  }
+
+  .search-name h5 {
+    font-weight: 700;
+  }
+
+  .form-control {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0.6rem 2rem 0.6rem 1rem;
+    font-size: 0.9rem;
+    border-radius: var(--border-radius-medium);
+  }
+
+  .site-search-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 3rem;
+    height: 100%;
+    z-index: 1;
+  }
+}
+
+// ------- 海报 ----------
 .main-poster {
   .poster-box {
     width: 400px;
@@ -1820,7 +1826,7 @@ main>.container {
   }
 }
 
-/* 赞赏独立样式 */
+// ------- 赞赏 ----------
 .main-reward {
   .reward-box {
     width: auto;
@@ -1835,20 +1841,20 @@ main>.container {
       border-radius: var(--border-radius-base);
       overflow: hidden;
       padding: 0.25rem;
-    }
 
-    img {
-      width: 10rem;
-      border-radius: var(--border-radius-base);
+      img {
+        width: 10rem;
+        border-radius: var(--border-radius-base);
 
-      @include max-media-breakpoint('md') {
-        width: 8rem;
+        @include max-media-breakpoint('md') {
+          width: 8rem;
+        }
       }
     }
   }
 }
 
-/* 分享独立样式 */
+// ------- 分享 ----------
 .share-box {
   top: 50%;
 
@@ -1891,50 +1897,3 @@ main>.container {
     }
   }
 }
-
-
-/* 搜索独立样式 */
-.search-box {
-  .search-form {
-    position: relative;
-  }
-
-  .search-name {
-    h5 {
-      font-weight: 700;
-    }
-  }
-
-  .form-control {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    padding: 0.6rem 2rem 0.6rem 1rem;
-    font-size: 0.9rem;
-    border-radius: var(--border-radius-medium);
-  }
-
-  .site-search-btn {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 3rem;
-    height: 100%;
-    z-index: 1;
-  }
-}
-
-/* 关闭按钮样式 */
-.close-btn {
-  position: absolute;
-  right: 0;
-  top: 0;
-  background: var(--font-color-main);
-  border-bottom-left-radius: var(--border-radius-medium);
-
-  i {
-    color: var(--bg-color-main);
-  }
-}
-
-/*---------- 搜索+分享+赞赏按钮样式end ----------*/

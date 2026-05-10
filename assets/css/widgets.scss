@@ -1,18 +1,15 @@
 /* ------------------------------------
- * Harmony Hues主题
+ * Harmony Hues 主题 — Widget 组件样式
  *
- * @author  星语社长
- * @link  https://biibii.cn
- * @update  2024-7-6 18:00:04
+ * @author    星语社长
+ * @link      https://biibii.cn
+ * @update    2024-7-6 18:00:04
  * --------------------------------- */
-:root[data-theme=light] {
-  /* 侧边栏-一言顶部渐变色 */
-  --hotposts-h-bg: linear-gradient(45deg, #fe7d7d, rgba(255, 255, 255, 0.2));
-  --newreply-h-bg: linear-gradient(45deg, #ffd83b, rgba(255, 255, 255, 0.2));
-  --atoc-h-bg: linear-gradient(45deg, #00b7ff, rgba(255, 255, 255, 0.2));
-}
 
-// 建议的标准断点定义
+// ==========================================
+// 1. SCSS 配置 — 断点与混合宏
+// ==========================================
+
 $breakpoints: (
   xs: 0,
   sm: 576px,
@@ -21,16 +18,13 @@ $breakpoints: (
   xl: 1200px
 );
 
-// max-width 查询
-@mixin max-media-breakpoint($breakpoint-name) {
-  $max-width: map-get($breakpoints, $breakpoint-name) - 0.02;
-
-  @media (max-width: $max-width) {
+@mixin max-media-breakpoint($name) {
+  @media (max-width: map-get($breakpoints, $name) - 0.02) {
     @content;
   }
 }
 
-// 定义文本溢出省略号样式
+// 文本溢出省略号
 @mixin text-ellipsis($line-clamp: 2) {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -39,6 +33,62 @@ $breakpoints: (
   -webkit-box-orient: vertical;
   white-space: normal;
 }
+
+// ==========================================
+// 2. 设计变量（Widget 专属）
+// ==========================================
+
+:root[data-theme=light] {
+  --hotposts-h-bg: linear-gradient(45deg, #fe7d7d, rgba(255, 255, 255, 0.2));
+  --newreply-h-bg: linear-gradient(45deg, #ffd83b, rgba(255, 255, 255, 0.2));
+  --atoc-h-bg: linear-gradient(45deg, #00b7ff, rgba(255, 255, 255, 0.2));
+}
+
+// ==========================================
+// 3. 动画
+// ==========================================
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes naturalBlink {
+
+  0%,
+  5%,
+  30%,
+  37%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  3%,
+  33% {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes eyeMoveSmooth {
+
+  0%,
+  100% {
+    transform: translateX(70px);
+  }
+
+  50% {
+    transform: translateX(0px);
+  }
+}
+
+// ==========================================
+// 4. Widget 容器公共样式
+// ==========================================
 
 .hh-widget {
   overflow: hidden;
@@ -56,7 +106,6 @@ $breakpoints: (
   }
 }
 
-/* 侧边栏-工具-标题-顶部-背景 */
 .widget-title-top-bg {
   position: absolute;
   top: 0;
@@ -70,7 +119,10 @@ $breakpoints: (
   backdrop-filter: blur(5px);
 }
 
-/* 侧边栏 - 博主信息 */
+// ==========================================
+// 5. 侧边栏 Widget — 博主信息
+// ==========================================
+
 .author-content {
   cursor: default;
 
@@ -119,40 +171,28 @@ $breakpoints: (
     color: var(--font-color-main-light);
   }
 
-  .blog-count-box {
-    .blog-count-item {
-      margin: 0.1rem;
-      color: var(--font-color-main);
-      font-weight: 500;
-      font-size: 0.85rem;
-      background-image: linear-gradient(to right, var(--overlay-color-dark-1), transparent);
-      border-radius: var(--border-radius-base);
-      overflow: hidden;
-    }
+  .blog-count-box .blog-count-item {
+    margin: 0.1rem;
+    color: var(--font-color-main);
+    font-weight: 500;
+    font-size: 0.85rem;
+    background-image: linear-gradient(to right, var(--overlay-color-dark-1), transparent);
+    border-radius: var(--border-radius-base);
+    overflow: hidden;
   }
 }
 
-// 旋转360度动画
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
+// ==========================================
+// 6. 侧边栏 Widget — 一言（Hitokoto）
+// ==========================================
 
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* 侧边栏 - 一言 */
 .yiyan-widget {
   position: relative;
 
-  .yiyan-date {
-    .yiyan-day {
-      line-height: 1;
-      font-weight: bold;
-      font-size: 2.25rem;
-    }
+  .yiyan-date .yiyan-day {
+    line-height: 1;
+    font-weight: bold;
+    font-size: 2.25rem;
   }
 
   .yiyan-refresh-btn {
@@ -204,82 +244,10 @@ $breakpoints: (
   }
 }
 
-/* 侧边栏 - 恶魔之眼 */
-.devil-widget {
-  background-color: #0e0e0e;
+// ==========================================
+// 7. 侧边栏 Widget — 热门文章
+// ==========================================
 
-  .devil-content {
-    position: relative;
-    height: 6rem;
-  }
-
-  .devil-eye-left,
-  .devil-eye-right {
-    overflow: hidden;
-    height: 2rem;
-    width: 45%;
-    background-color: var(--danger);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    animation: naturalBlink 3.5s infinite;
-    -webkit-animation: naturalBlink 3.5s infinite;
-  }
-
-
-  .devil-eye-left {
-    border-bottom-right-radius: 30px;
-    border-bottom-left-radius: 100%;
-  }
-
-  .devil-eye-right {
-    border-bottom-right-radius: 100%;
-    border-bottom-left-radius: 30px;
-  }
-
-  @keyframes naturalBlink {
-
-    0%,
-    5%,
-    30%,
-    37%,
-    100% {
-      transform: scaleY(1);
-    }
-
-    3%,
-    33% {
-      transform: scaleY(0);
-    }
-  }
-
-  .devil-eye-o {
-    width: 12px;
-    height: 12px;
-    background-color: #000;
-    border-radius: 10px;
-    animation: eyeMoveSmooth 5s ease-in-out infinite;
-    -webkit-animation: eyeMoveSmooth 5s ease-in-out infinite;
-  }
-
-  @keyframes eyeMoveSmooth {
-
-    0%,
-    100% {
-      transform: translateX(70px);
-    }
-
-    50% {
-      transform: translateX(0px);
-    }
-  }
-
-  .devil-text {
-    font-size: 0.75rem;
-    color: #6c757d;
-  }
-}
-
-/* 侧边栏 - 热门文章 */
 .hotposts-widget {
   $rank-colors: (
     1: #1a1a1a,
@@ -291,7 +259,6 @@ $breakpoints: (
   );
 
 .hotposts-item {
-
   .hotposts-link {
     display: flex;
     overflow: hidden;
@@ -323,7 +290,6 @@ $breakpoints: (
     }
   }
 
-  /* 排名文字颜色背景 */
   @each $rank, $color in $rank-colors {
     &:nth-child(#{$rank}) .hotposts-number {
       background-color: $color;
@@ -332,7 +298,10 @@ $breakpoints: (
 }
 }
 
-/* 侧边栏 - 最新评论 */
+// ==========================================
+// 8. 侧边栏 Widget — 最新评论
+// ==========================================
+
 .newreply-widget {
   font-size: 0.9rem;
   overflow: hidden;
@@ -381,7 +350,90 @@ $breakpoints: (
   }
 }
 
-/* 文章页面侧边栏 - 目录导航 */
+// ==========================================
+// 9. 侧边栏 Widget — 博客路牌
+// ==========================================
+
+.blogsignage-widget {
+  .blogsignage-head {
+    background-color: var(--color-primary-dark-1);
+    color: var(--white);
+    height: 3.5rem;
+    font-size: 1.15rem;
+    letter-spacing: 0.15rem;
+  }
+
+  .blogsignage-foot {
+    font-size: 0.9rem;
+
+    .iconfont {
+      font-size: 1rem;
+      display: inline-block;
+    }
+
+    .blogsignage-foot-west .iconfont {
+      transform: rotate(90deg);
+    }
+
+    .blogsignage-foot-east .iconfont {
+      transform: rotate(-90deg);
+    }
+  }
+}
+
+// ==========================================
+// 10. 侧边栏 Widget — 恶魔之眼
+// ==========================================
+
+.devil-widget {
+  background-color: #0e0e0e;
+
+  .devil-content {
+    position: relative;
+    height: 6rem;
+  }
+
+  .devil-eye-left,
+  .devil-eye-right {
+    overflow: hidden;
+    height: 2rem;
+    width: 45%;
+    background-color: var(--danger);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    animation: naturalBlink 3.5s infinite;
+    -webkit-animation: naturalBlink 3.5s infinite;
+  }
+
+  .devil-eye-left {
+    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: 100%;
+  }
+
+  .devil-eye-right {
+    border-bottom-right-radius: 100%;
+    border-bottom-left-radius: 30px;
+  }
+
+  .devil-eye-o {
+    width: 12px;
+    height: 12px;
+    background-color: #000;
+    border-radius: 10px;
+    animation: eyeMoveSmooth 5s ease-in-out infinite;
+    -webkit-animation: eyeMoveSmooth 5s ease-in-out infinite;
+  }
+
+  .devil-text {
+    font-size: 0.75rem;
+    color: #6c757d;
+  }
+}
+
+// ==========================================
+// 11. 文章页侧边栏 — 目录导航
+// ==========================================
+
 .atoc-content {
   font-size: 0.95rem;
 
@@ -408,127 +460,100 @@ $breakpoints: (
   }
 }
 
-/* 首页侧边栏 - 博客路牌 */
-.blogsignage-widget {
-  .blogsignage-head {
-    background-color: var(--color-primary-dark-1);
-    color: var(--white);
-    height: 3.5rem;
-    font-size: 1.15rem;
-    letter-spacing: 0.15rem;
+// ==========================================
+// 12. 首页底部 Widget — Hello
+// ==========================================
+
+.index-footer-widget .hello-widget {
+  position: relative;
+  height: 8rem;
+
+  .hello-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-color-dark-2);
+    mix-blend-mode: overlay;
+    -webkit-backdrop-filter: saturate(50%) blur(4px);
+    backdrop-filter: saturate(50%) blur(4px);
+
+    .hello-text {
+      color: var(--bg-color-main);
+      font-size: 2rem;
+      font-weight: bold;
+    }
   }
 
-  .blogsignage-foot {
-    font-size: 0.9rem;
+  .hello-btn-group {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
 
-    .iconfont {
-      font-size: 1rem;
-      display: inline-block;
-    }
-
-    .blogsignage-foot-west {
-      .iconfont {
-        transform: rotate(90deg);
-      }
-    }
-
-    .blogsignage-foot-east {
-      .iconfont {
-        transform: rotate(-90deg);
-      }
+    .hello-btn-item {
+      font-size: 0.8rem;
+      color: var(--color-primary-light-5);
+      background-color: var(--overlay-color-light-1);
+      border-radius: var(--border-radius-small);
     }
   }
 }
 
-/* 首页底部 - 样式 */
-.index-footer-widget {
+// ==========================================
+// 13. 首页底部 Widget — 时间之旅
+// ==========================================
 
-  /* 首页底部-Hello */
-  .hello-widget {
-    position: relative;
-    height: 8rem;
+.index-footer-widget .timejourney-widget {
+  position: relative;
+  background-image: var(--gradient-45deg);
+  z-index: 0;
+  overflow: hidden;
 
-    .hello-content {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: var(--overlay-color-dark-2);
-      mix-blend-mode: overlay;
-      -webkit-backdrop-filter: saturate(50%) blur(4px);
-      backdrop-filter: saturate(50%) blur(4px);
+  .timejourney-progress {
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    color: var(--bg-color-body);
+    font-weight: bold;
+    background-color: var(--font-color-main);
+    z-index: -1;
 
-      .hello-text {
-        color: var(--bg-color-main);
-        font-size: 2rem;
-        font-weight: bold;
-      }
-    }
-
-    .hello-btn-group {
-      position: absolute;
-      bottom: 0.75rem;
-      right: 0.75rem;
-
-      .hello-btn-item {
-        font-size: 0.8rem;
-        color: var(--color-primary-light-5);
-        background-color: var(--overlay-color-light-1);
-        border-radius: var(--border-radius-small);
-      }
+    @include max-media-breakpoint('md') {
+      font-size: 0.85rem;
     }
   }
 
-  /* 首页底部-时间之旅 */
-  .timejourney-widget {
-    position: relative;
-    background-image: var(--gradient-45deg);
-    z-index: 0;
-    overflow: hidden;
+  .timejourney-content {
+    width: 100%;
+    height: 100%;
+    color: var(--bg-color-body);
 
-    .timejourney-progress {
-      position: absolute;
-      width: 0%;
-      height: 100%;
-      color: var(--bg-color-body);
+    .timejourney-day {
+      font-size: 1.5rem;
       font-weight: bold;
-      background-color: var(--font-color-main);
-      z-index: -1;
 
       @include max-media-breakpoint('md') {
         font-size: 0.85rem;
       }
     }
 
-    .timejourney-content {
-      width: 100%;
-      height: 100%;
-      color: var(--bg-color-body);
+    .timejourney-desc,
+    .timejourney-unit {
+      font-size: 0.8rem;
+    }
 
-      .timejourney-day {
-        font-size: 1.5rem;
-        font-weight: bold;
-
-        @include max-media-breakpoint('md') {
-          font-size: 0.85rem;
-        }
-      }
-
-      .timejourney-desc,
-      .timejourney-unit {
-        font-size: 0.8rem;
-      }
-
-      .timejourney-desc {
-        color: var(--white);
-        mix-blend-mode: difference;
-      }
+    .timejourney-desc {
+      color: var(--white);
+      mix-blend-mode: difference;
     }
   }
 }
 
-/* 首页顶部 - 轮播图样式 */
+// ==========================================
+// 14. 首页顶部 — 轮播图（Swiper）
+// ==========================================
+
 .swiper-widget {
   overflow: hidden;
 
@@ -550,10 +575,8 @@ $breakpoints: (
       height: 11rem !important;
     }
 
-    &:hover {
-      .swiper-button-wrapper {
-        opacity: 1;
-      }
+    &:hover .swiper-button-wrapper {
+      opacity: 1;
     }
 
     .swiper-wrapper {

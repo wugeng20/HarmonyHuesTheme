@@ -1,4 +1,15 @@
-// 变量
+/* ------------------------------------
+ * Harmony Hues 主题 — Markdown 渲染样式
+ *
+ * @author    星语社长
+ * @link      https://biibii.cn
+ * @update    2024-7-6 18:00:04
+ * --------------------------------- */
+
+// ==========================================
+// 1. SCSS 配置 — 变量 / 混合宏 / 断点
+// ==========================================
+
 $base-size: 0.25rem;
 $base-margin: 1rem;
 $base-font-size: 1rem;
@@ -6,7 +17,7 @@ $base-line-height: 1.7;
 $base-font-weight: 700;
 $border-base: 1px solid rgba(230, 230, 240, .75);
 
-// 定义一个 mixin 用于设置标题的公共样式
+// 标题公共样式
 @mixin heading-styles($size) {
   position: relative;
   margin-top: $base-margin - 0.25rem;
@@ -16,7 +27,7 @@ $border-base: 1px solid rgba(230, 230, 240, .75);
   scroll-margin-top: 80px;
 }
 
-// 定义一个 mixin 用于设置标题前的装饰元素
+// 标题装饰元素
 @mixin heading-decoration($width, $height, $bottom: 0) {
   &::after {
     content: "";
@@ -27,11 +38,11 @@ $border-base: 1px solid rgba(230, 230, 240, .75);
     opacity: .6;
     border-radius: var(--border-radius-circle);
     z-index: -1;
-    bottom: 0;
+    bottom: $bottom;
   }
 }
 
-// 建议的标准断点定义
+// 响应式断点
 $breakpoints: (
   xs: 0,
   sm: 576px,
@@ -40,38 +51,26 @@ $breakpoints: (
   xl: 1200px
 );
 
-// min-width 查询
-@mixin min-media-breakpoint($breakpoint-name) {
-  $min-width: map-get($breakpoints, $breakpoint-name);
-
-  @media (min-width: $min-width) {
+@mixin min-media-breakpoint($name) {
+  @media (min-width: map-get($breakpoints, $name)) {
     @content;
   }
 }
 
-// max-width 查询
-@mixin max-media-breakpoint($breakpoint-name) {
-  $max-width: map-get($breakpoints, $breakpoint-name) - 0.02;
-
-  @media (max-width: $max-width) {
+@mixin max-media-breakpoint($name) {
+  @media (max-width: map-get($breakpoints, $name) - 0.02) {
     @content;
   }
 }
 
-// 范围查询 (需要两个参数)
-@mixin and-media-breakpoint($from, $to) {
-  $min: map-get($breakpoints, $from);
-  $max: map-get($breakpoints, $to) - 0.02;
-
-  @media (min-width: $min) and (max-width: $max) {
-    @content;
-  }
-}
+// ==========================================
+// 2. Markdown 正文基础排版
+// ==========================================
 
 .markdown-body {
-  word-break: break-all; // 英文单词换行
+  word-break: break-all;
 
-  // h标签
+  // ---------- 标题 h1 ~ h6 ----------
   h1 {
     @include heading-styles(1.375);
     @include heading-decoration($base-size * 6, $base-size * 6);
@@ -99,14 +98,14 @@ $breakpoints: (
     @include heading-styles(0.75);
   }
 
-  // p标签
+  // ---------- 段落 ----------
   p {
     margin: 0;
     font-size: $base-font-size;
     line-height: $base-line-height;
   }
 
-  // 链接a标签
+  // ---------- 链接 ----------
   a:not([data-fancybox]):not([data-links]):not([data-cloud]) {
     color: var(--color-primary);
     padding: 0 0.15rem;
@@ -116,7 +115,7 @@ $breakpoints: (
     text-underline-offset: 0.5ex;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    background: linear-gradient(var(--color-primary-light-5), var(--color-primary-light-5)) no-repeat bottom/100% 0;
+    background: linear-gradient(var(--color-primary-light-5), var(--color-primary-light-5)) no-repeat bottom / 100% 0;
     transition: background .3s;
 
     &:hover {
@@ -125,6 +124,7 @@ $breakpoints: (
     }
   }
 
+  // ---------- 块级元素间距 ----------
   blockquote,
   details,
   dl,
@@ -136,7 +136,7 @@ $breakpoints: (
     margin-bottom: $base-size * 2;
   }
 
-  // ul/ol标签
+  // ---------- 列表 ul / ol ----------
   ul,
   ol {
     padding-left: $base-size * 8;
@@ -157,7 +157,51 @@ $breakpoints: (
     list-style-type: disc;
   }
 
-  // 图片img标签
+  // ---------- 引用 blockquote ----------
+  blockquote {
+    position: relative;
+    padding: $base-size * 8;
+    line-height: 1.8;
+    text-indent: 0;
+    color: var(--font-color-main-transparent);
+    border: var(--border-solid-small);
+    border-radius: var(--border-radius-base);
+    overflow: hidden;
+
+    &:before,
+    &:after {
+      position: absolute;
+      font-family: Arial, serif;
+      font-size: $base-font-size * 4;
+      font-weight: $base-font-weight;
+      color: var(--border-color-main);
+    }
+
+    &:before {
+      content: "\201C";
+      left: 1rem;
+      top: -1.5rem;
+    }
+
+    &:after {
+      content: "\201D";
+      right: 1rem;
+      bottom: -3rem;
+    }
+  }
+
+  // ---------- 分割线 ----------
+  hr {
+    border: 0;
+    padding: 0.15rem;
+    background: repeating-linear-gradient(135deg,
+        var(--border-color-main) 0px,
+        var(--font-color-main-transparent) 1px,
+        transparent 1px,
+        transparent 6px);
+  }
+
+  // ---------- 图片 ----------
   img {
     display: block;
     max-width: 100%;
@@ -181,105 +225,103 @@ $breakpoints: (
     }
   }
 
-  // 引用blockquote标签
-  blockquote {
-    position: relative;
-    padding: $base-size * 8;
-    line-height: 1.8;
-    text-indent: 0;
-    color: var(--font-color-main-transparent);
-    border: var(--border-solid-small);
-    border-radius: var(--border-radius-base);
-    overflow: hidden;
-
-    &:before,
-    &:after {
-      position: absolute;
-      font-family: Arial, serif;
-      font-size: $base-font-size * 4;
-      font-weight: $base-font-weight;
-      color: var(--border-color-main);
-    }
-
-    &:before {
-      content: "“";
-      left: 1rem;
-      top: -1.5rem;
-    }
-
-    &:after {
-      content: "”";
-      right: 1rem;
-      bottom: -3rem;
-    }
+  // ---------- 视频 ----------
+  video {
+    width: unset;
+    max-width: 100%;
+    height: auto;
+    max-height: 35rem;
+    vertical-align: middle;
+    border-radius: var(--border-radius-medium);
+    margin: 0.25rem;
   }
 
-  /* table表格样式 */
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+  .video-box {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
 
-    th,
-    td {
-      padding: $base-size * 2 $base-size * 4;
-      border-right: $border-base;
-      border-top: $border-base;
-      letter-spacing: 0;
-      text-align: left;
-      vertical-align: top;
+  // ---------- iframe ----------
+  iframe {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    border-radius: var(--border-radius-base);
+  }
+}
+
+// ==========================================
+// 3. 表格
+// ==========================================
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  th,
+  td {
+    padding: $base-size * 2 $base-size * 4;
+    border-right: $border-base;
+    border-top: $border-base;
+    letter-spacing: 0;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  tr {
+    &:nth-child(odd) {
+      background-color: var(--overlay-color-light-1);
     }
 
-    tr {
-      &:nth-child(odd) {
-        background-color: var(--overlay-color-light-1);
+    &:nth-child(even) {
+      background-color: var(--overlay-color-light-8);
+    }
+
+    &:last-child {
+      th:first-child {
+        border-left: $border-base;
+        border-top-left-radius: var(--border-radius-medium);
       }
 
-      &:nth-child(even) {
-        background-color: var(--overlay-color-light-8);
-      }
-
-      &:last-child {
-        th {
-          &:first-child {
-            border-left: $border-base;
-            border-top-left-radius: var(--border-radius-medium);
-          }
-
-          &:last-child {
-            border-top-right-radius: var(--border-radius-medium);
-          }
-        }
-
-        td {
-          border-bottom: $border-base;
-
-          &:first-child {
-            border-bottom-left-radius: var(--border-radius-medium);
-          }
-
-          &:last-child {
-            border-bottom-right-radius: var(--border-radius-medium);
-          }
-        }
-      }
-
-      th {
-        background-color: var(--font-color-main);
-        color: var(--bg-color-main);
+      th:last-child {
+        border-top-right-radius: var(--border-radius-medium);
       }
 
       td {
+        border-bottom: $border-base;
+
         &:first-child {
-          border-left: $border-base;
+          border-bottom-left-radius: var(--border-radius-medium);
+        }
+
+        &:last-child {
+          border-bottom-right-radius: var(--border-radius-medium);
         }
       }
     }
-  }
 
-  // 代码code标签
+    th {
+      background-color: var(--font-color-main);
+      color: var(--bg-color-main);
+    }
+
+    td:first-child {
+      border-left: $border-base;
+    }
+  }
+}
+
+// ==========================================
+// 4. 代码块
+// ==========================================
+
+.markdown-body {
+
+  // 行内代码
   code:not([class^="lang-"]):not([class^="language-"]) {
     border-radius: 0.2rem;
     background-color: var(--color-primary-light-4);
@@ -289,7 +331,7 @@ $breakpoints: (
     margin: 0 2px;
   }
 
-  // 代码pre标签
+  // 代码块容器（含标题栏 + 复制按钮）
   .pre-container {
     position: relative;
     border: var(--border-solid-small);
@@ -324,7 +366,6 @@ $breakpoints: (
       max-height: $base-size * 120;
 
       &:not([class^="lang-"]):not([class^="language-"]) {
-        // 无语言代码块
         padding: 1rem;
         background-color: #272b33;
         color: #fff;
@@ -347,41 +388,12 @@ $breakpoints: (
       }
     }
   }
-
-  // hr标签
-  hr {
-    border: 0;
-    padding: 0.15rem;
-    background: repeating-linear-gradient(135deg, var(--border-color-main) 0px, var(--font-color-main-transparent) 1px, transparent 1px, transparent 6px);
-  }
-
-  // 视频video标签
-  video {
-    width: unset;
-    max-width: 100%;
-    height: auto;
-    max-height: 35rem;
-    vertical-align: middle;
-    border-radius: var(--border-radius-medium);
-    margin: 0.25rem;
-  }
-
-  .video-box {
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-  }
-
-  // iframe标签
-  iframe {
-    max-width: 100%;
-    height: auto;
-    vertical-align: middle;
-    border-radius: var(--border-radius-base);
-  }
 }
 
-/* 短代码样式一些公共样式 */
+// ==========================================
+// 5. 短代码 — 公共样式
+// ==========================================
+
 .short-code-card {
   position: relative;
   gap: 1rem;
@@ -393,7 +405,6 @@ $breakpoints: (
   overflow: hidden;
   margin: 1rem auto;
   z-index: 1;
-  overflow: hidden;
   background: var(--gradient-45deg);
   border-radius: var(--border-radius-medium);
   box-shadow: var(--shadow-box-small);
@@ -412,7 +423,10 @@ $breakpoints: (
   }
 }
 
-/* 短代码-文章Hint样式 */
+// ==========================================
+// 6. 短代码 — Hint 提示框
+// ==========================================
+
 .hint-content {
   --hint-color: var(--success);
   --hint-bg: #e1efe5;
@@ -428,14 +442,12 @@ $breakpoints: (
   overflow: hidden;
   margin: 0.5rem 0;
 
-  // 图标样式
   .iconfont {
     line-height: 2;
     color: var(--hint-color);
     vertical-align: middle;
   }
 
-  // 不同类型提示框的样式
   &.hint-info {
     --hint-color: var(--font-color-main);
     --hint-bg: #eee;
@@ -451,13 +463,15 @@ $breakpoints: (
     --hint-bg: #ffeaec;
   }
 
-  // 鼠标悬停效果
   &:hover {
     transform: translateY(-5px);
   }
 }
 
-/* 短代码-文章链接样式 */
+// ==========================================
+// 7. 短代码 — 链接卡片
+// ==========================================
+
 .to-links-content {
   position: relative;
 
@@ -478,7 +492,10 @@ $breakpoints: (
   }
 }
 
-/* 短代码-网盘下载样式 */
+// ==========================================
+// 8. 短代码 — 网盘下载
+// ==========================================
+
 .cloud-download-box {
   position: relative;
 
@@ -506,19 +523,24 @@ $breakpoints: (
       color: var(--font-color-main-light);
     }
 
-    .cloud-download-btn span {
-      color: var(--font-color-main-transparent);
-      font-size: 0.8rem;
-    }
+    .cloud-download-btn {
+      span {
+        color: var(--font-color-main-transparent);
+        font-size: 0.8rem;
+      }
 
-    .cloud-download-btn a {
-      background-color: var(--bg-color-primary);
-      border-radius: var(--border-radius-medium);
+      a {
+        background-color: var(--bg-color-primary);
+        border-radius: var(--border-radius-medium);
+      }
     }
   }
 }
 
-/* 折叠框样式 */
+// ==========================================
+// 9. 短代码 — 折叠框
+// ==========================================
+
 .fold-container {
   position: relative;
   overflow: hidden;
@@ -544,7 +566,10 @@ $breakpoints: (
   }
 }
 
-/* 宫格图片样式 */
+// ==========================================
+// 10. 短代码 — 宫格图片
+// ==========================================
+
 .grid-img-container {
   img {
     width: 100%;
