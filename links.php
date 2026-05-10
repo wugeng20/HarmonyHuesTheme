@@ -25,7 +25,6 @@ $groupedLinks = array();
 function parseLinksShortcode($content)
 {
   global $groupedLinks;
-  // 匹配所有 [Links ... /] 短代码
   preg_match_all('/\[Links\s+([^\]]+)\s*\/\]/', $content, $matches, PREG_SET_ORDER);
   $defaults = array(
     'title' => '',
@@ -36,23 +35,15 @@ function parseLinksShortcode($content)
     'status' => '正常',
   );
   foreach ($matches as $match) {
-    $link = array_merge(array(), $defaults);
-    // 支持引号和未加引号的属性
-    preg_match_all('/(\w+)=(["\'])(.*?)\2|(\w+)=([^\s]+)/', $match[1], $attrs, PREG_SET_ORDER);
+    $link = $defaults; // PHP 数组赋值即拷贝，无需 array_merge(array(), ...)
+    // 支持引号和无引号属性：key="value" 或 key=value
+    preg_match_all('/(\w+)=(?:(["\'])(.*?)\2|([^\s]+))/', $match[1], $attrs, PREG_SET_ORDER);
     foreach ($attrs as $attr) {
-      if (! empty($attr[1])) {
-        $key = strtolower($attr[1]);
-        $value = $attr[3];
-      } else {
-        $key = strtolower($attr[4]);
-        $value = $attr[5];
-      }
+      $key = strtolower($attr[1]);
+      $value = $attr[3] !== '' ? $attr[3] : $attr[4]; // 引号值优先
       if (array_key_exists($key, $defaults)) {
-        $link[$key] = htmlspecialchars_decode($value);
+        $link[$key] = htmlspecialchars_decode($value, ENT_QUOTES);
       }
-    }
-    if (empty($link['group'])) {
-      $link['group'] = '网上邻居';
     }
     $group = $link['group'];
     if (! isset($groupedLinks[$group])) {
@@ -60,9 +51,9 @@ function parseLinksShortcode($content)
     }
     $groupedLinks[$group][] = $link;
   }
+  // 移除短代码及 Markdown 解析产生的空段落 / 仅换行段落
   $content = preg_replace('/\[Links\s+[^\]]+\s*\/\]/', '', $content);
-  $content = preg_replace('#<p></p>|<p><br><br></p>#si', '', $content);
-  $content = preg_replace('#<p>(<br\s*?>\s*)+</p>#i', '', $content);
+  $content = preg_replace('#<p></p>|<p>(<br\s*/?>\s*)+</p>#i', '', $content);
   return $content;
 }
 
@@ -203,25 +194,31 @@ $content = parseLinksShortcode($this->content);
       }
       ?>
       <section class="links-group my-4">
-        <h2 class="font-weight-bold links-group-title title-text-stroke mt-3"><?php echo $groupName; ?></h2>
+        <h2 class="font-weight-bold links-group-title title-text-stroke mt-3">
+          <?php echo htmlspecialchars($groupName ?? ''); ?>
+        </h2>
         <div class="links-list row no-gutters">
           <?php foreach ($links as $link): ?>
             <?php if ($link['status'] !== '隐藏'): ?>
               <div class="col-6 col-lg-3 d-flex flex-column align-self-stretch">
                 <div class="links-card flex-fill p-2 m-1">
                   <a class="d-flex flex-direction align-items-center"
-                    <?php echo $link['status'] == '失联' ? '' : 'href="' . $link['url'] . '"'; ?> target="_blank"
-                    title="<?php echo $link['title']; ?>">
+                    <?php echo $link['status'] == '失联' ? '' : 'href="' . htmlspecialchars($link['url'] ?? '') . '"'; ?>
+                    target="_blank" title="<?php echo htmlspecialchars($link['title'] ?? ''); ?>">
                     <div class="link-avatar">
-                      <img src="<?php getLazyload(); ?>" data-original="<?php echo $link['avatar'] ?: getAvatarLazyload(); ?>"
-                        alt="<?php echo $link['title']; ?>" class="link-logo lazy" decoding="async" no-view>
+                      <img src="<?php getLazyload(); ?>"
+                        data-original="<?php echo htmlspecialchars($link['avatar'] ?: getAvatarLazyload()); ?>"
+                        alt="<?php echo htmlspecialchars($link['title'] ?? ''); ?>" class="link-logo lazy" decoding="async"
+                        no-view>
                       <span class="link-status"
                         style="background-color:<?php echo $link['status'] == '失联' ? 'var(--danger)' : 'var(--success)' ?>"
-                        title="<?php echo $link['status']; ?>"></span>
+                        title="<?php echo htmlspecialchars($link['status'] ?? ''); ?>"></span>
                     </div>
                     <div class="link-info flex-grow-1">
-                      <div class="link-title font-weight-bold links-text-clamp"><?php echo $link['title']; ?></div>
-                      <div class="link-desc links-text-clamp"><?php echo $link['desc'] ?: $link['url']; ?></div>
+                      <div class="link-title font-weight-bold links-text-clamp">
+                        <?php echo htmlspecialchars($link['title'] ?? ''); ?></div>
+                      <div class="link-desc links-text-clamp"><?php echo htmlspecialchars($link['desc'] ?: $link['url']); ?>
+                      </div>
                     </div>
                   </a><i class="iconfont icon-qianwang"></i>
                 </div>
