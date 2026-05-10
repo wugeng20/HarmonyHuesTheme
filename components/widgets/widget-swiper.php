@@ -43,11 +43,11 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
                 return $field === 'NULL' ? '' : $field;
             }, $parts);
 
-            $title = @htmlspecialchars($fields[0]);
-            $description = @htmlspecialchars($fields[1]);
-            $label = @htmlspecialchars($fields[2]);
+            $title = @htmlspecialchars($fields[0] ?? '');
+            $description = @htmlspecialchars($fields[1] ?? '');
+            $label = @htmlspecialchars($fields[2] ?? '');
             $image = @htmlspecialchars($fields[3] ?: getRandImg(false));
-            $link = @htmlspecialchars($fields[4]);
+            $link = @htmlspecialchars($fields[4] ?? '');
 
             // 获取文件扩展名
             $extension = strtolower(pathinfo($image, PATHINFO_EXTENSION));

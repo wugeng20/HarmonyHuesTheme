@@ -227,7 +227,7 @@ function filterGridImg($content)
         }
 
         // 构建安全的 title 属性
-        $safeTitle = htmlspecialchars($title, ENT_QUOTES);
+        $safeTitle = htmlspecialchars($title ?? '', ENT_QUOTES);
 
         // 返回优化后的 HTML
         return sprintf(

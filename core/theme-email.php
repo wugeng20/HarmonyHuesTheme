@@ -49,11 +49,11 @@ class Email
     {
         try {
             $params = array(
-                'title' => htmlspecialchars($comment->title),
+                'title' => htmlspecialchars($comment->title ?? ''),
                 'postlink' => preg_replace('/\/comment-page-\d+#comment-\d+/', '', $comment->permalink),
-                'permalink' => htmlspecialchars($comment->permalink),
-                'author' => htmlspecialchars($comment->author),
-                'text' => self::processCommentText($comment->text),
+                'permalink' => htmlspecialchars($comment->permalink ?? ''),
+                'author' => htmlspecialchars($comment->author ?? ''),
+                'text' => self::processCommentText($comment->text ?? ''),
                 'mail' => $comment->mail,
             );
             // 作者评论处理（博主回复）
@@ -115,7 +115,7 @@ class Email
         $content = preg_replace_callback(
             '/!\[(.*?)\]\((.*?)\)/',
             function ($matches) {
-                $alt = htmlspecialchars($matches[1]);
+                $alt = htmlspecialchars($matches[1] ?? '');
                 $siteUrl = Helper::options()->siteUrl;
                 $src = rtrim($siteUrl, '/') . '/' . ltrim($matches[2], '/');
                 return '<img style="display:block;width:auto;height:20rem;" src="' . $src . '" alt="' . $alt . '" />';

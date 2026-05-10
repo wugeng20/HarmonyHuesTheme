@@ -27,7 +27,7 @@ if ($t_url === base64_encode(base64_decode($t_url))) {
 }
 
 // 防止 XSS
-$t_url = htmlspecialchars($t_url, ENT_QUOTES, 'UTF-8');
+$t_url = htmlspecialchars($t_url ?? '', ENT_QUOTES, 'UTF-8');
 
 // 对取值进行网址校验和判断
 $allowed_protocols = array('http', 'https', 'thunder', 'qqdl', 'ed2k', 'Flashget', 'qbrowser');

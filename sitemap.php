@@ -19,9 +19,9 @@ $options = Typecho_Widget::widget('Widget_Options');
 function print_url($loc, $lastmod = null, $changefreq = 'daily', $priority = '0.5')
 {
     echo "\t<url>\n";
-    echo "\t\t<loc>" . htmlspecialchars($loc, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</loc>\n";
+    echo "\t\t<loc>" . htmlspecialchars($loc ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</loc>\n";
     if ($lastmod) {
-        echo "\t\t<lastmod>" . htmlspecialchars($lastmod, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</lastmod>\n";
+        echo "\t\t<lastmod>" . htmlspecialchars($lastmod ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</lastmod>\n";
     }
     echo "\t\t<changefreq>" . $changefreq . "</changefreq>\n";
     echo "\t\t<priority>" . $priority . "</priority>\n";

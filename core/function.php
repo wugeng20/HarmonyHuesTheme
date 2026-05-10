@@ -159,7 +159,7 @@ function getThemeMode()
     $systemTheme = $_COOKIE['system_theme'] ?? '';
     $theme = $theme === 'system' ? $systemTheme : $theme;
 
-    return htmlspecialchars($theme);
+    return htmlspecialchars($theme ?? '');
 }
 
 /**
@@ -322,7 +322,7 @@ function socialInfo()
     $socialArray = json_decode('[' . trim($socialInfo) . ']', true);
     $html = '';
     foreach ($socialArray as $social) {
-        $html .= '<a href="' . htmlspecialchars($social['link']) . '" title="' . htmlspecialchars($social['name']) . '" target="_blank"><i class="iconfont ' . htmlspecialchars($social['icon']) . '"></i></a>';
+        $html .= '<a href="' . htmlspecialchars($social['link'] ?? '') . '" title="' . htmlspecialchars($social['name'] ?? '') . '" target="_blank"><i class="iconfont ' . htmlspecialchars($social['icon'] ?? '') . '"></i></a>';
     }
 
     return $html;
@@ -727,10 +727,10 @@ function generateToc($content)
         // 构建a标签
         $aTag = sprintf(
             '<a class="atoc-link" href="#%s" data-target="%s" title="%s">%s</a>',
-            htmlspecialchars($id),
-            htmlspecialchars($id),
-            htmlspecialchars($title),
-            htmlspecialchars($title)
+            htmlspecialchars($id ?? ''),
+            htmlspecialchars($id ?? ''),
+            htmlspecialchars($title ?? ''),
+            htmlspecialchars($title ?? '')
         );
 
         // 关闭所有级别大于当前级别的<li>，并适当关闭<ul>

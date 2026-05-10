@@ -2,7 +2,7 @@
 
 /**
  * 明信片留言
- * 
+ *
  * @author  星语社长
  * @link  https://biibii.cn
  * @update  2025-1-20 12:48:15
@@ -20,7 +20,10 @@ $this->need('components/header.php');
 ?>
 
 <style>
-  @import url('https://chinese-fonts-cdn.deno.dev/packages/rmjzqpybxs/dist/瑞美加张清平硬笔行书/result.css');
+  @font-face {
+    font-family: "瑞美加张清平硬笔行书";
+    src: url("<?php getAssets('assets/fonts/瑞美加张清平硬笔行书.ttf'); ?>");
+  }
 
   .postcard-cover {
     background: linear-gradient(to right, #ccc 1px, transparent 1px), linear-gradient(to bottom, #ccc 1px, transparent 1px);
@@ -240,7 +243,7 @@ function threadedComments($comments, $options)
           $digits = str_split($paddedId);
           echo '<div class="postcard-code">';
           foreach ($digits as $digit) {
-            echo '<span class="postcard-code-item mr-1">' . htmlspecialchars($digit) . '</span>';
+            echo '<span class="postcard-code-item mr-1">' . htmlspecialchars($digit ?? '') . '</span>';
           }
           echo '</div>';
           ?>
@@ -328,13 +331,13 @@ function threadedComments($comments, $options)
               <?php if ($this->allow('comment')): ?>
                 <div id="<?php $this->respondId(); ?>" class="respond flex-grow-1 w-100">
                   <form method="post" action="<?php $this->commentUrl() ?>" id="comment-form" role="form">
-                    <?php if ($this->user->hasLogin()): // ===> 已登录用户 
+                    <?php if ($this->user->hasLogin()): // ===> 已登录用户
                     ?>
                       <div class="mb-3"><?php _e('当前用户: '); ?><a
                           href="<?php $this->options->profileUrl(); ?>"><?php $this->user->screenName(); ?></a>.
                         <a href="<?php $this->options->logoutUrl(); ?>" title="Logout"><?php _e('退出'); ?> &raquo;</a>
                       </div>
-                    <?php else: // ===> 未登录用户 
+                    <?php else: // ===> 未登录用户
                     ?>
                       <ul class="row comment-form-info">
                         <li class="col-12 col-md-4 col-xl-4 mb-2">

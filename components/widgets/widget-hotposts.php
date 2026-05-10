@@ -54,7 +54,7 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
         <ul class="hotposts-list">
           <?php foreach ($hotPostsCid as $index => $postcid): ?>
             <?php $post = Helper::widgetById('Contents', $postcid['cid']); ?>
-            <?php $postTitle = htmlspecialchars($post->title); ?>
+            <?php $postTitle = htmlspecialchars($post->title ?? ''); ?>
             <li class="hotposts-item py-1">
               <a class="hotposts-link" href="<?php $post->permalink(); ?>" title="<?php echo $postTitle; ?>">
                 <span class="hotposts-number"><?php echo $index + 1; ?></span>
