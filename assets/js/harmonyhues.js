@@ -188,12 +188,10 @@ $(document).ready(function () {
   /*---------------------滚动事件end---------------------*/
 
   /*---------------------滚动进事件集合st---------------------*/
-  $(window).scroll(function () {
-    /*滚动进度条*/
-    throttle(updateScrollProgress(), 100);
-    /*滚动Nav背景*/
-    throttle(toggleNavOnScroll('#navbar', 'nav-ui-one', 'nav-ui-two', 50), 100);
-  });
+  $(window).scroll(throttle(function () {
+    updateScrollProgress();
+    toggleNavOnScroll('#navbar', 'nav-ui-one', 'nav-ui-two', 50);
+  }, 100));
   /*---------------------滚动进事件集合end---------------------*/
 
   /*---------------------手机端导航栏st---------------------*/
