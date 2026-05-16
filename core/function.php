@@ -91,9 +91,16 @@ function themeInit($self)
         exit;
     }
 
-    // 添加文章锚点功能
+    // 文章页面
     if ($self->is('single')) {
+        // 添加文章锚点功能
         $self->content = parseContens($self->content); // 解析内容
+
+        // 优化文章页面的meta标签description内容
+        if (!empty($self->fields->abstract || $self->fields->description)) {
+            $archiveDescription = ($self->fields->abstract ?: $self->fields->description);
+            $self->setArchiveDescription($archiveDescription);
+        }
     }
 }
 
