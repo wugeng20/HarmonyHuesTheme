@@ -74,7 +74,7 @@ function themeFields($layout)
         NULL,
         NULL,
         _t('SEO描述语（非常重要！）'),
-        _t('介绍：用于设置当前页SEO描述语 <br />
+        _t('介绍：用于设置当前页SEO描述语，推荐100字以内 <br />
 注意：SEO描述语不应当过长也不应当过少 <br />
 其他：如果不填写此项，则默认截取文章片段')
     );
@@ -85,7 +85,7 @@ function themeFields($layout)
         NULL,
         NULL,
         _t('自定义摘要（非必填）'),
-        _t('填写时：将会显示填写的摘要 <br />
+        _t('填写时：将会显示填写的摘要，推荐100字以内 <br />
 不填写时：默认取文章里的内容，<b style="color:red;">图片格式推荐填写15以内字符</b>')
     );
     $layout->addItem($abstract);
