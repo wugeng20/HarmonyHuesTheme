@@ -94,11 +94,17 @@ if (($isArticleTop || $hiddenCategoryIds) && $this->is('index') || $this->is('fr
   $this->setTotal($this->getTotal() - count($hiddenPostCidArray)); //隐藏文章不计算在所有文章内
 }
 
-/** 过滤掉[GridImg] */
-function filterGridImg($content)
+/** 文章摘要-过滤短代码标签 */
+function archiveDescriptionText($content, $length = 100)
 {
-  $content = preg_replace('/\[GridImg\s+columns="(\d+)"\s+gap="([^"]+)"\](.*?)\[\/GridImg\]/s', '', $content);
-  return strip_tags($content); // 去除HTML标签
+  // 移除所有 短代码 标签标记（包括开始、结束、自闭合）
+  $content = preg_replace('/\[\/?\w+(?:[^]]*?)\/?\]/u', '', $content);
+
+  // 移除 HTML 标签
+  $content = strip_tags($content);
+
+  // 截取前 100 个字符（UTF-8 安全）
+  return mb_substr($content, 0, $length, 'UTF-8');
 }
 ?>
 <div class="post-main">
@@ -113,7 +119,7 @@ function filterGridImg($content)
                 <a href="<?php $this->permalink() ?>"
                   title="<?php $this->title() ?>"><?php $this->sticky() ?><?php $this->title() ?></a>
                 <div class="post-description">
-                  <?php echo mb_substr($this->fields->abstract, 0, 15) ?: mb_substr(filterGridImg($this->content), 0, 15); ?>
+                  <?php echo mb_substr($this->fields->abstract ?: archiveDescriptionText($this->content), 0, 15, 'UTF-8'); ?>
                 </div>
               </div>
               <div class="post-meta-wrap">
@@ -153,7 +159,7 @@ function filterGridImg($content)
                 <a href="<?php $this->permalink() ?>"
                   title="<?php $this->title() ?>"><?php echo $this->fields->articleTop ? '<span class="mr-1 top-tag">置顶</span>' : '' ?><?php $this->title() ?></a>
                 <div class="post-description">
-                  <?php echo $this->fields->abstract ?: $this->excerpt(100, '...'); ?>
+                  <?php echo trim($this->fields->abstract ?? $this->fields->description ?? '') !== '' ? ($this->fields->abstract ?? $this->fields->description) : archiveDescriptionText($this->content); ?>
                 </div>
               </div>
               <div class="post-meta-wrap d-flex justify-content-between">
