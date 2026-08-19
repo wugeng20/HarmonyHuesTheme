@@ -219,6 +219,13 @@ $this->need('components/header.php');
     opacity: 1;
     top: 45%;
   }
+
+  .comment-list,
+  .postcard-animation {
+    opacity: 0;
+    animation: fade-in-top 0.5s 0.3s forwards;
+    -webkit-animation: fade-in-top 0.5s 0.3s forwards;
+  }
 </style>
 <?php
 function threadedComments($comments, $options)
@@ -232,11 +239,6 @@ function threadedComments($comments, $options)
     class="p-0 d-flex flex-column flex-grow-1 postcard-item<?php echo $commentLevelClass; ?>">
     <div id="<?php $comments->theId(); ?>" class="d-flex flex-column flex-grow-1<?php echo $postcardLevelClass; ?>">
       <div class="postcard-box m-1 mt-3 p-2 w-auto">
-        <div class="postcard-stamp p-2">
-          <?php $email = $comments->mail;
-          $imgUrl = getGravatar($email);
-          echo '<img class="lazy" src="' . getAvatarLazyload(false) . '" data-original="' . $imgUrl . '" title="邮票头像">'; ?>
-        </div>
         <div class="postcard-code">
           <?php $commentId = $comments->coid;
           $paddedId = str_pad($commentId, 6, '0', STR_PAD_LEFT);
@@ -282,7 +284,9 @@ function threadedComments($comments, $options)
       <div class="col-lg-12">
         <div class="card postcard-cover m-1 mt-2 flex-row w-auto">
           <div class="w-50 postcard-cover-bg">
-            <img src="https://bu.dusays.com/2025/01/20/678de9907fe2a.webp" />
+            <img class="lazy"
+              data-original="<?php echo $this->fields->thumb ?: getAssets('assets/images/pages/mxp.webp', false) ?>"
+              alt="<?php $this->title() ?>" src="<?php getLazyload(); ?>" />
             <div class="postcard-cover-name d-flex flex-column align-items-center justify-content-center p-4">
               <p class="text-shadow-style postcard-cover-text">生活·梦想</p>
             </div>
@@ -311,7 +315,7 @@ function threadedComments($comments, $options)
         <?php endif; ?>
         </div>
         <!-- 留言列表end -->
-        <div class="col-lg-12">
+        <div class="col-lg-12 postcard-animation">
           <!-- 页面文章内容 -->
           <div class="col-lg-12 links-title font-weight-bold postcard-title mt-3">
             <p class="text-shadow-style m-0">留言须知</p>
