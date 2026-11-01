@@ -17,81 +17,92 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
  */
 $hiddenCategoryIds = $this->options->hideCategory ?? ''; // 要隐藏的分类ID，逗号分隔
 
-// 判断是否有置顶文章函数
-function hasArticleTop()
-{
-  $db = Typecho_Db::get();
-  $select = $db->fetchObject($db->select('COUNT(*) as count')
-    ->from('table.fields')
-    ->where('name = ? && str_value = 1', 'articleTop')->limit(1));
+// 判断是否有置顶文章函数（static 缓存 + function_exists 防止重复 include 时重定义）
+if (! function_exists('hasArticleTop')) {
+  function hasArticleTop()
+  {
+    static $hasTop = null;
 
-  return $select->count > 0; // 如果有置顶文章，返回true
+    if ($hasTop !== null) {
+      return $hasTop;
+    }
+
+    $db = Typecho_Db::get();
+    $select = $db->fetchObject($db->select('COUNT(*) as count')
+      ->from('table.fields')
+      ->where('name = ? && str_value = 1', 'articleTop')->limit(1));
+
+    $hasTop = ($select->count ?? 0) > 0; // 如果有置顶文章，返回true
+
+    return $hasTop;
+  }
 }
 
 // $isArticleTop = false; // 测试用
 $isArticleTop = hasArticleTop();
 
-// 仅在首页执行
-if (($isArticleTop || $hiddenCategoryIds) && $this->is('index') || $this->is('front')) {
+// 仅在首页（含 front 归档首页）且启用了置顶或隐藏分类时执行
+$hasCustomQueue = $isArticleTop || trim((string) $hiddenCategoryIds) !== '';
+
+if ($hasCustomQueue && ($this->is('index') || $this->is('front'))) {
   // 获取数据库对象
   $db = Typecho_Db::get();
   // 每页显示文章数量
   $adjustedPageSize = $this->parameter->pageSize;
-  // 获取文章数据
-  $normalPostQuery = $db->select('table.contents.*')->from('table.contents')->where('table.contents.type = ? && table.contents.status = ? && table.contents.created < ?', 'post', 'publish', time());
   // 需要移除的文章Cid
   $hiddenPostCidArray = array();
+
+  // 隐藏分类ID（只保留数字，避免非法值拼进 SQL）
+  $hiddenMids = array_filter(array_map('intval', explode(',', (string) $hiddenCategoryIds)));
+
+  // 隐藏分类下的所有文章ID
+  if (!empty($hiddenMids)) {
+    $hiddenPostSubQuery = $db->fetchAll($db->select('cid')->from('table.relationships')->where('mid IN (' . implode(',', $hiddenMids) . ')'));
+    $hiddenPostCidArray = array_column($hiddenPostSubQuery, 'cid') ?? [];
+  }
 
   // 清空原有文章的列队
   $this->row = array();
   $this->stack = array();
   $this->length = 0;
 
-  // 置顶的文章
-  if (!empty($isArticleTop)) {
-    // 拼接查询条件，获取置顶文章
-    $normalPostQuery->join('table.fields', 'table.contents.cid = table.fields.cid AND table.fields.name = \'articleTop\'', Typecho_Db::LEFT_JOIN);
-  }
-
-  // 隐藏分类的文章
-  if (!empty($hiddenCategoryIds)) {
-    // 子查询获取隐藏分类下的所有文章ID
-    $hiddenPostSubQuery = $db->fetchAll($db->select('cid')->from('table.relationships')->where("mid IN ($hiddenCategoryIds)"));
-    // 提取所有 cid 值
-    $hiddenPostCids = array_column($hiddenPostSubQuery, 'cid') ?? [];
-    $hiddenPostCidArray = array_merge($hiddenPostCidArray, $hiddenPostCids); // 将隐藏分类的文章ID合并到数组中
-  }
-
-  // 所有要隐藏的文章DB
-  if (!empty($hiddenPostCidArray)) {
-    // 用逗号连接成字符串
-    $hiddenCids = implode(',', $hiddenPostCidArray);
-    $normalPostQuery->where("table.contents.cid NOT IN ($hiddenCids)");
-  }
-
   // 登录时，显示用户各自的私密文章
   $userId = $this->user->uid;
-  if ($userId) {
-    $normalPostQuery->orWhere('authorId = ? && status = ?', $userId, 'private');
-  }
 
-  // 排序
-  if (!empty($isArticleTop)) {
-    // 置顶文章存在情况下：优先置顶文章，其次按照发布时间排序
-    $normalPostQuery->order('IF(table.fields.str_value = \'1\', 0, 1) ,table.contents.created', Typecho_Db::SORT_DESC);
-  } else {
-    // 按发布时间排序
-    $normalPostQuery->order('table.contents.created', Typecho_Db::SORT_DESC);
-  }
+  // 统一构造查询，保证列表与总数口径一致
+  $buildPostQuery = function ($select) use ($db, $isArticleTop, $hiddenPostCidArray, $userId) {
+    $query = $db->select($select)->from('table.contents')
+      ->where('table.contents.type = ? && table.contents.status = ? && table.contents.created < ?', 'post', 'publish', time());
+
+    // 置顶的文章
+    if (!empty($isArticleTop)) {
+      $query->join('table.fields', 'table.contents.cid = table.fields.cid AND table.fields.name = \'articleTop\'', Typecho_Db::LEFT_JOIN);
+    }
+
+    // 隐藏分类的文章
+    if (!empty($hiddenPostCidArray)) {
+      $query->where('table.contents.cid NOT IN (' . implode(',', array_map('intval', $hiddenPostCidArray)) . ')');
+    }
+
+    if ($userId) {
+      $query->orWhere('authorId = ? && status = ?', $userId, 'private');
+    }
+
+    return $query;
+  };
+
+  // 排序：置顶文章存在时优先置顶，其次按发布时间
+  $orderSql = !empty($isArticleTop) ? 'IF(table.fields.str_value = \'1\', 0, 1) ,table.contents.created' : 'table.contents.created';
 
   // 分页
-  $normalPosts = $db->fetchAll($normalPostQuery->page($this->_currentPage, $adjustedPageSize));
+  $normalPosts = $db->fetchAll($buildPostQuery('table.contents.*')->order($orderSql, Typecho_Db::SORT_DESC)->page($this->_currentPage, $adjustedPageSize));
   foreach ($normalPosts as $stickyPost) {
     $this->push($stickyPost);
   }
 
-  //压入列队
-  $this->setTotal($this->getTotal() - count($hiddenPostCidArray)); //隐藏文章不计算在所有文章内
+  // 总数按同一条件统计，避免按隐藏分类全量 cid 扣减导致页数偏少
+  $totalRow = $db->fetchObject($buildPostQuery(array('COUNT(*)' => 'num')));
+  $this->setTotal((int) ($totalRow->num ?? 0));
 }
 
 /** 文章摘要-过滤短代码标签 */
@@ -119,7 +130,7 @@ function archiveDescriptionText($content, $length = 100)
                 <a href="<?php $this->permalink() ?>"
                   title="<?php $this->title() ?>"><?php $this->sticky() ?><?php $this->title() ?></a>
                 <div class="post-description">
-                  <?php echo mb_substr($this->fields->abstract ?: archiveDescriptionText($this->content), 0, 15, 'UTF-8'); ?>
+                  <?php echo htmlspecialchars(mb_substr($this->fields->abstract ?: archiveDescriptionText($this->content), 0, 15, 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>
                 </div>
               </div>
               <div class="post-meta-wrap">
@@ -159,7 +170,10 @@ function archiveDescriptionText($content, $length = 100)
                 <a href="<?php $this->permalink() ?>"
                   title="<?php $this->title() ?>"><?php echo $this->fields->articleTop ? '<span class="mr-1 top-tag">置顶</span>' : '' ?><?php $this->title() ?></a>
                 <div class="post-description">
-                  <?php echo trim($this->fields->abstract ?? $this->fields->description ?? '') !== '' ? ($this->fields->abstract ?? $this->fields->description) : archiveDescriptionText($this->content); ?>
+                  <?php
+                  $postDescription = trim($this->fields->abstract ?? $this->fields->description ?? '') !== '' ? ($this->fields->abstract ?? $this->fields->description) : archiveDescriptionText($this->content);
+                  echo htmlspecialchars($postDescription, ENT_QUOTES, 'UTF-8');
+                  ?>
                 </div>
               </div>
               <div class="post-meta-wrap d-flex justify-content-between">

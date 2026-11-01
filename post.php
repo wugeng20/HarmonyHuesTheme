@@ -26,12 +26,14 @@ $this->need('components/header.php');
 
 <!--主体st-->
 <main>
-  <div class="container p-2 <?php echo htmlspecialchars($isSidebar ? 'pl-lg-4 pl-xl-4' : 'px-lg-3 px-xl-3'); ?>">
-    <!-- 面包屑 -->
-    <?php $this->need('components/breadcrumb.php'); ?>
+  <div class="container py-2 px-0">
+    <!-- 面包屑（启用封面时由封面内部输出） -->
+    <?php if (! usePostCover($this)): ?>
+      <?php $this->need('components/breadcrumb.php'); ?>
+    <?php endif; ?>
     <div class="row no-gutters">
       <!-- 文章内容st -->
-      <div class="<?php echo htmlspecialchars($isSidebar ? 'col-lg-9' : 'col-12'); ?>">
+      <div class="px-1 px-md-2 my-2 <?php echo htmlspecialchars($isSidebar ? 'col-lg-9' : 'col-12'); ?>">
         <?php $this->need('components/post-content.php'); ?>
       </div>
       <!-- 文章内容end -->

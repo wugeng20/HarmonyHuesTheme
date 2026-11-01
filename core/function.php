@@ -21,12 +21,21 @@ use Utils\Helper;
  */
 function getVersion()
 {
+    // 同一请求内只解析一次主题头（原先每页最多调用 14 次，每次都读文件+正则）
+    static $version = null;
+
+    if ($version !== null) {
+        return $version;
+    }
+
     try {
         $themeInfo = Typecho_Plugin::parseInfo(dirname(__DIR__) . '/index.php');
-        return $themeInfo['version'];
+        $version = (string) ($themeInfo['version'] ?? '');
     } catch (Exception $e) {
-        return '获取主题版本失败' . $e;
+        $version = '获取主题版本失败' . $e;
     }
+
+    return $version;
 };
 
 /**
@@ -39,11 +48,71 @@ function getAssets($assetPath, $echo = true)
 {
     $options = Helper::options();
     $baseUrl = $options->AssetsURL ? $options->AssetsURL : $options->themeUrl;
-    $fullUrl = rtrim($baseUrl, '/') . '/' . ltrim($assetPath, '/');
+    $assetPath = ltrim((string) $assetPath, '/');
+    // 模板里手工拼接的 ?v=版本号在这里统一剥离，改用文件修改时间做缓存标记，
+    // 这样重新生成 .min.css / .min.js 后不用改主题版本号，浏览器也会自动取新文件
+    $assetPath = preg_replace('/[?&]v=[^&#]*/', '', $assetPath);
+    $version = '';
+    $file = dirname(__DIR__) . '/' . $assetPath;
+    if (is_file($file)) {
+        $version = (string) filemtime($file);
+    }
+    $fullUrl = rtrim($baseUrl, '/') . '/' . $assetPath;
+    if ($version !== '') {
+        $fullUrl .= (strpos($fullUrl, '?') === false ? '?' : '&') . 'v=' . $version;
+    }
     if ($echo) {
         echo $fullUrl;
     } else {
         return $fullUrl;
+    }
+}
+
+/**
+ * 生成站内绝对路径，兼容子目录部署
+ * @param  string $path
+ * @return string
+ */
+function getSitePath($path = '')
+{
+    $siteUrl = rtrim((string) Helper::options()->siteUrl, '/');
+    return $siteUrl . '/' . ltrim((string) $path, '/');
+}
+
+/**
+ * 检测 contents 表 views 字段是否可用
+ *
+ * 同一请求内只探测一次，避免每次调用都取一整行来判断字段是否存在；
+ * 字段缺失时仅在已登录用户访问时尝试建列，避免匿名流量触发 DDL。
+ *
+ * @return bool
+ */
+function ensureViewsColumn()
+{
+    static $state = null;
+
+    if ($state !== null) {
+        return $state;
+    }
+
+    $db = Typecho_Db::get();
+
+    try {
+        $db->fetchRow($db->select('views')->from('table.contents')->limit(1));
+        return $state = true;
+    } catch (Exception $e) {
+        // views 字段不存在，继续尝试创建
+    }
+
+    try {
+        if (! Typecho_Cookie::get('__typecho_uid')) {
+            return $state = false;
+        }
+
+        $db->query('ALTER TABLE `' . $db->getPrefix() . 'contents` ADD `views` INT(10) DEFAULT 0;');
+        return $state = true;
+    } catch (Exception $e) {
+        return $state = false;
     }
 }
 
@@ -189,7 +258,7 @@ function getLogoImg($class = '')
         $darkSrc = $whiteSrc;
     }
 
-    $logoImg = getThemeMode() == 'light' ? '<img class="' . $class . '" src="' . $whiteSrc . '" dark-src="' . $darkSrc . '" alt="' . $alt . '">' : '<img class="' . $class . '" src="' . $darkSrc . '" white-src="' . $whiteSrc . '" alt="' . $alt . '">';
+    $logoImg = getThemeMode() == 'light' ? '<img class="' . $class . '" src="' . $whiteSrc . '" dark-src="' . $darkSrc . '" draggable="false" alt="' . $alt . '">' : '<img class="' . $class . '" src="' . $darkSrc . '" white-src="' . $whiteSrc . '" draggable="false" alt="' . $alt . '">';
 
     return $logoImg;
 }
@@ -202,19 +271,18 @@ function getLogoImg($class = '')
 function PostViewCount($archive)
 {
     $postId = $archive->cid;
-    $db = Typecho_Db::get();
 
-    // 检查contents表是否存在views字段，如果不存在则添加
-    $columns = $db->fetchRow($db->select()->from('table.contents'));
-    if (! array_key_exists('views', $columns)) {
-        $db->query('ALTER TABLE `' . $db->getPrefix() . 'contents` ADD `views` INT(10) DEFAULT 0;');
+    // views 字段不可用时直接输出 0，不在这里做建表操作
+    if (! ensureViewsColumn()) {
         echo 0;
         return;
     }
 
+    $db = Typecho_Db::get();
+
     // 获取当前文章的views值
     $row = $db->fetchRow($db->select('views')->from('table.contents')->where('cid = ?', $postId));
-    $views = $row['views'] ?? 0;
+    $views = (int) ($row['views'] ?? 0);
 
     // 文章正文页面，更新views值
     if ($archive->is('single')) {
@@ -225,7 +293,9 @@ function PostViewCount($archive)
         // 如果当前文章未被查看过，则更新views值
         if (! in_array($postId, $viewedPosts)) {
             $db->query($db->update('table.contents')->expression('views', 'views + 1')->where('cid = ?', $postId));
-            array_push($viewedPosts, $postId);
+            $viewedPosts[] = $postId;
+            // 限制 Cookie 长度，避免长期浏览后无限增长
+            $viewedPosts = array_slice($viewedPosts, -200);
             Typecho_Cookie::set('extend_contents_views', implode(',', $viewedPosts)); // 更新cookie中的查看过的文章ID数组
             $views++; // 更新views值
         }
@@ -242,10 +312,29 @@ function PostViewCount($archive)
 function randomPost($type = 'echo')
 {
     $db = Typecho_Db::get();
-    $result = $db->fetchRow($db->select()->from('table.contents')->where('type=?', 'post')->where('status=?', 'publish')->limit(1)->order('RAND()'));
-    if ($result) {
-        $f = Helper::widgetById('Contents', $result['cid']);
-        $permalink = $f->permalink;
+
+    // 先取总数再用随机 offset 命中一行，避免 ORDER BY RAND() 对全表排序
+    $totalRow = $db->fetchObject($db->select(array('COUNT(*)' => 'num'))
+        ->from('table.contents')
+        ->where('type = ?', 'post')
+        ->where('status = ?', 'publish'));
+    $total = (int) ($totalRow->num ?? 0);
+
+    $permalink = false;
+    if ($total > 0) {
+        $row = $db->fetchRow($db->select('cid', 'title', 'slug', 'created', 'type')
+            ->from('table.contents')
+            ->where('type = ?', 'post')
+            ->where('status = ?', 'publish')
+            ->offset(random_int(0, $total - 1))
+            ->limit(1));
+
+        if ($row) {
+            $permalink = getPermalinkFromRow($row);
+        }
+    }
+
+    if ($permalink) {
         if ($type == 'return') {
             return $permalink;
         } else {
@@ -329,7 +418,7 @@ function socialInfo()
     $socialArray = json_decode('[' . trim($socialInfo) . ']', true);
     $html = '';
     foreach ($socialArray as $social) {
-        $html .= '<a href="' . htmlspecialchars($social['link'] ?? '') . '" title="' . htmlspecialchars($social['name'] ?? '') . '" target="_blank"><i class="iconfont ' . htmlspecialchars($social['icon'] ?? '') . '"></i></a>';
+        $html .= '<a href="' . htmlspecialchars($social['link'] ?? '') . '" title="' . htmlspecialchars($social['name'] ?? '') . '" class="d-flex align-items-center justify-content-center" target="_blank"><i class="iconfont ' . htmlspecialchars($social['icon'] ?? '') . '"></i></a>';
     }
 
     return $html;
@@ -514,28 +603,151 @@ function CommentAuthor($obj, $autoLink = NULL, $noFollow = NULL)
 }
 
 /**
+ * 扫描 assets/emoji 下的表情包目录（一个子目录 = 一个表情包）
+ *
+ * 目录内可放 info.json（可选）：
+ * {"label": "显示名", "mode": "emoji|image", "order": 0, "titles": {"文件名": "中文名"}}
+ * - mode=emoji：点击后插入 :(owo=文件名)，由 formatEmoji() 渲染成行内表情
+ * - mode=image：点击后插入 Markdown 图片，适合动图/大表情
+ * 没有 info.json 时：label=目录名、mode=emoji、标题=文件名
+ *
+ * @return array
+ */
+function getEmojiPacks()
+{
+    static $packs = null;
+    if ($packs !== null) {
+        return $packs;
+    }
+
+    $packs = array();
+    $baseDir = dirname(__DIR__) . '/assets/emoji/';
+    if (!is_dir($baseDir)) {
+        return $packs;
+    }
+
+    $allowExt = array('webp', 'gif', 'png', 'jpg', 'jpeg', 'svg', 'avif', 'bmp');
+    $dirs = array();
+    foreach ((array) scandir($baseDir) as $dir) {
+        if ($dir === '.' || $dir === '..' || !is_dir($baseDir . $dir)) {
+            continue;
+        }
+        $dirs[] = $dir;
+    }
+    sort($dirs, SORT_NATURAL | SORT_FLAG_CASE);
+
+    $result = array();
+    foreach ($dirs as $dir) {
+        $info = array();
+        $infoFile = $baseDir . $dir . '/info.json';
+        if (is_file($infoFile)) {
+            // 兼容带 BOM 的 UTF-8 文件，json_decode 遇到 BOM 会直接失败
+            $decoded = json_decode(ltrim((string) file_get_contents($infoFile), "\xEF\xBB\xBF"), true);
+            if (is_array($decoded)) {
+                $info = $decoded;
+            }
+        }
+        $titles = isset($info['titles']) && is_array($info['titles']) ? $info['titles'] : array();
+
+        $files = array();
+        foreach ((array) scandir($baseDir . $dir) as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+            $filePath = $baseDir . $dir . '/' . $file;
+            if (!is_file($filePath)) {
+                continue;
+            }
+            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+            if (!in_array($ext, $allowExt, true)) {
+                continue;
+            }
+            $files[pathinfo($file, PATHINFO_FILENAME)] = $file;
+        }
+        if (!$files) {
+            continue;
+        }
+
+        // 先按 info.json 里 titles 的顺序排，剩下的按文件名自然排序
+        $items = array();
+        foreach ($titles as $key => $title) {
+            if (!isset($files[$key])) {
+                continue;
+            }
+            $items[] = array('key' => (string) $key, 'title' => (string) $title, 'file' => $files[$key]);
+            unset($files[$key]);
+        }
+        ksort($files, SORT_NATURAL | SORT_FLAG_CASE);
+        foreach ($files as $key => $file) {
+            $items[] = array('key' => (string) $key, 'title' => (string) $key, 'file' => $file);
+        }
+
+        $result[] = array(
+            'name' => $dir,
+            'label' => isset($info['label']) ? (string) $info['label'] : $dir,
+            'mode' => (isset($info['mode']) && in_array($info['mode'], array('emoji', 'image'), true)) ? $info['mode'] : 'emoji',
+            'order' => isset($info['order']) ? (int) $info['order'] : 999,
+            'path' => getAssets('assets/emoji/' . $dir . '/', false),
+            'items' => $items,
+        );
+    }
+
+    usort($result, function ($a, $b) {
+        if ($a['order'] === $b['order']) {
+            return strcasecmp($a['name'], $b['name']);
+        }
+        return $a['order'] < $b['order'] ? -1 : 1;
+    });
+
+    $packs = $result;
+    return $packs;
+}
+
+/**
  * 过滤表情包
  * @param string $text 文本内容
- * @param bool $type 是否输出
+ * @param bool $type 是否延迟加载
  * @return string
  */
 function formatEmoji($text, $type = true)
 {
-    $text = preg_replace_callback(
-        '/\:\(owo=(3dyanjing|lpl|aoye|baozha|buhaoyisi|qinqin|sanbing|yiqiangxiao|toutoukan|zaijian|chujiaren|jiaban|mianqiangxiao|weixian|fahongbao|chishou|chigua|tuxie|chaojia|youhou|ziyaxiao|hashiqi|hashiqishiquyishi|hashiqishiwang|kuqi|changge|xihuan|heiha|daxiao|shiwang|toutu|fendou|haoqi|haode|haixiu|xiaochou|xiaotou|ganga|yingyuan|kaixin|yinqibushi|weixiao|sikao|exin|jingxia|jingya|gandong|fennu|wokanhaoni|shoujixiangji|damie|dapai|tuosai|fue|koubi|taiyanjing|wuzuixiao|wulian|cahan|doujiyan|zhihuideyanshen|yuebing|youmeiyougaocuo|leiben|shensi|huaji|huajiheshui|huajinaicha|huajiningmeng|huajikuanghan|huajibeizi|fannao|xiongmao|xiongmaochangge|xiongmaoxihuan|xiongmaoshiwang|niunianjinbao|goutou|goutouweibo|goutoushiwang|goutoupangci|goutouhua|goutoucao|zhutou|shengbing|dianhua|yiwen|tengtong|kanchuanyiqie|xuanyun|shuijiao|jinyan|xiaoku|jiujie|lvmao|shuaku|huzi|caigou|caigouhua|beida|liekai|songfu|songhua|yinxian|nanyizhixin|guilian|heixian|guzhang)\)/is',
-        function ($match) use ($type) {
+    static $map = null;
+    if ($map === null) {
+        $map = array();
+        foreach (getEmojiPacks() as $pack) {
+            if ($pack['mode'] !== 'emoji') {
+                continue;
+            }
+            foreach ($pack['items'] as $item) {
+                $key = strtolower($item['key']);
+                if (!isset($map[$key])) {
+                    $map[$key] = $pack['path'] . $item['file'];
+                }
+            }
+        }
+    }
+    if (!$map) {
+        return $text;
+    }
+
+    return preg_replace_callback(
+        '/\:\(owo=([a-zA-Z0-9_\-]+)\)/i',
+        function ($match) use ($type, $map) {
+            $key = strtolower($match[1]);
+            if (!isset($map[$key])) {
+                return $match[0];
+            }
+            $url = htmlspecialchars($map[$key], ENT_QUOTES, 'UTF-8');
+            $alt = htmlspecialchars($key, ENT_QUOTES, 'UTF-8');
             if ($type) {
                 return '<img class="emoji-image lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-  data-original="' . getAssets('assets/emoji/Heo/', false) . $match[1] . '.webp" alt="' . $match[1] . '" no-view />';
-            } else {
-                return '<img class="emoji-image" src="' . getAssets('assets/emoji/Heo/', false) . $match[1] . '.webp"
-  alt="' . $match[1] . '" style="width:20px;height:auto;" no-view />';
+  data-original="' . $url . '" alt="' . $alt . '" no-view />';
             }
+            return '<img class="emoji-image" src="' . $url . '"
+  alt="' . $alt . '" style="width:20px;height:auto;" no-view />';
         },
         $text
     );
-
-    return $text;
 }
 
 /**
@@ -637,6 +849,35 @@ function getCustomMenu($currentUrl = '')
  *                       当 $imgnum > 0 时返回包含图片URL的数组。
  *                       若无图片则返回空字符串或空数组。
  */
+function getPostCoverImage($archive)
+{
+  if (! $archive->is('post')) {
+    return '';
+  }
+  $raw = trim((string) $archive->fields->thumb);
+  if ($raw === '') {
+    return '';
+  }
+  $lines = preg_split('/\r\n|\r|\n/', $raw);
+  return trim((string) ($lines[0] ?? ''));
+}
+
+/**
+ * 文章页是否启用封面（hero）布局
+ *
+ * 条件：文章有封面图，且主题选项“文章页面封面图”未关闭
+ *
+ * @param \Widget\Archive $archive
+ * @return bool
+ */
+function usePostCover($archive)
+{
+  if (getPostCoverImage($archive) === '') {
+    return false;
+  }
+  return (string) Helper::options()->postCover !== '0';
+}
+
 function getImgLink($archive, $imgnum = 0, $israndom = true)
 {
     // 1. 获取自定义图片列表（优先使用）
@@ -661,8 +902,34 @@ function getImgLink($archive, $imgnum = 0, $israndom = true)
     $remainingNeeded = $imgnum - count($customImageUrls);
     if ($remainingNeeded >= 0 && (count($customImageUrls) == 0 || count($customImageUrls) != $imgnum)) {
         // 准备文章内容
-        $content = $archive->content ?? '';
-        $content = $archive->is('post') ? $content : parseContens($archive->content);
+        $content = (string) ($archive->content ?? '');
+
+        if (! $archive->is('post')) {
+            // 列表卡片场景：先用正则直接取首图，命中就跳过 parseContens() + DOMDocument
+            // （首页 10 张卡片原先是 10 次 Markdown 渲染 + 10 次 DOM 解析）
+            if ($imgnum <= 1 && preg_match('/<img[^>]*\bdata-original=["\']([^"\']+)["\']/i', $content, $m) === 1) {
+                $firstImage = trim($m[1]);
+                if ($firstImage !== '') {
+                    return $firstImage;
+                }
+            }
+
+            if ($imgnum <= 1 && preg_match('/<img[^>]*\bsrc=["\']([^"\']+)["\']/i', $content, $m) === 1) {
+                $firstImage = trim($m[1]);
+                if ($firstImage !== '') {
+                    return $firstImage;
+                }
+            }
+
+            if ($imgnum <= 1 && preg_match('/!\[[^\]]*\]\(\s*([^)\s]+)/i', $content, $m) === 1) {
+                $firstImage = trim($m[1]);
+                if ($firstImage !== '') {
+                    return $firstImage;
+                }
+            }
+
+            $content = parseContens($archive->content);
+        }
 
         // 从内容中提取图片或者随机缩略图图片
         $contentImages = extractImageLinks($content, $remainingNeeded, $israndom);
@@ -674,6 +941,72 @@ function getImgLink($archive, $imgnum = 0, $israndom = true)
     // 返回图片数组,0则为字符串
     return $imgnum > 1 ? $customImageUrls : $customImageUrls[0];
 }
+
+/**
+ * 判断当前页面是否需要加载 svg-icon.min.js（约 86KB）
+ *
+ * 只有「关于我」页面模板与含 [cloud] 网盘短代码的文章会输出 data-svg。
+ * header.php 用它决定是否加载脚本，footer.php 用它在未加载时补一个 showSvg 空实现。
+ *
+ * @param  object $archive
+ * @return bool
+ */
+function needsSvgIcon($archive)
+{
+    static $need = null;
+
+    if ($need !== null) {
+        return $need;
+    }
+
+    if ($archive->is('page') && ($archive->template ?? '') === 'aboutme.php') {
+        return $need = true;
+    }
+
+    if ($archive->is('post') || $archive->is('page')) {
+        return $need = (bool) preg_match('/\[cloud(?=[\s\]])/', (string) $archive->content);
+    }
+
+    return $need = false;
+}
+
+/**
+ * 由数据库行直接拼出文章/页面永久链接
+ * 用于替代「先查 cid 再 Helper::widgetById() 取 permalink」的 N+1 写法
+ * @param  array|object $row 至少包含 cid、type、slug、created
+ * @return string
+ */
+function getPermalinkFromRow($row)
+{
+    $row = (array) $row;
+
+    if (empty($row['cid'])) {
+        return '';
+    }
+
+    $type = $row['type'] ?? 'post';
+    $created = (int) ($row['created'] ?? 0);
+
+    // 日期型固定链接需要 year/month/day 占位参数
+    if ($created > 0) {
+        $row['year'] = date('Y', $created);
+        $row['month'] = date('m', $created);
+        $row['day'] = date('d', $created);
+    }
+
+    try {
+        $path = Typecho_Router::url($type, $row);
+    } catch (Exception $e) {
+        return '';
+    }
+
+    if (empty($path) || $path === '#') {
+        return '';
+    }
+
+    return Typecho_Common::url($path, Helper::options()->index);
+}
+
 /**
  * 判断评论敏感词是否在字符串内
  * @param string $words_str 敏感词字符串，多个敏感词用|分隔

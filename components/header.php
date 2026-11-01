@@ -23,9 +23,10 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
   <?php endif; ?>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
   <?php if ($this->is('single')): ?>
-    <meta name="keywords" content="<?php echo $this->fields->keywords ?: htmlspecialchars($this->_keywords ?? ''); ?>" />
+    <meta name="keywords"
+      content="<?php echo htmlspecialchars($this->fields->keywords ?: (string) ($this->_keywords ?? ''), ENT_QUOTES, 'UTF-8'); ?>" />
     <meta name="description"
-      content="<?php echo $this->fields->description ?: htmlspecialchars($this->_description ?? ''); ?>" />
+      content="<?php echo htmlspecialchars($this->fields->description ?: (string) ($this->_description ?? ''), ENT_QUOTES, 'UTF-8'); ?>" />
     <?php $this->header('keywords=&description='); ?>
   <?php else: ?>
     <?php $this->header(); ?>
@@ -58,7 +59,11 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
   <!-- iconfont -->
   <link rel="stylesheet" href="<?php getAssets('assets/lib/iconfont/iconfont.min.css?v=' . getVersion()); ?>"
     type="text/css" media="all">
-  <link rel="stylesheet" href="<?php $this->options->iconfont() ?>" type="text/css" media="all">
+  <?php $iconfontUrl = trim((string) $this->options->iconfont); ?>
+  <?php if ($iconfontUrl): ?>
+    <link rel="stylesheet" href="<?php echo htmlspecialchars($iconfontUrl, ENT_QUOTES, 'UTF-8'); ?>" type="text/css"
+      media="all">
+  <?php endif; ?>
   <!-- 自定义css -->
   <link rel="stylesheet" href="<?php getAssets('assets/css/style.min.css?v=' . getVersion()); ?>" type="text/css"
     media="all">
@@ -74,7 +79,13 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
   <!-- jQuery -->
   <script type="text/javascript" src="<?php getAssets('assets/lib/jquery/jquery.min.js'); ?>"></script>
   <script type="text/javascript" src="<?php getAssets('assets/lib/jquery/jquery.lazyload.min.js'); ?>"></script>
-  <script type="text/javascript" src="<?php getAssets('assets/js/svg-icon.min.js?v=' . getVersion()); ?>"></script>
+  <?php
+  // svg-icon 体积 86KB，仅「关于我」模板（7 处 data-svg）与含 [cloud] 网盘短代码的文章需要
+  $needSvgIcon = needsSvgIcon($this);
+  ?>
+  <?php if ($needSvgIcon): ?>
+    <script type="text/javascript" src="<?php getAssets('assets/js/svg-icon.min.js?v=' . getVersion()); ?>"></script>
+  <?php endif; ?>
   <!-- 轮播图js+css -->
   <?php if (! empty($this->options->indexBlock) && in_array('ShowSwiper', $this->options->indexBlock) && $this->is('index')): ?>
     <link rel="stylesheet" href="<?php getAssets('assets/lib/swiper3/swiper-3.4.2.min.css'); ?>" type="text/css"

@@ -57,7 +57,8 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
     <div class="text-center my-4">
       <h2>404 - <?php _e('页面没找到'); ?></h2>
       <p><?php _e('你想查看的页面已被转移或删除了'); ?></p>
-      <a class="error-btn d-inline-block my-4 py-2 px-3" href="/" role="button" target="_self"><?php _e('回到首页'); ?></a>
+      <a class="error-btn d-inline-block my-4 py-2 px-3" href="<?php echo getSitePath(''); ?>" role="button"
+        target="_self"><?php _e('回到首页'); ?></a>
     </div>
   </div>
 </main>

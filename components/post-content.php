@@ -11,90 +11,104 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
   exit;
 }
 ?>
+<?php $usePostCover = usePostCover($this); ?>
+<?php if ($usePostCover): ?>
+<?php $this->need('components/post-cover.php'); ?>
+<?php endif; ?>
 <!-- 文章st -->
-<div id="post" class="post card mt-2">
+<div id="post" class="post card">
   <div class="card-body">
+    <?php if (! $usePostCover): ?>
     <!-- 文章信息 -->
     <div class="post-header mb-4">
       <h1 class="h4 post-title font-weight-bold mb-4"><?php $this->title() ?></h1>
       <?php if (! $this->is('page')): ?>
-        <div class="meta d-flex align-items-center text-muted">
-          <div class="author-left">
-            <name class="d-inline-block mr-md-2"><i class="iconfont icon-zuozhe mr-1"></i><a
-                href="<?php $this->author->permalink(); ?>" title="由<?php $this->author(); ?>发布"
-                rel="author"><?php $this->author(); ?></a></name>
-            <time datetime="<?php $this->date('c'); ?>" class="d-inline-block"><i
-                class="iconfont icon-shijian mr-1"></i><?php $this->date(); ?></time>
-          </div>
-          <div class="author-right ml-auto text-sm">
-            <a title="浏览量" role="button"><i class="iconfont icon-liulanjilu mr-1"></i><?php PostViewCount($this); ?></a>
-            <a class="mx-1" href="<?php $this->permalink() ?>#comments" title="评论" role="button"><i
-                class="iconfont icon-pinglun1 mr-1"></i><?php $this->commentsNum('0', '1', '%d'); ?></a>
-          </div>
+      <div class="meta d-flex align-items-center text-muted">
+        <div class="author-left">
+          <name class="d-inline-block mr-md-2"><i class="iconfont icon-zuozhe mr-1"></i><a
+              href="<?php $this->author->permalink(); ?>" title="由<?php $this->author(); ?>发布"
+              rel="author"><?php $this->author(); ?></a></name>
+          <time datetime="<?php $this->date('c'); ?>" class="d-inline-block" title="发布时间"><i
+              class="iconfont icon-shijian mr-1"></i><?php $this->date(); ?></time>
         </div>
+        <div class="author-right ml-auto text-sm">
+          <a title="浏览量" role="button"><i class="iconfont icon-liulanjilu mr-1"></i><?php PostViewCount($this); ?></a>
+          <a class="mx-1" href="<?php $this->permalink() ?>#comments" title="评论" role="button"><i
+              class="iconfont icon-pinglun1 mr-1"></i><?php $this->commentsNum('0', '1', '%d'); ?></a>
+        </div>
+      </div>
       <?php endif; ?>
       <div class="border-theme bg-primary"></div>
     </div>
+    <?php endif; ?>
     <!-- 文章内容 -->
     <div class="post-content markdown-body" itemprop="articleBody" view-image>
       <?php $this->content(); ?>
     </div>
     <?php if (! $this->is('page')): ?>
-      <div class="post-end d-flex align-items-center justify-content-center my-4">THE END</div>
-      <!-- 文章标签+分类 -->
-      <div class="category-and-tags d-flex flex-wrap align-items-center">
-        <div class="post-category d-flex flex-wrap align-items-center mt-2">
-          <span class="ct-title">分类：</span><?php $this->category('', true, ''); ?>
-        </div>
-        <div class="post-tags d-flex flex-wrap align-items-center mt-2">
-          <?php if (count($this->tags) != 0): ?>
-            <span class="ct-title">标签：</span><?php $this->tags('', true, ''); ?>
-          <?php endif; ?>
-        </div>
+    <div class="post-end d-flex align-items-center justify-content-center my-4">THE END</div>
+    <!-- 文章标签+分类 -->
+    <div class="category-and-tags d-flex flex-wrap align-items-center">
+      <div class="post-category d-flex flex-wrap align-items-center mt-2">
+        <span class="ct-title">分类：</span><?php $this->category('', true, ''); ?>
       </div>
-      <!-- 分享+赞助 -->
-      <div class="post-tools d-flex justify-content-center mt-4">
-        <div class="post-tools-item d-flex flex-column align-items-center">
-          <button class="btn" id="poster-btn" title="文章海报"><i class="iconfont icon-haibao"></i></button>
-          <span class="post-tools-title">海报</span>
-        </div>
-        <div class="post-tools-item d-flex flex-column align-items-center">
-          <button class="btn" id="reward-btn" title="赞赏作者"><i class="iconfont icon-zanshangma"></i></button>
-          <span class="post-tools-title">赞赏</span>
-        </div>
-        <div class="post-tools-item d-flex flex-column align-items-center">
-          <button class="btn" id="share-btn" title="分享文章"><i class="iconfont icon-fenxiang1"></i></button>
-          <span class="post-tools-title">分享</span>
-        </div>
+      <div class="post-tags d-flex flex-wrap align-items-center mt-2">
+        <?php if (count($this->tags) != 0): ?>
+        <span class="ct-title">标签：</span><?php $this->tags('', true, ''); ?>
+        <?php endif; ?>
       </div>
-      <!-- 版权声明 -->
-      <div class="post-copyright mt-4 p-3">
-        <div class="copyright-content">
-          <div class="copyright-title">&#169版权申明</div>
-          <p class="copyright-desc"><span class="ml-3"></span>- 本文由作者 <a href="<?php $this->author->permalink(); ?>"
-              title="<?php $this->author(); ?>">@<?php $this->author(); ?></a>
-            原创发布在<?php $this->options->title(); ?>站点。未经许可，禁止转载。</p>
-        </div>
-        <div class="copyright-svgname animated-signature svg-name">
-          <?php $this->options->svgName(); ?>
-        </div>
+    </div>
+    <!-- 分享+赞助 -->
+    <div class="post-tools d-flex justify-content-center mt-4">
+      <div class="post-tools-item d-flex flex-column align-items-center">
+        <button class="btn d-flex flex-column align-items-center justify-content-center" id="poster-btn" title="文章海报"><i
+            class="iconfont icon-haibao"></i></button>
+        <span class="post-tools-title">海报</span>
       </div>
+      <div class="post-tools-item d-flex flex-column align-items-center">
+        <button class="btn d-flex flex-column align-items-center justify-content-center" id="reward-btn" title="赞赏作者"><i
+            class="iconfont icon-zanshangma"></i></button>
+        <span class="post-tools-title">赞赏</span>
+      </div>
+      <div class="post-tools-item d-flex flex-column align-items-center">
+        <button class="btn d-flex flex-column align-items-center justify-content-center" id="share-btn" title="分享文章"><i
+            class="iconfont icon-fenxiang1"></i></button>
+        <span class="post-tools-title">分享</span>
+      </div>
+    </div>
+    <!-- 版权声明 -->
+    <div class="post-copyright mt-4 p-3">
+      <div class="copyright-content">
+        <div class="copyright-title">&#169版权申明</div>
+        <p class="copyright-desc"><span class="ml-3"></span>- 本文由作者 <a href="<?php $this->author->permalink(); ?>"
+            title="<?php $this->author(); ?>">@<?php $this->author(); ?></a>
+          原创发布在<?php $this->options->title(); ?>站点。未经许可，禁止转载。</p>
+      </div>
+      <div class="copyright-svgname animated-signature svg-name">
+        <?php $this->options->svgName(); ?>
+      </div>
+    </div>
     <?php endif; ?>
   </div>
 </div>
 <!-- 文章en -->
-<!-- 下一篇、上一篇 -->
+<!-- 上一篇、下一篇 -->
 <?php if (! $this->is('page')): ?>
-  <div class="post-next-prev d-flex justify-content-between my-4">
-    <div class="post-next card p-2 p-md-3 text-left">
-      <div class="next-prev-title text-webkit-mask font-weight-bold">上一篇</div>
-      <?php thePrev($this, "新故事即将开始", $this->fields->articleType == 'image' ? true : false); ?>
-    </div>
-    <div class="post-prev card p-2 p-md-3 text-right">
-      <div class="next-prev-title text-webkit-mask font-weight-bold">下一篇</div>
-      <?php theNext($this, "已是最后一篇", $this->fields->articleType == 'image' ? true : false); ?>
+<nav class="post-flow my-4" aria-label="文章导航">
+  <div class="post-flow-side post-flow-prev">
+    <span class="pf-dir"><span class="pf-chevron" aria-hidden="true"></span>上一篇</span>
+    <div class="pf-body">
+      <?php thePrev($this, '<span class="pf-empty">新故事即将开始</span>', $this->fields->articleType == 'image' ? true : false); ?>
     </div>
   </div>
+  <div class="post-flow-hub" aria-hidden="true"></div>
+  <div class="post-flow-side post-flow-next">
+    <span class="pf-dir">下一篇<span class="pf-chevron" aria-hidden="true"></span></span>
+    <div class="pf-body">
+      <?php theNext($this, '<span class="pf-empty">已是最后一篇</span>', $this->fields->articleType == 'image' ? true : false); ?>
+    </div>
+  </div>
+</nav>
 <?php endif; ?>
 <!--文章评论-->
 <?php $this->need('components/comments.php'); ?>

@@ -11,7 +11,7 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
   exit;
 }
 ?>
-<ul class="breadcrumb mb-0 p-0 pb-2">
+<ul class="breadcrumb mb-0 py-0 pb-2 px-1 px-md-2">
   <li>
     <a href="<?php $this->options->siteUrl(); ?>" class="link" title="首页">首页</a>
   </li>

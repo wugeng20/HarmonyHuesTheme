@@ -28,15 +28,15 @@ function print_url($loc, $lastmod = null, $changefreq = 'daily', $priority = '0.
     echo "\t</url>\n";
 }
 
-// 获取所有已发布的文章
-$articles = $db->fetchAll($db->select()->from('table.contents')
+// 获取所有已发布的文章（只取生成 sitemap 需要的列，避免把正文读进内存）
+$articles = $db->fetchAll($db->select('cid', 'title', 'slug', 'created', 'modified', 'type')->from('table.contents')
     ->where('table.contents.status = ?', 'publish')
     ->where('table.contents.created < ?', $options->gmtTime)
     ->where('table.contents.type = ?', 'post')
     ->order('table.contents.created', Typecho_Db::SORT_DESC));
 
 // 获取所有已发布的页面
-$pages = $db->fetchAll($db->select()->from('table.contents')
+$pages = $db->fetchAll($db->select('cid', 'title', 'slug', 'created', 'modified', 'type')->from('table.contents')
     ->where('table.contents.status = ?', 'publish')
     ->where('table.contents.created < ?', $options->gmtTime)
     ->where('table.contents.type = ?', 'page')
@@ -51,6 +51,17 @@ $categories = $db->fetchAll($db->select()->from('table.metas')
 $tags = $db->fetchAll($db->select()->from('table.metas')
     ->where('table.metas.type = ?', 'tag')
     ->order('table.metas.mid', Typecho_Db::SORT_DESC));
+
+// 分类/标签最近更新时间：一次分组查询替代循环里每个分类一次查询（N+1）
+$latestByMid = array();
+$latestRows = $db->fetchAll($db->select('table.relationships.mid AS mid', 'MAX(table.contents.modified) AS lastmod')
+    ->from('table.contents')
+    ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
+    ->where('table.contents.status = ?', 'publish')
+    ->group('table.relationships.mid'));
+foreach ($latestRows as $latestRow) {
+    $latestByMid[(int) $latestRow['mid']] = (int) $latestRow['lastmod'];
+}
 
 // 输出 XML 头部
 header('Content-Type: application/xml');
@@ -76,29 +87,20 @@ foreach ($pages as $page) {
 
 // 分类
 foreach ($categories as $category) {
-    $latestArticle = $db->fetchRow($db->select()->from('table.contents')
-        ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-        ->where('table.contents.status = ?', 'publish')
-        ->where('table.relationships.mid = ?', $category['mid'])
-        ->order('table.contents.created', Typecho_Db::SORT_DESC)
-        ->limit(1));
-    if ($latestArticle) {
-        $permalink = $options->siteUrl . 'category/' . rawurlencode($category['slug']);
-        print_url($permalink, date('Y-m-d', $latestArticle['modified']), 'daily', '0.5');
+    $mid = (int) $category['mid'];
+    if (isset($latestByMid[$mid])) {
+        // 用路由反解析，避免硬编码 category/ 前缀在自定义固定链接下失效
+        $permalink = Typecho_Common::url(Typecho_Router::url('category', $category), $options->index);
+        print_url($permalink, date('Y-m-d', $latestByMid[$mid]), 'daily', '0.5');
     }
 }
 
 // 标签
 foreach ($tags as $tag) {
-    $latestArticle = $db->fetchRow($db->select()->from('table.contents')
-        ->join('table.relationships', 'table.contents.cid = table.relationships.cid')
-        ->where('table.contents.status = ?', 'publish')
-        ->where('table.relationships.mid = ?', $tag['mid'])
-        ->order('table.contents.created', Typecho_Db::SORT_DESC)
-        ->limit(1));
-    if ($latestArticle) {
-        $permalink = $options->siteUrl . 'tag/' . rawurlencode($tag['slug']);
-        print_url($permalink, date('Y-m-d', $latestArticle['modified']), 'daily', '0.5');
+    $mid = (int) $tag['mid'];
+    if (isset($latestByMid[$mid])) {
+        $permalink = Typecho_Common::url(Typecho_Router::url('tag', $tag), $options->index);
+        print_url($permalink, date('Y-m-d', $latestByMid[$mid]), 'daily', '0.5');
     }
 }
 

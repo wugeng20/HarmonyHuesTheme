@@ -47,10 +47,10 @@ function ContentHint($content)
     );
 
     $replacements = array(
-        'success' => '<div class="hint-content hint-success p-2"><i class="iconfont icon-success"></i><div>%s</div></div>',
-        'info' => '<div class="hint-content hint-info p-2"><i class="iconfont icon-info"></i><div>%s</div></div>',
-        'warning' => '<div class="hint-content hint-warning p-2"><i class="iconfont icon-warning"></i><div>%s</div></div>',
-        'danger' => '<div class="hint-content hint-danger p-2"><i class="iconfont icon-danger"></i><div>%s</div></div>',
+        'success' => '<div class="hint-content hint-success p-2 d-flex"><i class="iconfont icon-success"></i><div>%s</div></div>',
+        'info' => '<div class="hint-content hint-info p-2 d-flex"><i class="iconfont icon-info"></i><div>%s</div></div>',
+        'warning' => '<div class="hint-content hint-warning p-2 d-flex"><i class="iconfont icon-warning"></i><div>%s</div></div>',
+        'danger' => '<div class="hint-content hint-danger p-2 d-flex"><i class="iconfont icon-danger"></i><div>%s</div></div>',
     );
 
     $callback = function ($matches) use ($replacements) {
@@ -239,21 +239,30 @@ function ContentCloud($content)
 /* 过滤pre代码标签 */
 function ContentCode($content)
 {
-    // 正则表达式匹配
+    // 匹配 <pre ...>...</pre>，保留原有属性
     $pattern = '#<pre([^>]*)>(.*?)</pre>#si';
 
-    // 替换的 HTML 结构
-    $replacement = '
-            <div class="pre-container mb-3">
-              <div class="py-1 px-2 d-flex justify-content-between align-items-center pre-header">
-                <div class="pre-icon"></div>
-                <button class="pre-copy">复制</button>
-              </div>
-              <pre$1>$2</pre>
-            </div>
-            ';
+    $content = preg_replace_callback($pattern, function ($matches) {
+        $attrs = $matches[1];
+        $inner = $matches[2];
 
-    $content = preg_replace($pattern, $replacement, $content);
+        // 从 <code class="language-xxx"> 里取语言名
+        $lang = '';
+        if (preg_match('/class="[^"]*language-([\w+#.\-]+)/i', $inner, $lm)) {
+            $lang = strtolower($lm[1]);
+        }
+        $langLabel = $lang !== ''
+            ? '<span class="pre-lang">' . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') . '</span>'
+            : '';
+
+        return '<div class="pre-container mb-3">'
+            . '<div class="py-1 px-2 d-flex justify-content-between align-items-center pre-header">'
+            . '<div class="pre-head-left d-flex align-items-center"><div class="pre-icon"></div>' . $langLabel . '</div>'
+            . '<button class="pre-copy">复制</button>'
+            . '</div>'
+            . '<pre' . $attrs . '>' . $inner . '</pre>'
+            . '</div>';
+    }, $content);
 
     return $content;
 }

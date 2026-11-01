@@ -7,8 +7,8 @@
  * @link  https://biibii.cn
  * @update  2025-5-30 12:57:51
  */
-if ( ! defined('__TYPECHO_ROOT_DIR__')) {
-    exit;
+if (! defined('__TYPECHO_ROOT_DIR__')) {
+  exit;
 }
 ?>
 <div class="main-search">
@@ -27,12 +27,12 @@ if ( ! defined('__TYPECHO_ROOT_DIR__')) {
         <div class="post-tags d-flex flex-wrap mt-4">
           <?php $this->widget('Widget_Metas_Tag_Cloud', 'ignoreZeroCount=1&limit=15')->to($tags); ?>
           <?php if ($tags->have()): ?>
-          <?php while ($tags->next()): ?>
-          <a href="<?php $tags->permalink(); ?>" rel="tag" title="<?php $tags->count(); ?> 个话题"><?php $tags->name(); ?>
-            (<?php $tags->count(); ?>)</a>
-          <?php endwhile; ?>
+            <?php while ($tags->next()): ?>
+              <a href="<?php $tags->permalink(); ?>" rel="tag" title="<?php $tags->count(); ?> 个话题"><?php $tags->name(); ?>
+                (<?php $tags->count(); ?>)</a>
+            <?php endwhile; ?>
           <?php else: ?>
-          <div><?php _e('没有任何标签'); ?></div>
+            <div><?php _e('没有任何标签'); ?></div>
           <?php endif; ?>
         </div>
       </div>

@@ -89,12 +89,12 @@ if (! defined('__TYPECHO_ROOT_DIR__')) {
     <div class="card w-auto m-1 m-md-2 swiper-widget">
         <div class="swiper-container <?php echo $this->options->indexLayout ? 'no-sidebar' : ''; ?>">
             <div class="swiper-wrapper"><?php slidesHtml($swiperText) ?></div>
-            <div class="swiper-pagination d-flex align-items-center mx-1"></div>
-            <div class="d-flex justify-content-center align-items-center m-2 swiper-button-wrapper">
-                <div class="swiper-button-prev d-flex justify-content-center align-items-center" title="上一张"><i
-                        class="iconfont icon-shangyizhang p-1"></i></div>
-                <div class="swiper-button-next d-flex justify-content-center align-items-center" title="下一张"><i
-                        class="iconfont icon-xiayizhang p-1"></i></div>
+            <div class="swiper-pagination d-flex"></div>
+            <div class="swiper-button-wrapper d-flex">
+                <div class="swiper-button-prev d-flex" title="上一张" aria-label="上一张" role="button"><i
+                        class="iconfont icon-shangyiye"></i></div>
+                <div class="swiper-button-next d-flex" title="下一张" aria-label="下一张" role="button"><i
+                        class="iconfont icon-xiayiye"></i></div>
             </div>
         </div>
     </div>

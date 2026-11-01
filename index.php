@@ -4,7 +4,7 @@
  * <ul><li>php 支持：  7.2 ~ 8.x （说明：php 8.x 需要使用 typecho 1.2+ 版本）</li><li>作者博客：<a href="https://www.biibii.cn/" target="_blank">BIIBII.CN</a></li><li>关于主题：<a href="https://www.biibii.cn/harmonyhues.html" target="_blank">HarmonyHues主题</a></li><li>Github：<a href="https://github.com/wugeng20/HarmonyHuesTheme" target="_blank">https://github.com/wugeng20/HarmonyHuesTheme</a></li></ul>
  * @package Harmony Hues主题 - 源于自然界中的和谐之美，简洁的轻量化新Typecho主题。
  * @author 星语社长
- * @version 1.1.12
+ * @version 2.0.0
  * @link https://biibii.cn
  */
 
@@ -16,13 +16,14 @@ $this->need('components/header.php');
 
 ?>
 <main>
-  <div class="container p-2">
+  <div class="container py-2 px-0">
     <div class="row no-gutters">
       <?php $this->need('components/layout.php'); ?>
     </div>
     <div class="index-footer-widget mt-3 px-1">
       <?php $this->need('components/widgets/widget-hello.php'); ?>
       <?php $this->need('components/widgets/widget-timejourney.php'); ?>
+      <?php $this->need('components/widgets/widget-links.php'); ?>
     </div>
   </div>
 </main>

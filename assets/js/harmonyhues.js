@@ -83,18 +83,54 @@ $(document).ready(function () {
     document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
   }
 
+  // 以点击位置为圆心扩散切换主题（View Transitions，渐进增强）
+  function switchTheme(theme, originEl) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!document.startViewTransition || reduceMotion) {
+      setTheme(theme);
+      return;
+    }
+
+    // 扩散半径 = 点击位置到视口最远角的距离
+    const rect = originEl.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+
+    const transition = document.startViewTransition(function () {
+      setTheme(theme);
+    });
+
+    transition.ready.then(function () {
+      document.documentElement.animate(
+        {
+          clipPath: [
+            'circle(0 at ' + x + 'px ' + y + 'px)',
+            'circle(' + radius + 'px at ' + x + 'px ' + y + 'px)'
+          ]
+        },
+        {
+          duration: 560,
+          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          pseudoElement: '::view-transition-new(root)'
+        }
+      );
+    }).catch(function () { });
+  }
+
   // 按钮点击事件
   $('.theme-toggle').on('click', 'button', function () {
     const theme = $(this).attr('title');
     switch (theme) {
       case '浅色模式':
-        setTheme(THEMES.LIGHT);
+        switchTheme(THEMES.LIGHT, this);
         break;
       case '深色模式':
-        setTheme(THEMES.DARK);
+        switchTheme(THEMES.DARK, this);
         break;
       case '跟随系统':
-        setTheme(THEMES.SYSTEM);
+        switchTheme(THEMES.SYSTEM, this);
         break;
     }
     setActiveButton($(this));
@@ -159,40 +195,60 @@ $(document).ready(function () {
     }
   }
   // 滚动Nav背景
-  let $isNav = false;
-  if ($('#navbar').hasClass('nav-ui-one')) {
-    $isNav = true;
-  }
-  toggleNavOnScroll = (navSelector, classOne, classTwo, scrollThreshold = 100) => {
-    if ($isNav) { return; }
+  /*--------------------- 导航栏滚动状态（统一控制器）---------------------*/
+  // 一个 rAF 里同时处理：阅读进度线、紧凑态、方向感知的隐藏/现身
+  let hhNavLastY = window.scrollY || window.pageYOffset || 0;
+  let hhNavTicking = false;
 
-    const $nav = $(navSelector);
-    const currentScrollTop = $(this).scrollTop();
+  function hhNavUpdate() {
+    hhNavTicking = false;
+    const nav = document.getElementById('navbar');
+    if (!nav) return;
 
-    if (currentScrollTop > scrollThreshold) {
-      // 向下滚动超过阈值，切换到 classOne
-      if ($nav.hasClass(classTwo)) {
-        $nav.removeClass(classTwo).addClass(classOne);
-      }
-    } else {
-      // 回到顶部，切换到 classTwo
-      if ($nav.hasClass(classOne)) {
-        $nav.removeClass(classOne).addClass(classTwo);
-      }
+    const y = window.scrollY || window.pageYOffset || 0;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const percent = max > 0 ? Math.min(100, Math.max(0, (y / max) * 100)) : 0;
+
+    // 1. 导航底边的阅读进度线
+    nav.style.setProperty('--hh-nav-progress', percent.toFixed(2) + '%');
+
+    // 2. 超过 100px 进入紧凑态（logo 与菜单间隙收一点）
+    nav.classList.toggle('is-compact', y > 100);
+
+    // 3. 弹层打开或焦点在导航内时保持可见，避免操作途中导航消失
+    const busy = document.querySelector('#nav-components.open, .main-search.open, .pop-tool-overlay-bg.open') ||
+      nav.contains(document.activeElement);
+
+    if (y < 120 || busy) {
+      nav.classList.remove('nav-hidden');
+    } else if (y > hhNavLastY + 6) {
+      nav.classList.add('nav-hidden');      // 向下滚动：收起
+    } else if (y < hhNavLastY - 6) {
+      nav.classList.remove('nav-hidden');   // 向上回滚：立即现身
     }
+
+    // 导航收起时，把右侧粘性栏顶上来补位
+    const sticky = document.querySelector('.sidebar-sticky');
+    if (sticky) {
+      sticky.classList.toggle('visible-top', nav.classList.contains('nav-hidden'));
+    }
+
+    hhNavLastY = y;
   }
 
-  // 页面加载时更新进度
-  updateScrollProgress();
-  toggleNavOnScroll('#navbar', 'nav-ui-one', 'nav-ui-two', 100);
-  /*---------------------滚动事件end---------------------*/
+  function hhNavRequest() {
+    if (hhNavTicking) return;
+    hhNavTicking = true;
+    requestAnimationFrame(hhNavUpdate);
+  }
 
-  /*---------------------滚动进事件集合st---------------------*/
-  $(window).scroll(throttle(function () {
-    updateScrollProgress();
-    toggleNavOnScroll('#navbar', 'nav-ui-one', 'nav-ui-two', 50);
-  }, 100));
-  /*---------------------滚动进事件集合end---------------------*/
+  window.addEventListener('scroll', hhNavRequest, { passive: true });
+  window.addEventListener('resize', hhNavRequest);
+  hhNavUpdate();
+  // 进度数字（回到顶部按钮）沿用原来的节流
+  $(window).scroll(throttle(updateScrollProgress, 120));
+  /*--------------------- 导航栏滚动状态 end ---------------------*/
+
 
   /*---------------------手机端导航栏st---------------------*/
   let startY = 0;
@@ -638,53 +694,66 @@ $(document).ready(function () {
   });
   /*---------------------懒加载结束---------------------*/
   /*---------------------顶部导航栏滚动隐藏与显示开始---------------------*/
-  let lastScrollTop = 0;
-  const navbar = $("#navbar");
-  const sidebarSticky = $(".sidebar-sticky");
-  const scrollThreshold = 100; // 滚动阈值设为100px
-
-  $(window).scroll(function () {
-    const currentScroll = $(this).scrollTop();
-
-    // 当滚动距离小于阈值时强制显示导航栏
-    if (currentScroll < scrollThreshold) {
-      navbar.removeClass("nav-hidden").addClass("nav-visible");
-      lastScrollTop = currentScroll;
-      return;
-    }
-
-    // 滚动方向判断
-    if (Math.abs(currentScroll - lastScrollTop) > 5) { // 增加5px容差防止误判
-      if (currentScroll > lastScrollTop) {
-        // 向下滚动超过阈值时隐藏
-        navbar.removeClass("nav-visible").addClass("nav-hidden");
-        sidebarSticky.addClass("visible-top");
-      } else {
-        // 向上滚动时立即显示
-        navbar.removeClass("nav-hidden").addClass("nav-visible");
-        sidebarSticky.removeClass("visible-top");
-      }
-    }
-    lastScrollTop = currentScroll;
-  });
-  /*---------------------顶部导航栏滚动隐藏与显示结束---------------------*/
+  /*--------------------- 导航显示/隐藏已并入上方统一控制器 ---------------------*/
   /*---------------------一些插件集合str---------------------*/
-  // 动画延迟函数
-  function applyAnimationDelay(selector, delayFactor) {
+  // 动画延迟函数（封顶，避免元素越多等待越久）
+  function applyAnimationDelay(selector, delayFactor, maxDelay = 0.32) {
     $(selector).each(function (index) {
-      var delay = (index * delayFactor) + 's';
+      var delay = Math.min(index * delayFactor, maxDelay) + 's';
       $(this).css('animation-delay', delay);
     });
   }
 
   // 导航栏菜单动画
-  applyAnimationDelay('.nav-menu>.nav-item', 0.15);
+  applyAnimationDelay('.nav-menu>.nav-item', 0.06);
 
   // 侧边栏添加动画，但不包括具有 .no-animation 类的元素
-  applyAnimationDelay('.hh-widget:not(.no-animation)', 0.3);
+  applyAnimationDelay('.hh-widget:not(.no-animation)', 0.08);
 
   // 选择所有.card元素，但不包括具有 .no-animation 类的元素
-  applyAnimationDelay('.card:not(.no-animation)', 0.3);
+  applyAnimationDelay('.card:not(.no-animation)', 0.08);
+
+  // 上一篇 / 下一篇：与卡片同款的加载上浮动画
+  applyAnimationDelay('.post-flow:not(.no-animation)', 0.08);
+
+  // 文章列表逐张入场：卡片滚动进入视口时淡入上浮（IntersectionObserver 驱动）
+  function initListReveal() {
+    var lists = document.querySelectorAll('.post-list');
+    if (!lists.length || typeof IntersectionObserver === 'undefined') return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    Array.prototype.forEach.call(lists, function (list) {
+      var items = Array.prototype.filter.call(list.children, function (el) {
+        return el.nodeType === 1 && !el.classList.contains('no-animation');
+      });
+      if (!items.length) return;
+
+      list.classList.add('hh-reveal-ready');
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          // 同一行的卡片错峰 60ms，最多 240ms，长列表不会无限等待
+          var index = parseInt(el.getAttribute('data-hh-index'), 10) || 0;
+          var delay = Math.min(index * 60, 240);
+          el.style.transitionDelay = delay + 'ms';
+          el.classList.add('is-revealed');
+          // 入场结束后清掉延迟，避免悬停等交互被错峰延迟拖慢
+          setTimeout(function () {
+            el.style.transitionDelay = '';
+          }, delay + 700);
+          io.unobserve(el);
+        });
+      }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+
+      items.forEach(function (el, i) {
+        el.setAttribute('data-hh-index', String(i % 6));
+        io.observe(el);
+      });
+    });
+  }
+  initListReveal();
 
   // 轮播图
   if (typeof Swiper !== 'undefined') {
@@ -718,11 +787,13 @@ $(document).ready(function () {
 
   // 灯箱
   if (typeof ViewImage !== 'undefined') {
-    window.ViewImage && ViewImage.init('.post-content img[show-img],.comment-list img');
+    window.ViewImage && ViewImage.init('.post-content img[show-img],.comment-list img,.post-cover img');
   }
 
-  // SVG图标
-  showSvg();
+  // SVG图标（svg-icon.min.js 仅在需要 data-svg 的页面加载，未加载时 footer 会补空实现）
+  if (typeof showSvg === 'function') {
+    showSvg();
+  }
 
   // 首页底部时间之旅
   if ($('.timejourney-progress').length > 0) {
@@ -746,4 +817,79 @@ $(document).ready(function () {
     });
   }
   /*---------------------一些插件集合end---------------------*/
+});
+
+/* Markdown 增强：表格横向滚动容器 */
+jQuery(function ($) {
+  var $body = $('.markdown-body');
+  if (!$body.length) {
+    return;
+  }
+
+  $body.find('table').each(function () {
+    var $table = $(this);
+    if ($table.parent().hasClass('md-table-wrap')) {
+      return;
+    }
+    $table.wrap('<div class="md-table-wrap"></div>');
+  });
+});
+
+/* 首页底部「友情链接」：跑马灯 + 换一批 */
+jQuery(function ($) {
+  var $widget = $('[data-links-widget]');
+  if (!$widget.length) {
+    return;
+  }
+
+  var $track = $widget.find('.links-widget-track');
+  var $groups = $widget.find('[data-links-group]');
+  var $button = $widget.find('[data-links-shuffle]');
+
+  if (!$track.length || $groups.length < 2) {
+    return;
+  }
+
+  // 第二组始终是第一组的克隆，保证 -50% 位移无缝衔接
+  var cloneGroup = function () {
+    var $clone = $groups.eq(0).clone(true);
+    $clone.attr('aria-hidden', 'true');
+    $clone.find('a').attr('tabindex', '-1');
+    $groups.eq(1).replaceWith($clone);
+    $groups = $widget.find('[data-links-group]');
+  };
+
+  // 速度恒定：约 85px/s，卡片多时长自然变长
+  var setDuration = function () {
+    var width = $groups.eq(0)[0].getBoundingClientRect().width;
+    var seconds = Math.max(26, width / 85);
+    $track.get(0).style.setProperty('--lw-duration', seconds.toFixed(1) + 's');
+  };
+
+  cloneGroup();
+  setDuration();
+  $(window).on('resize', setDuration);
+
+  $button.on('click', function () {
+    var items = $groups.eq(0).children('.links-widget-card').get();
+    if (items.length < 2) {
+      return;
+    }
+
+    $widget.addClass('is-shuffling');
+
+    for (var i = items.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = items[i];
+      items[i] = items[j];
+      items[j] = tmp;
+    }
+
+    window.setTimeout(function () {
+      $groups.eq(0).empty().append(items);
+      cloneGroup();
+      setDuration();
+      $widget.removeClass('is-shuffling');
+    }, 180);
+  });
 });

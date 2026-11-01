@@ -21,7 +21,8 @@ function themeConfig($form)
     <link rel="stylesheet" href="<?php getAssets('assets/lib/bootstrap4/bootstrap.min.css') ?>" type="text/css" media="all">
     <link rel="stylesheet" href="<?php getAssets('assets/css/style.min.css') ?>" type="text/css" media="all">
     <link rel="stylesheet" href="<?php getAssets('assets/typecho/config/css/config.min.css') ?>">
-    <div class="harmonyhues-config card mt-2 mb-4 p-2">
+    <script src="<?php getAssets('assets/typecho/config/js/config.min.js') ?>" defer></script>
+    <div id="hhc-meta" data-version="<?php echo htmlspecialchars(getVersion(), ENT_QUOTES, 'UTF-8'); ?>" hidden></div>
     <?php
 
     //---------------------------- 基础设置 ----------------------------//
@@ -35,6 +36,7 @@ function themeConfig($form)
     );
     $form->addInput($favicon);
     $favicon->setAttribute('class', 'setting-content my-3');
+    $favicon->setAttribute('data-hhc', 'basic');
 
     // 网站logo
     $logoUrl = new Typecho_Widget_Helper_Form_Element_Text(
@@ -46,6 +48,7 @@ function themeConfig($form)
     );
     $form->addInput($logoUrl);
     $logoUrl->setAttribute('class', 'setting-content my-3');
+    $logoUrl->setAttribute('data-hhc', 'basic');
 
     // 网站logo-暗黑模式
     $logoUrlDark = new Typecho_Widget_Helper_Form_Element_Text(
@@ -57,6 +60,7 @@ function themeConfig($form)
     );
     $form->addInput($logoUrlDark);
     $logoUrlDark->setAttribute('class', 'setting-content my-3');
+    $logoUrlDark->setAttribute('data-hhc', 'basic');
 
     // 网站个人简介
     $blogmeabout = new Typecho_Widget_Helper_Form_Element_Text(
@@ -68,6 +72,19 @@ function themeConfig($form)
     );
     $form->addInput($blogmeabout);
     $blogmeabout->setAttribute('class', 'setting-content my-3');
+    $blogmeabout->setAttribute('data-hhc', 'basic');
+
+    // 博主主页/关于我 链接
+    $bloggerLink = new Typecho_Widget_Helper_Form_Element_Text(
+        'bloggerLink',
+        NULL,
+        NULL,
+        '博主主页/关于我链接（非必填）',
+        '介绍：侧边栏「博主信息」的头像与昵称会指向这个地址，可填相对路径（如 /about.html）或完整 URL；留空则不可点击。'
+    );
+    $form->addInput($bloggerLink);
+    $bloggerLink->setAttribute('class', 'setting-content my-3');
+    $bloggerLink->setAttribute('data-hhc', 'basic');
 
     // ---------------------------- 主题设置 ----------------------------//
     // 侧边栏博主信息社交
@@ -80,6 +97,7 @@ function themeConfig($form)
     );
     $form->addInput($socialInfo);
     $socialInfo->setAttribute('class', 'setting-content my-3');
+    $socialInfo->setAttribute('data-hhc', 'basic');
 
     // 微信赞赏二维码
     $wechatQrCode = new Typecho_Widget_Helper_Form_Element_Text(
@@ -91,6 +109,7 @@ function themeConfig($form)
     );
     $form->addInput($wechatQrCode);
     $wechatQrCode->setAttribute('class', 'setting-content my-3');
+    $wechatQrCode->setAttribute('data-hhc', 'basic');
 
     // 支付宝赞赏二维码
     $alipayQrCode = new Typecho_Widget_Helper_Form_Element_Text(
@@ -102,6 +121,7 @@ function themeConfig($form)
     );
     $form->addInput($alipayQrCode);
     $alipayQrCode->setAttribute('class', 'setting-content my-3');
+    $alipayQrCode->setAttribute('data-hhc', 'basic');
 
     // 导航栏样式
     $navStyle = new Typecho_Widget_Helper_Form_Element_Select(
@@ -116,6 +136,7 @@ function themeConfig($form)
     );
     $form->addInput($navStyle->multiMode());
     $navStyle->setAttribute('class', 'setting-content my-3');
+    $navStyle->setAttribute('data-hhc', 'look');
 
     // 首页布局
     $indexLayout = new Typecho_Widget_Helper_Form_Element_Select(
@@ -130,6 +151,7 @@ function themeConfig($form)
     );
     $form->addInput($indexLayout->multiMode());
     $indexLayout->setAttribute('class', 'setting-content my-3');
+    $indexLayout->setAttribute('data-hhc', 'look');
 
     // 自定义缩略图
     $customThumbnail = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -141,6 +163,7 @@ function themeConfig($form)
     );
     $form->addInput($customThumbnail);
     $customThumbnail->setAttribute('class', 'setting-content my-3');
+    $customThumbnail->setAttribute('data-hhc', 'look');
 
     // 自定义懒加载IMG
     $lazyload = new Typecho_Widget_Helper_Form_Element_Text(
@@ -152,6 +175,7 @@ function themeConfig($form)
     );
     $form->addInput($lazyload);
     $lazyload->setAttribute('class', 'setting-content my-3');
+    $lazyload->setAttribute('data-hhc', 'look');
 
     // SVG签名
     $svgName = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -163,6 +187,8 @@ function themeConfig($form)
     );
     $form->addInput($svgName);
     $svgName->setAttribute('class', 'setting-content my-3');
+    $svgName->setAttribute('data-hhc', 'look');
+    $svgName->setAttribute('data-hhc-mono', '1');
 
     // 自定义导航栏
     $navbarInfo = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -175,6 +201,7 @@ function themeConfig($form)
     );
     $form->addInput($navbarInfo);
     $navbarInfo->setAttribute('class', 'setting-content my-3');
+    $navbarInfo->setAttribute('data-hhc', 'nav');
 
     // 首页不显示分类文章
     $hideCategory = new Typecho_Widget_Helper_Form_Element_Text(
@@ -186,6 +213,22 @@ function themeConfig($form)
     );
     $form->addInput($hideCategory);
     $hideCategory->setAttribute('class', 'setting-content my-3');
+    $hideCategory->setAttribute('data-hhc', 'nav');
+
+    // 文章页面封面图
+    $postCover = new Typecho_Widget_Helper_Form_Element_Select(
+        'postCover',
+        array(
+            '1' => '显示文章封面',
+            '0' => '不显示文章封面',
+        ),
+        '1',
+        '文章页面封面图（非必填）',
+        '介绍：开启后，有封面（自定义字段 thumb）的文章会在顶部展示封面卡片，并把面包屑、标题、作者、时间、浏览、评论放进取景框内'
+    );
+    $form->addInput($postCover->multiMode());
+    $postCover->setAttribute('class', 'setting-content my-3');
+    $postCover->setAttribute('data-hhc', 'nav');
 
     // 是否开启goLink外链
     $isGoLink = new Typecho_Widget_Helper_Form_Element_Select(
@@ -200,6 +243,7 @@ function themeConfig($form)
     );
     $form->addInput($isGoLink->multiMode());
     $isGoLink->setAttribute('class', 'setting-content my-3');
+    $isGoLink->setAttribute('data-hhc', 'safe');
 
     // 头像源
     $Gravatars = new Typecho_Widget_Helper_Form_Element_Select(
@@ -220,6 +264,7 @@ function themeConfig($form)
         '介绍：不同的源响应速度不同，头像也不同'
     );
     $Gravatars->setAttribute('class', 'setting-content my-3');
+    $Gravatars->setAttribute('data-hhc', 'safe');
     $form->addInput($Gravatars->multiMode());
 
     // CSP策略
@@ -235,6 +280,7 @@ function themeConfig($form)
     );
     $form->addInput($isCSP->multiMode());
     $isCSP->setAttribute('class', 'setting-content my-3');
+    $isCSP->setAttribute('data-hhc', 'safe');
 
     // CSP内容
     $contentCSP = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -246,6 +292,8 @@ function themeConfig($form)
     );
     $form->addInput($contentCSP);
     $contentCSP->setAttribute('class', 'setting-content my-3');
+    $contentCSP->setAttribute('data-hhc', 'safe');
+    $contentCSP->setAttribute('data-hhc-mono', '1');
 
     // 侧边栏设置
     $sidebarBlock = new Typecho_Widget_Helper_Form_Element_Checkbox(
@@ -257,6 +305,7 @@ function themeConfig($form)
             'ShowHotPosts' => '热门文章',
             'ShowBlogSignage' => '博客路牌',
             'ShowDevilEyes' => '恶魔之眼',
+            'ShowTags' => '标签',
         ),
         array('ShowAboutMe', 'ShowSidebarYiyan', 'ShowHotPosts'),
         '侧边栏显示（非必填）',
@@ -264,6 +313,7 @@ function themeConfig($form)
     );
     $form->addInput($sidebarBlock->multiMode());
     $sidebarBlock->setAttribute('class', 'setting-content my-3');
+    $sidebarBlock->setAttribute('data-hhc', 'home');
 
     // 侧边栏-博客路牌
     $blogSignageText = new Typecho_Widget_Helper_Form_Element_Text(
@@ -275,6 +325,7 @@ function themeConfig($form)
     );
     $form->addInput($blogSignageText);
     $blogSignageText->setAttribute('class', 'setting-content my-3');
+    $blogSignageText->setAttribute('data-hhc', 'home');
 
     // 首页内容显示
     $indexBlock = new Typecho_Widget_Helper_Form_Element_Checkbox(
@@ -284,7 +335,7 @@ function themeConfig($form)
             'ShowSwiper' => '首页-轮播幻灯片',
             'ShowHello' => '底部-Hello信息',
             'ShowTimeJourney' => '底部-时间之旅',
-            'ShowLinks' => '友情链接（未开发）',
+            'ShowLinks' => '底部-友情链接',
         ),
         array('ShowHello'),
         '首页内容显示（非必填）',
@@ -292,6 +343,19 @@ function themeConfig($form)
     );
     $form->addInput($indexBlock->multiMode());
     $indexBlock->setAttribute('class', 'setting-content my-3');
+    $indexBlock->setAttribute('data-hhc', 'home');
+
+    // 首页底部-友情链接页面 CID
+    $linksCid = new Typecho_Widget_Helper_Form_Element_Text(
+        'linksCid',
+        NULL,
+        '',
+        '首页底部-友情链接页面 CID（非必填）',
+        '介绍：填入「友情链接」独立页面的 CID，首页底部会从该页面的 [Links ... /] 短代码里随机抽取 8 位邻居展示；需同时在上方「首页内容显示」勾选「底部-友情链接」'
+    );
+    $form->addInput($linksCid);
+    $linksCid->setAttribute('class', 'setting-content my-3');
+    $linksCid->setAttribute('data-hhc', 'home');
 
     // 首页顶部-轮播幻灯片
     $swiperText = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -303,6 +367,7 @@ function themeConfig($form)
     );
     $form->addInput($swiperText);
     $swiperText->setAttribute('class', 'setting-content my-3');
+    $swiperText->setAttribute('data-hhc', 'home');
 
     // 首页底部-Hello文字
     $helloText = new Typecho_Widget_Helper_Form_Element_Text(
@@ -314,6 +379,7 @@ function themeConfig($form)
     );
     $form->addInput($helloText);
     $helloText->setAttribute('class', 'setting-content my-3');
+    $helloText->setAttribute('data-hhc', 'home');
 
     // 首页底部-时间之旅内容
     $timeJourneyText = new Typecho_Widget_Helper_Form_Element_Text(
@@ -325,6 +391,7 @@ function themeConfig($form)
     );
     $form->addInput($timeJourneyText);
     $timeJourneyText->setAttribute('class', 'setting-content my-3');
+    $timeJourneyText->setAttribute('data-hhc', 'home');
 
     // 网站icon
     $iconfont = new Typecho_Widget_Helper_Form_Element_Text(
@@ -337,6 +404,7 @@ function themeConfig($form)
     );
     $form->addInput($iconfont);
     $iconfont->setAttribute('class', 'setting-content my-3');
+    $iconfont->setAttribute('data-hhc', 'look');
 
     // 评论敏感词
     $SensitiveWords = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -348,6 +416,7 @@ function themeConfig($form)
              例如：你妈死了|你妈炸了|我是你爹（使用|分隔开）'
     );
     $SensitiveWords->setAttribute('class', 'setting-content my-3');
+    $SensitiveWords->setAttribute('data-hhc', 'comment');
     $form->addInput($SensitiveWords);
 
     // 评论限制开关
@@ -360,6 +429,7 @@ function themeConfig($form)
              其他：用于屏蔽国外机器人刷的全英文垃圾广告信息'
     );
     $LimitOneChinese->setAttribute('class', 'setting-content my-3');
+    $LimitOneChinese->setAttribute('data-hhc', 'comment');
     $form->addInput($LimitOneChinese->multiMode());
 
     // 评论限制
@@ -373,6 +443,7 @@ function themeConfig($form)
     );
     $form->addInput($TextLimit->multiMode());
     $TextLimit->setAttribute('class', 'setting-content my-3');
+    $TextLimit->setAttribute('data-hhc', 'comment');
 
     // 评论邮件通知
     $commentMail = new Typecho_Widget_Helper_Form_Element_Select(
@@ -385,6 +456,7 @@ function themeConfig($form)
          其他：下方例子以QQ邮箱为例，推荐使用QQ邮箱'
     );
     $commentMail->setAttribute('class', 'setting-content my-3');
+    $commentMail->setAttribute('data-hhc', 'mail');
     $form->addInput($commentMail->multiMode());
 
     $commentMailHost = new Typecho_Widget_Helper_Form_Element_Text(
@@ -395,6 +467,7 @@ function themeConfig($form)
         '例如：smtp.qq.com'
     );
     $commentMailHost->setAttribute('class', 'setting-content my-3');
+    $commentMailHost->setAttribute('data-hhc', 'mail');
     $form->addInput($commentMailHost->multiMode());
 
     $commentSMTPSecure = new Typecho_Widget_Helper_Form_Element_Select(
@@ -405,6 +478,7 @@ function themeConfig($form)
         '介绍：用于选择登录鉴权加密方式'
     );
     $commentSMTPSecure->setAttribute('class', 'setting-content my-3');
+    $commentSMTPSecure->setAttribute('data-hhc', 'mail');
     $form->addInput($commentSMTPSecure->multiMode());
 
     $commentMailPort = new Typecho_Widget_Helper_Form_Element_Text(
@@ -415,6 +489,7 @@ function themeConfig($form)
         '例如：465'
     );
     $commentMailPort->setAttribute('class', 'setting-content my-3');
+    $commentMailPort->setAttribute('data-hhc', 'mail');
     $form->addInput($commentMailPort->multiMode());
 
     $commentMailFromName = new Typecho_Widget_Helper_Form_Element_Text(
@@ -425,6 +500,7 @@ function themeConfig($form)
         '例如：蔡徐坤博客评论回复通知'
     );
     $commentMailFromName->setAttribute('class', 'setting-content my-3');
+    $commentMailFromName->setAttribute('data-hhc', 'mail');
     $form->addInput($commentMailFromName->multiMode());
 
     $commentMailAccount = new Typecho_Widget_Helper_Form_Element_Text(
@@ -435,6 +511,7 @@ function themeConfig($form)
         '例如：123456@qq.com'
     );
     $commentMailAccount->setAttribute('class', 'setting-content my-3');
+    $commentMailAccount->setAttribute('data-hhc', 'mail');
     $form->addInput($commentMailAccount->multiMode());
 
     $commentMailPassword = new Typecho_Widget_Helper_Form_Element_Text(
@@ -448,6 +525,7 @@ function themeConfig($form)
          其他：这个可以百度一下开启教程，有图文教程'
     );
     $commentMailPassword->setAttribute('class', 'setting-content my-3');
+    $commentMailPassword->setAttribute('data-hhc', 'mail');
     $form->addInput($commentMailPassword->multiMode());
 
     // 底部设置
@@ -460,6 +538,7 @@ function themeConfig($form)
     );
     $form->addInput($icp);
     $icp->setAttribute('class', 'setting-content my-3');
+    $icp->setAttribute('data-hhc', 'footer');
 
     // 网站建站日期
     $sitedate = new Typecho_Widget_Helper_Form_Element_Text(
@@ -471,6 +550,7 @@ function themeConfig($form)
     );
     $form->addInput($sitedate);
     $sitedate->setAttribute('class', 'setting-content my-3');
+    $sitedate->setAttribute('data-hhc', 'footer');
 
     // 底部footer内容
     $footerContent = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -482,6 +562,7 @@ function themeConfig($form)
     );
     $form->addInput($footerContent);
     $footerContent->setAttribute('class', 'setting-content my-3');
+    $footerContent->setAttribute('data-hhc', 'footer');
 
     // 网站统计代码（非必填）
     $zztj = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -493,6 +574,7 @@ function themeConfig($form)
     );
     $form->addInput($zztj);
     $zztj->setAttribute('class', 'setting-content my-3');
+    $zztj->setAttribute('data-hhc', 'footer');
 
     // 自定义CSS
     $customStyle = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -504,6 +586,8 @@ function themeConfig($form)
     );
     $form->addInput($customStyle);
     $customStyle->setAttribute('class', 'setting-content my-3');
+    $customStyle->setAttribute('data-hhc', 'footer');
+    $customStyle->setAttribute('data-hhc-mono', '1');
 
     // 自定义JS
     $customScript = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -515,6 +599,8 @@ function themeConfig($form)
     );
     $form->addInput($customScript);
     $customScript->setAttribute('class', 'setting-content my-3');
+    $customScript->setAttribute('data-hhc', 'footer');
+    $customScript->setAttribute('data-hhc-mono', '1');
 
     // 自定义增加head里内容（非必填）
     $customHeadEnd = new Typecho_Widget_Helper_Form_Element_Textarea(
@@ -525,6 +611,8 @@ function themeConfig($form)
         '介绍：此处用于在&lt;head&gt;&lt;/head&gt;标签里增加自定义内容，可以填写引入第三方css、js等等'
     );
     $customHeadEnd->setAttribute('class', 'setting-content my-3');
+    $customHeadEnd->setAttribute('data-hhc', 'footer');
+    $customHeadEnd->setAttribute('data-hhc-mono', '1');
     $form->addInput($customHeadEnd);
 
     // 自定义增加body里内容（非必填）
@@ -536,6 +624,8 @@ function themeConfig($form)
         '介绍：此处用于填写在&lt;body&gt;&lt;/body&gt;标签末尾位置的内容，例如：可以填写引入第三方js脚本等等'
     );
     $customBodyEnd->setAttribute('class', 'setting-content my-3');
+    $customBodyEnd->setAttribute('data-hhc', 'footer');
+    $customBodyEnd->setAttribute('data-hhc-mono', '1');
     $form->addInput($customBodyEnd);
 }
 
