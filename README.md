@@ -12,10 +12,10 @@
 Typecho 主题《HarmonyHues - 和谐色调》，一款 **轻拟态（Soft UI）** 风格的轻量主题。
 
 - 设计灵感源自自然界中的和谐之美：低对比的灰白底色、柔和的单向光源、卡片像从页面里轻轻浮起，而不是贴在上面。
-- 名字来自当年让 GPT 起的几个候选，百度翻译「和谐色调」后顺手选中，后来发现改不动了……
+- 名字来自当年让 GPT 起的几个候选，百度翻译「和谐色调」后顺手选中，后来懒得改了，就用这个主题名称
 - 开发初衷很简单：阅读优先、少一点打扰、把「写」和「读」这件事做顺。
 
-主题预览：[BIIBII.CN](https://www.biibii.cn/) ｜ 主题介绍：[harmonyhues.html](https://www.biibii.cn/harmonyhues.html)
+主题预览：[BIIBII.CN](https://www.biibii.cn/) ｜ 主题介绍：[关于主题](https://www.biibii.cn/harmonyhues.html)
 
 ## 亮点
 
@@ -75,7 +75,7 @@ Typecho 主题《HarmonyHues - 和谐色调》，一款 **轻拟态（Soft UI）
 
 这是一次以「视觉系统 + 后台体验」为主的重做，主题从“类拟态”正式收敛为一套完整的轻拟态设计语言。
 
-> 完整记录见 [UpdateLog.md](./UpdateLog.md)
+> 完整记录见 [更新日志](./UpdateLog.md)
 
 - **视觉重做**：全站颜色 / 圆角 / 阴影收敛为 CSS 变量，卡片改为同色调 + 白边 + 双向阴影，暗色重新调校
 - **导航升级**：双模式导航（全宽 / Mini）+ 紧凑态 + 阅读进度线，移动端不再挤压内容
